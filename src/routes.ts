@@ -1,10 +1,8 @@
 import { dAppName } from 'config';
 import withPageTitle from './components/PageTitle';
 import OdinsFate from './pages/OdinsFate';
-import UnlockPage from './pages/UnlockPage';
 
 export const routeNames = {
-  unlock: '/unlock',
   ledger: '/ledger',
   walletconnect: '/walletconnect',
   home: '/',

@@ -3,7 +3,6 @@ import { DappUI, DappProvider } from '@elrondnetwork/dapp-core';
 import { Route, Routes, BrowserRouter as Router, Navigate } from 'react-router-dom';
 import Layout from 'components/Layout';
 import PageNotFound from 'pages/PageNotFound';
-import UnlockPage from 'pages/UnlockPage';
 import Staking from './pages/OdinsFate';
 import { routeNames } from 'routes';
 import routes from 'routes';
@@ -30,10 +29,6 @@ const App = () => {
           <NotificationModal />
           <SignTransactionsModals className='custom-class-for-modals' />
           <Routes>
-            <Route
-              path={routeNames.unlock}
-              element={<UnlockPage loginRoute={routeNames.home} />}
-            />
             {routes.map((route: any, index: number) => (
               <Route
                 path={route.path}
