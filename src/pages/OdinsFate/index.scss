@@ -263,9 +263,21 @@
 
         transition: all 0.3s ease-in;
 
-        &:hover, &:active, &:focus {
+        &:hover, &:active, &:focus, {
             background-color: rgba(109, 241, 250, 0.4) !important;
         }
+
+        .text2 {
+            font-size: 1.8rem;
+            color:#f4c430;
+        }
+        .text3 {
+            font-size: 1.2rem;
+        }
+    }
+
+    .fate-token-amount-button.active{
+        background-color: rgba(109, 241, 250, 0.4) !important;
     }
 }
 

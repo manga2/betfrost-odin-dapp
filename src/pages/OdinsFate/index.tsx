@@ -163,6 +163,13 @@ const OdinsFate = () => {
       }
     }, [selectedTokenId]);
 
+    //
+    const [selectedAmountId, setSelectedAmountId] = React.useState<number>(0);
+    function onAmountButtonClick(e) {
+      setSelectedAmountId(e.target.value);
+    }
+    console.log('selectedAmountId', selectedAmountId);
+
     return (
         <div className='fate-container'>
           <div className='fate-part-1'>
@@ -211,24 +218,20 @@ const OdinsFate = () => {
           <div className='fate-part-2'>
             <Container className='fate-inner-container'>
               <Row className='fate-token-amount-button-container'>
-                <Col xs={6}>
-                  <button className='fate-token-amount-button'>0.05 EGLD</button>
-                </Col>
-                <Col xs={6}>
-                  <button className='fate-token-amount-button'>0.10 EGLD</button>
-                </Col>
-                <Col xs={6}>
-                  <button className='fate-token-amount-button'>0.25 EGLD</button>
-                </Col>
-                <Col xs={6}>
-                  <button className='fate-token-amount-button'>0.50 EGLD</button>
-                </Col>
-                <Col xs={6}>
-                  <button className='fate-token-amount-button'>1.00 EGLD</button>
-                </Col>
-                <Col xs={6}>
-                  <button className='fate-token-amount-button'>2.00 EGLD</button>
-                </Col>
+                {
+                  flipPacks && selectedTokenId && flipPacks[selectedTokenId].amounts.map((v, index) => (
+                    <Col xs={6} key={`token-amount-col-${index}`}>
+                      <button
+                        className={index == selectedAmountId ? 'fate-token-amount-button active': 'fate-token-amount-button'}
+                        key={`token-amount-${index}`}
+                        value={index}
+                        onClick={onAmountButtonClick}
+                        >
+                          {printNumber(v)}{' '}{flipPacks[selectedTokenId].ticker}
+                      </button>
+                    </Col>
+                  ))
+                }
               </Row>
 
               <div>
