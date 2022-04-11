@@ -38,8 +38,16 @@ import {
   IContractInteractor,
 } from '../../utils';
 import DarkAsgardImage from '../../assets/img/dark-asgard-1.png';
+import FlipResultModal from 'components/FlipResultModal';
 
 const OdinsFate = () => {
+  const [flipResultModalShow, setFlipResultModalShow] = React.useState<boolean>(false);
+  const [flipResult, setFlipResult] = React.useState<boolean>(false);
+
+  function onFlip() {
+    setFlipResultModalShow(true);
+  }
+
     return (
         <div className='fate-container'>
           <div className='fate-part-1'>
@@ -110,7 +118,12 @@ const OdinsFate = () => {
               </Row>
 
               <div>
-                <button className='fate-flip-button gradient-button'>I Shall Choose</button>
+                <button
+                  className='fate-flip-button gradient-button'
+                  onClick={onFlip}
+                  >
+                    I Shall Choose
+                </button>
               </div>
 
               <div className='fate-history-container'>
@@ -129,6 +142,12 @@ const OdinsFate = () => {
               </div>
             </Container>
           </div>
+
+          <FlipResultModal
+            show={flipResultModalShow}
+            onHide={() => setFlipResultModalShow(false)}
+            data={ {flipResult} }
+          />
         </div>
     );
 };
