@@ -31,11 +31,11 @@ const Navbar = () => {
         <BsNavbar.Collapse id='responsive-navbar-nav' className='nav-menu-wrap'>
           <Nav className='ml-auto'>
             {isLoggedIn ? (
-              <NavItem className='auth-button' onClick={handleLogout}>
+              <NavItem className='auth-button gradient-button' onClick={handleLogout}>
                 Disconnect
               </NavItem>
             ) : (
-              <Link to={ routeNames.unlock } className='auth-button'>
+              <Link to={ routeNames.unlock } className='auth-button gradient-button'>
                 Connect
               </Link>
             )}

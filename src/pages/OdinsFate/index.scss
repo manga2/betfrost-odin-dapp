@@ -105,14 +105,16 @@
         // -webkit-text-stroke: 1px #c4c4c488;
 	    // -webkit-text-fill-color: white;
 
-        background: -webkit-linear-gradient(90deg, #AC6E35 0%, #FADE8C 51.56%, #AC6E35 100%);
+        background: $gradient-papyrus;
         -webkit-background-clip: text;
         -webkit-text-fill-color: transparent;
         background-clip: text;
         
-        text-shadow:
-            0 0 6px rgba(202,228,225,0.92),
-            0 0 9px rgba(202,228,225,0.34);
+        // text-shadow:
+        //     0 0 6px rgba(202,228,225,0.92),
+        //     0 0 9px rgba(202,228,225,0.34);
+        text-shadow: 0 0 6px rgba(120, 120, 120, 0.3),
+                    0 0 9px rgba(0, 0, 0, 0.18);
     }
 
     .fate-card-vs {
