@@ -1,6 +1,6 @@
 import React from 'react';
 import {Modal as BsModal, Col} from 'react-bootstrap';
-import { DappUI, useGetLoginInfo } from '@elrondnetwork/dapp-core';
+import { DappUI, useGetAccountInfo } from '@elrondnetwork/dapp-core';
 import './index.scss';
 
 const ConnectionModal = (props) => {
@@ -18,6 +18,14 @@ const ConnectionModal = (props) => {
         md: 5,
         sm: 12,
     };
+
+    // if wallet connected, close modal
+    const { address } = useGetAccountInfo();
+    React.useEffect(() => {
+        if (address) {
+            props.onHide();
+        }
+    }, [address]);
 
     return (
         <BsModal
