@@ -35,18 +35,133 @@ import {
   convertWeiToEgld,
   convertTimestampToDateTime,
   convertSecondsToDays,
+  convertWeiToEsdt,
+  getBalanceOfToken,
   IContractInteractor,
-} from '../../utils';
+  IFlipPack,
+} from 'utils';
+import {
+  FLIP_CONTRACT_ADDRESS,
+  FLIP_CONTRACT_ABI_URL,
+  FLIP_CONTRACT_NAME,
+  FLIP_PACK_COUNT,
+} from 'config';
+import {
+  TOKENS
+} from 'data';
 import DarkAsgardImage from '../../assets/img/dark-asgard-1.png';
 import FlipResultModal from 'components/FlipResultModal';
 
+function printNumber(v) {
+  const integral = Math.floor(v);
+  let fractional = Math.floor((v - integral) * 100).toString();
+  if (fractional.length == 1) fractional = '0' + fractional;
+  else if (fractional.length == 0) fractional = '00';
+
+  return (
+      <>
+          <span className='text2'>{integral.toLocaleString()}</span>
+          .
+          <span className='text3'>{fractional}</span>
+      </>
+  );
+}
+
 const OdinsFate = () => {
+  // modal
   const [flipResultModalShow, setFlipResultModalShow] = React.useState<boolean>(false);
   const [flipResult, setFlipResult] = React.useState<boolean>(false);
 
   function onFlip() {
     setFlipResultModalShow(true);
   }
+  
+  //
+  const { account } = useGetAccountInfo();
+  const { network } = useGetNetworkConfig();
+  const provider = new ProxyProvider(network.apiAddress, { timeout: TIMEOUT });
+
+  // load smart contract abi and parse it to SmartContract object for tx
+  const [contractInteractor, setContractInteractor] = React.useState<IContractInteractor | undefined>();
+  React.useEffect(() => {
+    async function loadContract() {
+        const registry = await AbiRegistry.load({ urls: [FLIP_CONTRACT_ABI_URL] });
+        const abi = new SmartContractAbi(registry, [FLIP_CONTRACT_NAME]);
+        const contract = new SmartContract({ address: new Address(FLIP_CONTRACT_ADDRESS), abi: abi });
+        const controller = new DefaultSmartContractController(abi, provider);
+
+        setContractInteractor({
+            contract,
+            controller,
+        });
+    }
+
+    loadContract();
+  }, []); // [] makes useEffect run once
+
+  const [flipPacks, setFlipPacks] = React.useState<any>();
+  React.useEffect(() => {
+      (async () => {
+          if (!contractInteractor || !account.address) return;
+          const interaction = contractInteractor.contract.methods.getFlipPacks();
+          const res = await contractInteractor.controller.query(interaction);
+
+          if (!res || !res.returnCode.isSuccess()) return;
+          const items = res.firstValue?.valueOf();
+          console.log('getFlipPacks', items);
+
+          const flipPacks = {};
+          for (const [_, item] of items) {
+            const token_id = item.token_id.toString();
+            const lp_fee = item.lp_fee.toNumber();
+            const treasury_fee = item.treasury_fee.toNumber();
+            const fee = (lp_fee + treasury_fee) / 100;
+
+            const amounts = [];
+            for (const amount of item.amounts) {
+              amounts.push(convertWeiToEsdt(amount, TOKENS[token_id].decimals));
+            }
+
+            const flipPack = {
+              token_id,
+              ticker: TOKENS[token_id].ticker,
+              fee,
+              amounts,
+            };
+
+            flipPacks[flipPack.token_id] = flipPack;
+          }
+          console.log('flipPacks', flipPacks);
+          setFlipPacks(flipPacks);
+      })();
+    }, [contractInteractor]);
+
+    //
+    const [selectedTokenId, setSelectedTokenId] = React.useState<string | undefined>();
+    function onTokenIdMenuSelect(token_id){
+      console.log('token_id', token_id);
+      setSelectedTokenId(token_id);
+    }
+
+    // if flipPacks are changed, select the first tokens as selectedTokenId
+    React.useEffect(() => {
+      if (flipPacks) {
+        for (const [key, value] of Object.entries(flipPacks)) {
+          setSelectedTokenId(key);
+          return;
+        }
+      }
+    }, [flipPacks]);
+
+    //
+    const [selectedTokenBalance, setSelectedTokenBalance] = React.useState<number | undefined>();
+    React.useEffect(() => {
+      if (account.address && selectedTokenId) {
+        getBalanceOfToken(network.apiAddress, account, selectedTokenId).then((v) => {
+          setSelectedTokenBalance(v);
+        });
+      }
+    }, [selectedTokenId]);
 
     return (
         <div className='fate-container'>
@@ -75,21 +190,20 @@ const OdinsFate = () => {
               <div className='fate-balance-container'>
                 <span className='fate-balance-text'>
                   <span className='text1'>You have&nbsp;</span>
-                  <span className='text2'>19</span>
-                  .
-                  <span className='text3'>354</span>
+                  {selectedTokenBalance ? printNumber(selectedTokenBalance) : '-'}
                 </span>
-                <Dropdown>
+                <Dropdown onSelect={onTokenIdMenuSelect} drop='end'>
                   <Dropdown.Toggle className='token-id-toggle' id="token-id">
-                    EGLD
+                    {selectedTokenId && TOKENS[selectedTokenId] && TOKENS[selectedTokenId].ticker}
                   </Dropdown.Toggle>
                   <Dropdown.Menu className='token-id-menu'>
-                    <Dropdown.Item>EGLD</Dropdown.Item>
-                    <Dropdown.Item>ODIN</Dropdown.Item>
-                    <Dropdown.Item>MEX</Dropdown.Item>
+                    {
+                      flipPacks && Object.keys(flipPacks).map((key, index) => 
+                      (<Dropdown.Item eventKey={key} key={`token-id-menu-item-${key}`}>{flipPacks[key].ticker}</Dropdown.Item>))
+                    }
                   </Dropdown.Menu>
                 </Dropdown>
-                <span className='fate-balance-fee'>(7% fee)</span>
+                <span className='fate-balance-fee'>({selectedTokenId ? flipPacks[selectedTokenId].fee : '-'}% fee)</span>
               </div>
             </Container>
           </div>
