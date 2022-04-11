@@ -1,0 +1,133 @@
+@import '../../assets/sass/custom.scss';
+
+.fate-container {
+    color: $color-white-1;
+
+    min-height: 100vh;
+
+    background-image: url("../../assets/img/dark-asgard-1.png");
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    overflow-x: hidden;
+
+    text-align: center;
+}
+
+.fate-inner-container {
+    padding-top: 80px;
+    max-width: 600px;
+}
+
+.fate-title {
+    font-size: 3rem;
+    font-family: $font-morris;
+
+    margin-bottom: 2rem;
+}
+
+.fate-text {
+    font-size: 1.2rem;
+    font-family: $font-zill;
+
+    margin-bottom: 2rem;
+}
+
+.fate-card-container {
+    position: relative;
+    width: 600px;
+    height: 300px;
+    margin-left: auto;
+    margin-right: auto;
+
+    .fate-card {
+        display: inline-block;
+        height: 100%;
+        width: 50%;
+        position: relative;
+    }
+
+    .fate-card-odin {
+        background-image: url("../../assets/img/odin.png");
+        background-size: cover;
+        background-position: center;
+        background-repeat: no-repeat;
+        width: 100%;
+        height: 100%;
+        position: absolute;
+        top: 0;
+        left: 0;
+    }
+    .fate-card-loki {
+        background-image: url("../../assets/img/loki.png");
+        background-size: cover;
+        background-position: center;
+        background-repeat: no-repeat;
+        width: 100%;
+        height: 100%;
+        position: absolute;
+        top: 0;
+        left: 0;
+    }
+
+    .fate-card-hover {
+        z-index: 1;
+        width: 100%;
+        height: 100%;
+        position: absolute;
+        top: 0;
+        left: 0;
+        overflow: hidden;
+    }
+
+    .fate-card-hover.disabled {
+        background-color: rgba(0, 0, 0, .8);
+    }
+    .fate-card-hover:not(.disabled) {
+        border: 4px solid #37EA89A0;
+        box-shadow: 0px 0px 10px rgba(140, 213, 106, 0.5),
+                    0px 0px 15px rgba(140, 213, 106, 0.3),
+                    0px 0px 20px rgba(140, 213, 106, 0.18);
+    }
+
+    .fate-card-name {
+        position: absolute;
+        bottom: 0;
+        left: 50%;
+        transform: translate(-50%, -10%);
+        z-index: 2;
+
+        color: $color-white-1;
+        font-size: 2.4rem;
+        font-family: $font-morris;
+        font-weight: 600;
+
+        // -webkit-text-stroke: 1px #c4c4c488;
+	    // -webkit-text-fill-color: white;
+
+        background: -webkit-linear-gradient(90deg, #AC6E35 0%, #FADE8C 51.56%, #AC6E35 100%);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+        
+        text-shadow:
+            0 0 6px rgba(202,228,225,0.92),
+            0 0 9px rgba(202,228,225,0.34);
+    }
+
+    .fate-card-vs {
+        background-image: url("../../assets/img/vs.png");
+        background-size: cover;
+        background-position: center;
+        background-repeat: no-repeat;
+
+        position: absolute;
+        top: 55%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+
+        width: 160px;
+        height: 160px;
+        z-index: 2;
+    }
+}

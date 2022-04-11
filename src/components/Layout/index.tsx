@@ -4,7 +4,7 @@ import { useLocation } from 'react-router-dom';
 import routes, { routeNames } from 'routes';
 import Footer from './Footer';
 import Navbar from './Navbar';
-import './layout.scss';
+import './index.scss';
 
 const Layout = ({ children }: { children: React.ReactNode }) => {
   const { search } = useLocation();

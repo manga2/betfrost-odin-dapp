@@ -32,7 +32,7 @@ const App = () => {
           <Routes>
             <Route
               path={routeNames.unlock}
-              element={<UnlockPage loginRoute={routeNames.odinsfate} />}
+              element={<UnlockPage loginRoute={routeNames.home} />}
             />
             {routes.map((route: any, index: number) => (
               <Route

@@ -7,6 +7,7 @@ export const routeNames = {
   unlock: '/unlock',
   ledger: '/ledger',
   walletconnect: '/walletconnect',
+  home: '/',
   odinsfate: '/odinsfate'
 };
 

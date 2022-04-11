@@ -17,11 +17,11 @@ const Navbar = () => {
   const isLoggedIn = Boolean(address);
 
   return (
-    <BsNavbar className='bg-white border-bottom px-4 py-3' expand='sm' collapseOnSelect>
+    <BsNavbar className='px-4 py-3' expand='sm' collapseOnSelect fixed='top'>
       <div className='container-fluid'>
         <Link
           className='d-flex align-items-center navbar-brand mr-0 c-logo-container'
-          to={routeNames.staking}
+          to={routeNames.home}
         >
           <img src={logo} />
           <span className=''>{dAppName}</span>

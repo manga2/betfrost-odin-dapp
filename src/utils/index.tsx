@@ -7,5 +7,4 @@ export function getCurrentTimestamp() {
 }
 
 export * from './convert';
-export * from './endpoint';
 export * from './state';
