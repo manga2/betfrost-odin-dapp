@@ -22,7 +22,7 @@ $gradient-fancy: linear-gradient(89.97deg, #a343e3 0.02%, #c923a4 98.97%);
     border-style: solid;
     border-image: $gradient-fancy 1;
  
-    background-color: rgba(0, 0, 0, 0.1);
+    background-color: #C0C0C011;
     
     color: $color-white-1;
     font-family: $font-morris;
@@ -39,7 +39,7 @@ $gradient-fancy: linear-gradient(89.97deg, #a343e3 0.02%, #c923a4 98.97%);
     left: -2px;
     top: -2px;
     transition: all 0.2s ease-in;
-    z-index: -1;
+    z-index: 0;
     background: $gradient-fancy;
 }
 
