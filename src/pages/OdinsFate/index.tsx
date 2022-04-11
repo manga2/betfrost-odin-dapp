@@ -26,7 +26,7 @@ import {
 
 import axios from 'axios';
 import Modal from 'react-modal';
-import { Container, Row, Col } from 'react-bootstrap';
+import { Container, Row, Col, Dropdown, Form } from 'react-bootstrap';
 import './index.scss';
 
 import {
@@ -60,6 +60,29 @@ const OdinsFate = () => {
                 <div className='fate-card-name'>Loki</div>
               </div>
               <div className='fate-card-vs' />
+            </div>
+            <div className='fate-balance-container'>
+              <span className='fate-balance-text'>
+                <span className='text1'>You have&nbsp;</span>
+                <span className='text2'>19</span>
+                .
+                <span className='text3'>354</span>
+              </span>
+              <Dropdown>
+                <Dropdown.Toggle className='token-id-toggle' id="token-id">
+                  EGLD
+                </Dropdown.Toggle>
+                <Dropdown.Menu className='token-id-menu'>
+                  <Dropdown.Item>EGLD</Dropdown.Item>
+                  <Dropdown.Item>ODIN</Dropdown.Item>
+                  <Dropdown.Item>MEX</Dropdown.Item>
+                </Dropdown.Menu>
+              </Dropdown>
+              {/* <Form.Select className='fate-token-id-combo' aria-label='fate-token-id-combo'>
+                <option key='1'>EGLD</option>
+                <option key='2'>ODIN</option>
+                <option key='3'>MEX</option>
+              </Form.Select> */}
             </div>
           </Container>
         </div>

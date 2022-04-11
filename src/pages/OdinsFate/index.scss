@@ -4,6 +4,7 @@
     color: $color-white-1;
 
     min-height: 100vh;
+    margin-bottom: 3rem;
 
     background-image: url("../../assets/img/dark-asgard-1.png");
     background-size: cover;
@@ -39,6 +40,7 @@
     height: 300px;
     margin-left: auto;
     margin-right: auto;
+    margin-bottom: 3rem;
 
     .fate-card {
         display: inline-block;
@@ -131,5 +133,58 @@
         width: 160px;
         height: 160px;
         z-index: 2;
+    }
+}
+
+.fate-balance-container {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    gap: 20px;
+
+    .fate-balance-text {
+        font-size: 1.6rem;
+        font-family: $font-morris;
+
+        .text1 {
+
+        }
+        .text2 {
+            font-size: 1.8rem;
+            color:#f4c430;
+        }
+        .text3 {
+            font-size: 1.2rem;
+        }
+    }
+
+
+        // border: 1px solid rgba(91, 198, 206, 0.54);
+        // background-color: rgba(0, 0, 0, 0.1);
+        // padding: .4rem .8rem;
+        // color: $color-white-1;
+
+    .token-id-toggle {
+        border: 2px solid rgba(91, 198, 206, 0.54) !important;
+        background-color: rgba(0, 0, 0, 0.1);
+
+        transition: all 0.3s ease-in;
+
+        &:hover, &:active, &:focus {
+            background-color: rgba(109, 241, 250, 0.4) !important;
+        }
+    }
+
+    .token-id-menu {
+        background-color: rgba(29, 26, 29, 0.9) !important;
+        
+        .dropdown-item {
+            color: $color-white-1;
+
+            &:hover {
+                background-color: #e9ecef44 !important;
+            }
+        }
     }
 }
