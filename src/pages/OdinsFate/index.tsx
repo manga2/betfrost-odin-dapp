@@ -51,7 +51,7 @@ const OdinsFate = () => {
     return (
         <div className='fate-container'>
           <div className='fate-part-1'>
-            <Container className='fate-inner-container'>
+            <Container className='fate-inner-container fate-inner-top-container'>
               <div className='fate-title'>Odin&apos;s Fate</div>
               <div className='fate-text'>
                 <p>Who shall rise, who shall fall</p>
@@ -97,22 +97,22 @@ const OdinsFate = () => {
           <div className='fate-part-2'>
             <Container className='fate-inner-container'>
               <Row className='fate-token-amount-button-container'>
-                <Col sm={6}>
+                <Col xs={6}>
                   <button className='fate-token-amount-button'>0.05 EGLD</button>
                 </Col>
-                <Col sm={6}>
+                <Col xs={6}>
                   <button className='fate-token-amount-button'>0.10 EGLD</button>
                 </Col>
-                <Col sm={6}>
+                <Col xs={6}>
                   <button className='fate-token-amount-button'>0.25 EGLD</button>
                 </Col>
-                <Col sm={6}>
+                <Col xs={6}>
                   <button className='fate-token-amount-button'>0.50 EGLD</button>
                 </Col>
-                <Col sm={6}>
+                <Col xs={6}>
                   <button className='fate-token-amount-button'>1.00 EGLD</button>
                 </Col>
-                <Col sm={6}>
+                <Col xs={6}>
                   <button className='fate-token-amount-button'>2.00 EGLD</button>
                 </Col>
               </Row>

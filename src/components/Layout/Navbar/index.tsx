@@ -16,8 +16,26 @@ const Navbar = () => {
 
   const isLoggedIn = Boolean(address);
 
+  // transparency-changing scroll
+  let listener = null;
+  const [scrollState, setScrollState] = React.useState('top');
+
+  React.useEffect(() => {
+    listener = document.addEventListener('scroll', e => {
+      const scrolled = document.scrollingElement.scrollTop;
+      if (scrolled >= 80) {
+        if (scrollState !== 'amir') setScrollState('amir');
+      } else {
+        if (scrollState !== 'top') setScrollState('top');
+      }
+    });
+    return () => {
+      document.removeEventListener('scroll', listener);
+    };
+  }, [scrollState]);
+
   return (
-    <BsNavbar className='px-4 py-3' expand='sm' collapseOnSelect fixed='top'>
+    <BsNavbar className={scrollState == 'top' ? 'px-4 py-3' : 'px-4 py-3 custom-navbar-dark'} expand='sm' collapseOnSelect fixed='top'>
       <div className='container-fluid'>
         <Link
           className='d-flex align-items-center navbar-brand mr-0 c-logo-container'

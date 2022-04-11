@@ -17,8 +17,10 @@
     overflow-x: hidden;
 }
 
-.fate-inner-container {
+.fate-inner-top-container {
     padding-top: 80px;
+}
+.fate-inner-container {
     max-width: 600px;
 }
 
@@ -39,7 +41,7 @@
 }
 
 .fate-text {
-    font-size: 1.2rem;
+    font-size: 1.1rem;
     font-family: $font-zill;
 
     text-shadow: 0 0 3px 6px rgba(0, 0, 0, 1),
@@ -141,13 +143,36 @@
         background-repeat: no-repeat;
 
         position: absolute;
-        top: 55%;
+        top: 50%;
         left: 50%;
         transform: translate(-50%, -50%);
 
         width: 160px;
         height: 160px;
         z-index: 2;
+    }
+}
+
+@media (max-width: 768px) {
+    .fate-card-container {
+        width: 400px;
+        height: 200px;    
+    }
+}
+
+@media (max-width: 576px) {
+    .fate-card-container {
+        width: 200px;
+        height: 400px;
+    
+        .fate-card {
+            height: 50%;
+            width: 100%;
+        }
+
+        .fate-card-name {
+            visibility: collapse;
+        }
     }
 }
 
@@ -212,6 +237,12 @@
     }
 }
 
+@media (max-width: 576px) {
+    .fate-balance-container {
+        flex-direction: column;
+    }
+}
+
 .fate-token-amount-button-container {
     max-width: 500px;
     margin-left: auto !important;
@@ -238,6 +269,16 @@
     }
 }
 
+
+@media (max-width: 576px) {
+    .fate-token-amount-button-container {
+        .fate-token-amount-button {
+            padding: .4rem;
+            width: 120px;
+        }
+    }
+}
+
 .fate-flip-button {
     font-family: $font-zill;
     font-size: 1.6rem;
@@ -251,6 +292,9 @@
     font-family: $font-morris;
     text-align: center;
 
+    max-width: 600px;
+    margin-left: auto;
+    margin-right: auto;
     margin-top: 4rem;
 
     .fate-history-row {
