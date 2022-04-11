@@ -6,6 +6,7 @@ import { dAppName } from 'config';
 import { routeNames } from 'routes';
 import logo from '../../../assets/img/odin.svg';
 import './index.scss';
+import ConnectionModal from '../../ConnectionModal';
 
 const Navbar = () => {
   const { address } = useGetAccountInfo();
@@ -34,8 +35,12 @@ const Navbar = () => {
     };
   }, [scrollState]);
 
+
+  //
+  const [connectionModalShow, setConnectModalShow] = React.useState<boolean>(false);
+
   return (
-    <BsNavbar className={scrollState == 'top' ? 'px-4 py-3' : 'px-4 py-3 custom-navbar-dark'} expand='sm' collapseOnSelect fixed='top'>
+    <BsNavbar className={scrollState == 'top' ? 'px-4 py-3 custom-navbar' : 'px-4 py-3 custom-navbar custom-navbar-dark'} expand='sm' collapseOnSelect fixed='top' variant='dark'>
       <div className='container-fluid'>
         <Link
           className='d-flex align-items-center navbar-brand mr-0 c-logo-container'
@@ -53,13 +58,18 @@ const Navbar = () => {
                 Disconnect
               </NavItem>
             ) : (
-              <Link to={ routeNames.unlock } className='auth-button gradient-button'>
+              <NavItem className='auth-button gradient-button' onClick={() => {setConnectModalShow(true);}}>
                 Connect
-              </Link>
+              </NavItem>
             )}
           </Nav>
         </BsNavbar.Collapse>
       </div>
+
+      <ConnectionModal
+        show={connectionModalShow}
+        onHide={() => setConnectModalShow(false)}
+      />
     </BsNavbar>
   );
 };
