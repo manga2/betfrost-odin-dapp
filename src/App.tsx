@@ -1,6 +1,10 @@
 import React from 'react';
 import { DappUI, DappProvider } from '@elrondnetwork/dapp-core';
 import { Route, Routes, BrowserRouter as Router, Navigate } from 'react-router-dom';
+import {
+  useGetPendingTransactions,
+} from '@elrondnetwork/dapp-core';
+
 import Layout from 'components/Layout';
 import PageNotFound from 'pages/PageNotFound';
 import Staking from './pages/OdinsFate';
@@ -8,7 +12,7 @@ import { routeNames } from 'routes';
 import routes from 'routes';
 import '@elrondnetwork/dapp-core/build/index.css';
 import { ENVIRONMENT } from './config';
-
+import './App.scss';
 
 const {
   TransactionsToastList,
