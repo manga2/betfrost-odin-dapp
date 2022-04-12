@@ -23,6 +23,7 @@ import {
   GasLimit,
   DefaultSmartContractController,
   OptionalValue,
+  U32Value,
 } from '@elrondnetwork/erdjs';
 
 import axios from 'axios';
@@ -38,6 +39,7 @@ import {
   convertSecondsToDays,
   convertWeiToEsdt,
   getBalanceOfToken,
+  convertEsdtToWei,
   IContractInteractor,
   IFlipPack,
   IFlipTx,
@@ -46,7 +48,7 @@ import {
   FLIP_CONTRACT_ADDRESS,
   FLIP_CONTRACT_ABI_URL,
   FLIP_CONTRACT_NAME,
-  FLIP_PACK_COUNT,
+  FLIP_GAS_LIMIT,
 } from 'config';
 import {
   TOKENS
@@ -241,6 +243,50 @@ const OdinsFate = () => {
       setFace(face);
     }
 
+    //
+    async function flip() {
+      if (!account) return;
+      if (!selectedTokenId) return;
+
+      const amountInWei = convertEsdtToWei(flipPacks[selectedTokenId].amounts[selectedAmountId], TOKENS[selectedTokenId].decimals);
+      let tx;
+      if (selectedTokenId == 'EGLD') {
+        const args: TypedValue[] = [
+          new U32Value(face),
+        ];
+        const { argumentsString } = new ArgSerializer().valuesToString(args);
+        const data = `flip@${argumentsString}`;
+
+        tx = {
+          receiver: FLIP_CONTRACT_ADDRESS,
+          gasLimit: new GasLimit(FLIP_GAS_LIMIT),
+          data: data,
+          args: [new U32Value(face)],
+          value: amountInWei,
+        };
+      } else {
+        const args: TypedValue[] = [
+          BytesValue.fromUTF8(selectedTokenId),
+          new BigUIntValue(amountInWei),
+          BytesValue.fromUTF8('flip'),
+          new U32Value(face),
+        ];
+        const { argumentsString } = new ArgSerializer().valuesToString(args);
+        const data = `ESDTTransfer@${argumentsString}`;
+
+        tx = {
+          data: data,
+          receiver: FLIP_CONTRACT_ADDRESS,
+          gasLimit: new GasLimit(FLIP_GAS_LIMIT),
+        };
+      }
+
+      await refreshAccount();
+      await sendTransactions({
+        transactions: tx,
+      });
+  }
+
     return (
         <div className='fate-container'>
           <div className='fate-part-1'>
@@ -308,7 +354,7 @@ const OdinsFate = () => {
               <div>
                 <button
                   className='fate-flip-button gradient-button'
-                  onClick={onFlip}
+                  onClick={flip}
                   disabled={flipButtonDisabled}
                   >
                     {flipButtonText}
@@ -316,12 +362,13 @@ const OdinsFate = () => {
               </div>
 
               <div className='fate-history-container'>
-                <Row className='fate-history-row'>
-                  {
-                    flipTxs && flipTxs.map((v, index) => (
+                {
+                  flipTxs && flipTxs.map((v, index) => (
+                    <Row className='fate-history-row' key={`flip-tx-row-${index}`}>
                       <Col
+                        sm={12}
                         className='fate-history-text'
-                        key={`flip-tx-${index}`}
+                        key={`flip-tx-text-${index}`}
                         >
                           {printAddress(v.user_address)}
                           {' '}
@@ -331,9 +378,10 @@ const OdinsFate = () => {
                           {' '}
                           {v.ticker}
                       </Col>
-                    ))
-                  }
-                </Row>
+                    </Row>
+                  ))
+                }
+                
                 {/* <Row className='fate-history-row'>
                   <Col sm={8} className='fate-history-text'>erd1234123423443... wisely earned 0.1 EGLD</Col>
                   <Col sm={4} className='fate-history-tx'><a>View Transaction</a></Col>

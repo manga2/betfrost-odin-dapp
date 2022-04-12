@@ -48,6 +48,11 @@ export const convertWeiToEsdt = (v: any, decimals = 18, precision = 2) => {
     return Math.floor(number * factor) / factor;
 };
 
+export const convertEsdtToWei = (v: number, decimals = 18) => {
+    const factor = Math.pow(10, decimals);
+    return (new BigNumber(v)).multipliedBy(factor);
+};
+
 export const convertUndefinedToZero = (v: any) => {
     return v ? v : 0;
 };
