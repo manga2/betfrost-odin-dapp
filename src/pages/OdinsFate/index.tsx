@@ -231,15 +231,15 @@ const OdinsFate = () => {
         }
       }
 
-      console.log('selectedTokenId', selectedTokenId);
-      console.log('selectedAmountId', selectedAmountId);
-      console.log('selectedTokenBalance', selectedTokenBalance);
-      console.log('flipButtonDisabled', flipButtonDisabled);
-      console.log('flipButtonText', flipButtonText);
-
       setFlipButtonDisabled(flipButtonDisabled);
       setFlipButtonText(flipButtonText);
     }, [account, selectedTokenId, selectedAmountId, selectedTokenBalance]);
+
+    //
+    const [face, setFace] = React.useState<number>(1);
+    function onFaceClick(face) {
+      setFace(face);
+    }
 
     return (
         <div className='fate-container'>
@@ -252,14 +252,14 @@ const OdinsFate = () => {
               </div>
 
               <div className='fate-card-container'>
-                <div className='fate-card'>
+                <div className='fate-card' onClick={() => onFaceClick(1)}>
                   <div className='fate-card-odin' />
-                  <div className='fate-card-hover fate-card-hover-odin disabled' />
+                  <div className={face ? 'fate-card-hover fate-card-hover-odin active' : 'fate-card-hover fate-card-hover-odin'} />
                   <div className='fate-card-name'>Odin</div>
                 </div>
-                <div className='fate-card'>
+                <div className='fate-card' onClick={() => onFaceClick(0)}>
                   <div className='fate-card-loki' />
-                  <div className='fate-card-hover fate-card-hover-loki' />
+                  <div className={!face ? 'fate-card-hover fate-card-hover-loki active' : 'fate-card-hover fate-card-hover-loki'} />
                   <div className='fate-card-name'>Loki</div>
                 </div>
                 <div className='fate-card-vs' />

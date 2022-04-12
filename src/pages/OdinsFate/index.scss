@@ -97,12 +97,23 @@
         top: 0;
         left: 0;
         overflow: hidden;
+
+        transition-property: color, margin, background-color;
+        transition-duration: 0.5s;
+        transition-timing-function: ease-in;
     }
 
-    .fate-card-hover.disabled {
+    .fate-card-hover:not(.active):not(:hover) {
         background-color: rgba(0, 0, 0, .8);
     }
-    .fate-card-hover:not(.disabled) {
+
+    .fate-card-hover-odin:hover, .fate-card-hover-odin.active {
+        border: 4px solid #f4c430;
+        box-shadow: 0px 0px 10px rgba(140, 213, 106, 0.5),
+                    0px 0px 15px rgba(140, 213, 106, 0.3),
+                    0px 0px 20px rgba(140, 213, 106, 0.18);
+    }
+    .fate-card-hover-loki:hover, .fate-card-hover-loki.active {
         border: 4px solid #37EA89A0;
         box-shadow: 0px 0px 10px rgba(140, 213, 106, 0.5),
                     0px 0px 15px rgba(140, 213, 106, 0.3),
@@ -263,7 +274,7 @@
 
         transition: all 0.3s ease-in;
 
-        &:hover, &:active, &:focus, {
+        &:hover, &:active, &:focus {
             background-color: rgba(109, 241, 250, 0.4) !important;
         }
 
