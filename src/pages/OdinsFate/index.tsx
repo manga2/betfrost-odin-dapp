@@ -1,6 +1,7 @@
 import React, {useState} from 'react';
 
 import {
+  isServerTransactionSuccessful,
   refreshAccount,
   sendTransactions,
   useGetAccountInfo,
@@ -24,6 +25,7 @@ import {
   DefaultSmartContractController,
   OptionalValue,
   U32Value,
+  Balance
 } from '@elrondnetwork/erdjs';
 
 import axios from 'axios';
@@ -49,6 +51,7 @@ import {
   FLIP_CONTRACT_ABI_URL,
   FLIP_CONTRACT_NAME,
   FLIP_GAS_LIMIT,
+  FLIP_LAST_TX_SEARCH_COUNT,
 } from 'config';
 import {
   TOKENS
@@ -80,10 +83,6 @@ const OdinsFate = () => {
   const [flipResultModalShow, setFlipResultModalShow] = React.useState<boolean>(false);
   const [flipResult, setFlipResult] = React.useState<boolean>(false);
 
-  function onFlip() {
-    setFlipResultModalShow(true);
-  }
-  
   //
   const { account } = useGetAccountInfo();
   const { network } = useGetNetworkConfig();
@@ -145,10 +144,11 @@ const OdinsFate = () => {
       })();
     }, [contractInteractor]);
 
+  const [sessionId, setSessionId] = React.useState<number>(0);
   const [flipTxs, setFlipTxs] = React.useState<any>();
   React.useEffect(() => {
       (async () => {
-          if (!contractInteractor) return;
+          if (!contractInteractor || hasPendingTransactions) return;
           const args = [OptionalValue.newMissing()];
           const interaction = contractInteractor.contract.methods.viewLastFlips(args);
           const res = await contractInteractor.controller.query(interaction);
@@ -179,6 +179,22 @@ const OdinsFate = () => {
           }
           console.log('flipTxs', flipTxs);
           setFlipTxs(flipTxs);
+
+          // check for result of last flip tx
+          if (sessionId && flipTxs && flipTxs.length > 0 && !hasPendingTransactions) {
+            const count = Math.min(FLIP_LAST_TX_SEARCH_COUNT, flipTxs.length);
+            for (let i = 0; i < count; i++) {
+              const flipTx = flipTxs[i];
+
+              if (flipTx.user_address == account.address) {
+                setFlipResult(flipTx.success);
+                setFlipResultModalShow(true);
+
+                setSessionId(0);
+                return;
+              }
+            }
+          }
       })();
     }, [contractInteractor, hasPendingTransactions]);
 
@@ -202,7 +218,7 @@ const OdinsFate = () => {
     //
     const [selectedTokenBalance, setSelectedTokenBalance] = React.useState<number | undefined>();
     React.useEffect(() => {
-      if (account.address && selectedTokenId) {
+      if (account.address && selectedTokenId && !hasPendingTransactions) {
         getBalanceOfToken(network.apiAddress, account, selectedTokenId).then((v) => {
           setSelectedTokenBalance(v);
         });
@@ -212,7 +228,7 @@ const OdinsFate = () => {
     //
     const [selectedAmountId, setSelectedAmountId] = React.useState<number>(0);
     function onAmountButtonClick(e) {
-      setSelectedAmountId(e.target.value);
+      setSelectedAmountId(e.currentTarget.value);
     }
     
     //
@@ -225,6 +241,10 @@ const OdinsFate = () => {
         flipButtonText = 'Connect Your Wallet';
       }
       else if (selectedTokenId) {
+        console.log('selectedTokenId', selectedTokenId);
+        console.log('selectedAmountId', selectedAmountId);
+        console.log('selectedTokenBalance', selectedTokenBalance);
+        console.log('flipPacks[selectedTokenId].amounts[selectedAmountId]', flipPacks[selectedTokenId].amounts[selectedAmountId]);
         if (selectedTokenBalance >= flipPacks[selectedTokenId].amounts[selectedAmountId]) {
           flipButtonDisabled = false;
           flipButtonText = 'I Shall Choose';
@@ -248,7 +268,9 @@ const OdinsFate = () => {
       if (!account) return;
       if (!selectedTokenId) return;
 
-      const amountInWei = convertEsdtToWei(flipPacks[selectedTokenId].amounts[selectedAmountId], TOKENS[selectedTokenId].decimals);
+      const amount = flipPacks[selectedTokenId].amounts[selectedAmountId];
+      const amountInWei = convertEsdtToWei(amount, TOKENS[selectedTokenId].decimals);
+
       let tx;
       if (selectedTokenId == 'EGLD') {
         const args: TypedValue[] = [
@@ -261,7 +283,6 @@ const OdinsFate = () => {
           receiver: FLIP_CONTRACT_ADDRESS,
           gasLimit: new GasLimit(FLIP_GAS_LIMIT),
           data: data,
-          args: [new U32Value(face)],
           value: amountInWei,
         };
       } else {
@@ -275,17 +296,21 @@ const OdinsFate = () => {
         const data = `ESDTTransfer@${argumentsString}`;
 
         tx = {
-          data: data,
           receiver: FLIP_CONTRACT_ADDRESS,
           gasLimit: new GasLimit(FLIP_GAS_LIMIT),
+          data: data,
         };
       }
 
       await refreshAccount();
-      await sendTransactions({
+      const { sessionId } = await sendTransactions({
         transactions: tx,
       });
-  }
+
+      if (sessionId) {
+        setSessionId(parseInt(sessionId));
+      }
+    }
 
     return (
         <div className='fate-container'>
