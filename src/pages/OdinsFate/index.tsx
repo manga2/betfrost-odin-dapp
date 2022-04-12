@@ -361,7 +361,7 @@ const OdinsFate = () => {
                     }
                   </Dropdown.Menu>
                 </Dropdown>
-                <span className='fate-balance-fee'>({selectedTokenId ? flipPacks[selectedTokenId].fee : '-'}% fee)</span>
+                {/* <span className='fate-balance-fee'>({selectedTokenId ? flipPacks[selectedTokenId].fee : '-'}% fee)</span> */}
               </div>
             </Container>
           </div>
