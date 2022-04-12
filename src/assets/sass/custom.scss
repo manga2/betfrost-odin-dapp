@@ -28,6 +28,12 @@ $gradient-fancy: linear-gradient(89.97deg, #a343e3 0.02%, #c923a4 98.97%);
     font-family: $font-morris;
     font-size: 1.6rem;
     transition: all 0.3s ease-in;
+
+    &:disabled {
+        color: #77777788;
+        border: 2px solid #C0C0C066;
+        cursor: initial;
+    }
 }
 
 .gradient-button:before {
@@ -43,10 +49,10 @@ $gradient-fancy: linear-gradient(89.97deg, #a343e3 0.02%, #c923a4 98.97%);
     background: $gradient-fancy;
 }
 
-.gradient-button:hover:before, .gradient-button:active:before{
+.gradient-button:hover:not(:disabled):before, .gradient-button:active:not(:disabled):before{
     opacity: .8;
 }
 
-.gradient-button:hover, .gradient-button:active {
+.gradient-button:hover:not(:disabled), .gradient-button:active:not(:disabled) {
     color: $color-white-1;
 }

@@ -22,6 +22,7 @@ import {
   TransactionPayload,
   GasLimit,
   DefaultSmartContractController,
+  OptionalValue,
 } from '@elrondnetwork/erdjs';
 
 import axios from 'axios';
@@ -39,6 +40,7 @@ import {
   getBalanceOfToken,
   IContractInteractor,
   IFlipPack,
+  IFlipTx,
 } from 'utils';
 import {
   FLIP_CONTRACT_ADDRESS,
@@ -67,6 +69,10 @@ function printNumber(v) {
   );
 }
 
+function printAddress(v, len = 20) {
+  return v.substring(0, len);
+}
+
 const OdinsFate = () => {
   // modal
   const [flipResultModalShow, setFlipResultModalShow] = React.useState<boolean>(false);
@@ -80,6 +86,7 @@ const OdinsFate = () => {
   const { account } = useGetAccountInfo();
   const { network } = useGetNetworkConfig();
   const provider = new ProxyProvider(network.apiAddress, { timeout: TIMEOUT });
+  const { hasPendingTransactions } = useGetPendingTransactions();
 
   // load smart contract abi and parse it to SmartContract object for tx
   const [contractInteractor, setContractInteractor] = React.useState<IContractInteractor | undefined>();
@@ -102,7 +109,7 @@ const OdinsFate = () => {
   const [flipPacks, setFlipPacks] = React.useState<any>();
   React.useEffect(() => {
       (async () => {
-          if (!contractInteractor || !account.address) return;
+          if (!contractInteractor) return;
           const interaction = contractInteractor.contract.methods.getFlipPacks();
           const res = await contractInteractor.controller.query(interaction);
 
@@ -136,6 +143,43 @@ const OdinsFate = () => {
       })();
     }, [contractInteractor]);
 
+  const [flipTxs, setFlipTxs] = React.useState<any>();
+  React.useEffect(() => {
+      (async () => {
+          if (!contractInteractor) return;
+          const args = [OptionalValue.newMissing()];
+          const interaction = contractInteractor.contract.methods.viewLastFlips(args);
+          const res = await contractInteractor.controller.query(interaction);
+
+          if (!res || !res.returnCode.isSuccess()) return;
+          const items = res.firstValue?.valueOf();
+          console.log('viewLastFlips', items);
+
+          const flipTxs = [];
+          for (const item of items) {
+            const token_id = item.token_id.toString();
+            const ticker = TOKENS[token_id].ticker;
+            const amount = convertWeiToEsdt(item.amount, TOKENS[token_id].decimals);
+            const user_address = item.user_address.toString();
+            const timestamp = new Date(item.timestamp.toNumber() * 1000);
+            const success = item.success;
+
+            const flipTx = {
+              token_id,
+              ticker,
+              amount,
+              user_address,
+              timestamp,
+              success,
+            };
+
+            flipTxs.push(flipTx);
+          }
+          console.log('flipTxs', flipTxs);
+          setFlipTxs(flipTxs);
+      })();
+    }, [contractInteractor, hasPendingTransactions]);
+
     //
     const [selectedTokenId, setSelectedTokenId] = React.useState<string | undefined>();
     function onTokenIdMenuSelect(token_id){
@@ -161,14 +205,41 @@ const OdinsFate = () => {
           setSelectedTokenBalance(v);
         });
       }
-    }, [selectedTokenId]);
+    }, [selectedTokenId, hasPendingTransactions]);
 
     //
     const [selectedAmountId, setSelectedAmountId] = React.useState<number>(0);
     function onAmountButtonClick(e) {
       setSelectedAmountId(e.target.value);
     }
-    console.log('selectedAmountId', selectedAmountId);
+    
+    //
+    const [flipButtonDisabled, setFlipButtonDisabled] = React.useState<boolean>(true);
+    const [flipButtonText, setFlipButtonText] = React.useState<string>('-');
+    React.useEffect(() => {
+      let flipButtonDisabled = true;
+      let flipButtonText = '-';
+      if (!account) {
+        flipButtonText = 'Connect Your Wallet';
+      }
+      else if (selectedTokenId) {
+        if (selectedTokenBalance >= flipPacks[selectedTokenId].amounts[selectedAmountId]) {
+          flipButtonDisabled = false;
+          flipButtonText = 'I Shall Choose';
+        } else {
+          flipButtonText = 'Not Enough Balance';
+        }
+      }
+
+      console.log('selectedTokenId', selectedTokenId);
+      console.log('selectedAmountId', selectedAmountId);
+      console.log('selectedTokenBalance', selectedTokenBalance);
+      console.log('flipButtonDisabled', flipButtonDisabled);
+      console.log('flipButtonText', flipButtonText);
+
+      setFlipButtonDisabled(flipButtonDisabled);
+      setFlipButtonText(flipButtonText);
+    }, [account, selectedTokenId, selectedAmountId, selectedTokenBalance]);
 
     return (
         <div className='fate-container'>
@@ -197,7 +268,7 @@ const OdinsFate = () => {
               <div className='fate-balance-container'>
                 <span className='fate-balance-text'>
                   <span className='text1'>You have&nbsp;</span>
-                  {selectedTokenBalance ? printNumber(selectedTokenBalance) : '-'}
+                  {selectedTokenBalance !== undefined ? printNumber(selectedTokenBalance) : '-'}
                 </span>
                 <Dropdown onSelect={onTokenIdMenuSelect} drop='end'>
                   <Dropdown.Toggle className='token-id-toggle' id="token-id">
@@ -238,24 +309,39 @@ const OdinsFate = () => {
                 <button
                   className='fate-flip-button gradient-button'
                   onClick={onFlip}
+                  disabled={flipButtonDisabled}
                   >
-                    I Shall Choose
+                    {flipButtonText}
                 </button>
               </div>
 
               <div className='fate-history-container'>
                 <Row className='fate-history-row'>
+                  {
+                    flipTxs && flipTxs.map((v, index) => (
+                      <Col
+                        className='fate-history-text'
+                        key={`flip-tx-${index}`}
+                        >
+                          {printAddress(v.user_address)}
+                          {' '}
+                          <span className={v.success ? 'win' : 'lose'}>{v.success ? 'wisely earned' : 'threw away'}</span>
+                          {' '}
+                          {printNumber(v.amount)}
+                          {' '}
+                          {v.ticker}
+                      </Col>
+                    ))
+                  }
+                </Row>
+                {/* <Row className='fate-history-row'>
                   <Col sm={8} className='fate-history-text'>erd1234123423443... wisely earned 0.1 EGLD</Col>
                   <Col sm={4} className='fate-history-tx'><a>View Transaction</a></Col>
                 </Row>
                 <Row className='fate-history-row'>
                   <Col sm={8} className='fate-history-text'>erd1234123423443... wisely earned 0.1 EGLD</Col>
                   <Col sm={4} className='fate-history-tx'><a>View Transaction</a></Col>
-                </Row>
-                <Row className='fate-history-row'>
-                  <Col sm={8} className='fate-history-text'>erd1234123423443... wisely earned 0.1 EGLD</Col>
-                  <Col sm={4} className='fate-history-tx'><a>View Transaction</a></Col>
-                </Row>
+                </Row> */}
               </div>
             </Container>
           </div>

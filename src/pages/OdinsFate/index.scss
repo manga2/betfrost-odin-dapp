@@ -320,10 +320,20 @@
         padding: .4rem .8rem;
 
         .fate-history-text {
-            background: $gradient-papyrus;
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
+            .win {
+                color: #f4c430;
+            }
+            .lose {
+                color: #B22222;
+            }
+
+            .text2 {
+                font-size: 1.8rem;
+                color:#e223b2;
+            }
+            .text3 {
+                font-size: 1.2rem;
+            }
         }
 
         .fate-history-tx {
