@@ -9,4 +9,4 @@ export const FLIP_CONTRACT_ABI_URL = '/abi/odin-coinflip.abi.json';
 export const FLIP_CONTRACT_NAME = 'OdinCoinflip';
 export const FLIP_GAS_LIMIT = 6000000;
 
-export const FLIP_LAST_TX_SEARCH_COUNT = 1;
+export const FLIP_LAST_TX_SEARCH_COUNT = 3;
