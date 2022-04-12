@@ -69,6 +69,7 @@ const Navbar = () => {
       <ConnectionModal
         show={connectionModalShow}
         onHide={() => setConnectModalShow(false)}
+        data={{ callbackRoute:routeNames.home }}
       />
     </BsNavbar>
   );

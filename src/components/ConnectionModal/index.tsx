@@ -38,26 +38,26 @@ const ConnectionModal = (props) => {
             <BsModal.Body className='row'>
                 <Col {...colSizes}>
                     <ExtensionLoginButton
-                    callbackRoute={props.loginRoute}
+                    callbackRoute={data.callbackRoute}
                     loginButtonText={'Extension'}
                     />
                 </Col>
                 <Col {...colSizes}>
                     <WebWalletLoginButton
-                    callbackRoute={props.loginRoute}
+                    callbackRoute={data.callbackRoute}
                     loginButtonText={'Web wallet'}
                     />
                 </Col>
                 <Col {...colSizes}>
                     <LedgerLoginButton
                     loginButtonText={'Ledger'}
-                    callbackRoute={props.loginRoute}
+                    callbackRoute={data.callbackRoute}
                     className={'test-class_name'}
                     />
                 </Col>
                 <Col {...colSizes}>
                     <WalletConnectLoginButton
-                    callbackRoute={props.loginRoute}
+                    callbackRoute={data.callbackRoute}
                     loginButtonText={'Maiar'}
                     />
                 </Col>
