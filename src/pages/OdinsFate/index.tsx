@@ -343,12 +343,21 @@ const OdinsFate = () => {
                 </span>
                 <Dropdown onSelect={onTokenIdMenuSelect} drop='end'>
                   <Dropdown.Toggle className='token-id-toggle' id="token-id">
-                    {selectedTokenId && TOKENS[selectedTokenId] && TOKENS[selectedTokenId].ticker}
+                    {selectedTokenId && TOKENS[selectedTokenId] && (
+                        <>
+                          <span>{TOKENS[selectedTokenId].ticker}</span>
+                          <img src={TOKENS[selectedTokenId].url} />
+                        </>
+                      )}
                   </Dropdown.Toggle>
                   <Dropdown.Menu className='token-id-menu'>
                     {
-                      flipPacks && Object.keys(flipPacks).map((key, index) => 
-                      (<Dropdown.Item eventKey={key} key={`token-id-menu-item-${key}`}>{flipPacks[key].ticker}</Dropdown.Item>))
+                      flipPacks && Object.keys(flipPacks).map((key, index) => (
+                        <Dropdown.Item eventKey={key} key={`token-id-menu-item-${key}`}>
+                          <span>{flipPacks[key].ticker}</span>
+                          <img src={TOKENS[key].url} />
+                        </Dropdown.Item>
+                      ))
                     }
                   </Dropdown.Menu>
                 </Dropdown>
