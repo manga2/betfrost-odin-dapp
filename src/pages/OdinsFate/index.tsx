@@ -1,7 +1,6 @@
 import React, {useState} from 'react';
 
 import {
-  isServerTransactionSuccessful,
   refreshAccount,
   sendTransactions,
   useGetAccountInfo,
@@ -10,41 +9,29 @@ import {
 } from '@elrondnetwork/dapp-core';
 import {
   Address,
-  AddressValue,
   AbiRegistry,
   SmartContractAbi,
   SmartContract,
   ProxyProvider,
   TypedValue,
   BytesValue,
-  Egld,
   BigUIntValue,
   ArgSerializer,
-  TransactionPayload,
   GasLimit,
   DefaultSmartContractController,
   OptionalValue,
   U32Value,
-  Balance
 } from '@elrondnetwork/erdjs';
 
-import axios from 'axios';
-import Modal from 'react-modal';
 import { Container, Row, Col, Dropdown, Form, Table } from 'react-bootstrap';
 import './index.scss';
 
 import {
-  SECOND_IN_MILLI,
   TIMEOUT,
-  convertWeiToEgld,
-  convertTimestampToDateTime,
-  convertSecondsToDays,
   convertWeiToEsdt,
   getBalanceOfToken,
   convertEsdtToWei,
   IContractInteractor,
-  IFlipPack,
-  IFlipTx,
 } from 'utils';
 import {
   FLIP_CONTRACT_ADDRESS,
@@ -56,7 +43,6 @@ import {
 import {
   TOKENS
 } from 'data';
-import DarkAsgardImage from '../../assets/img/dark-asgard-1.png';
 import FlipResultModal from 'components/FlipResultModal';
 
 function printNumber(v) {

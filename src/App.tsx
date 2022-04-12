@@ -1,13 +1,9 @@
 import React from 'react';
 import { DappUI, DappProvider } from '@elrondnetwork/dapp-core';
 import { Route, Routes, BrowserRouter as Router, Navigate } from 'react-router-dom';
-import {
-  useGetPendingTransactions,
-} from '@elrondnetwork/dapp-core';
-
 import Layout from 'components/Layout';
 import PageNotFound from 'pages/PageNotFound';
-import Staking from './pages/OdinsFate';
+import UnlockPage from './pages/UnlockPage';
 import { routeNames } from 'routes';
 import routes from 'routes';
 import '@elrondnetwork/dapp-core/build/index.css';
@@ -32,6 +28,10 @@ const App = () => {
           <NotificationModal />
           <SignTransactionsModals />
           <Routes>
+            <Route
+              path={routeNames.unlock}
+              element={<UnlockPage loginRoute={routeNames.home} />}
+            />
             {routes.map((route: any, index: number) => (
               <Route
                 path={route.path}
