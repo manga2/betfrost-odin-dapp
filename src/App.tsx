@@ -27,7 +27,7 @@ const App = () => {
         <Layout>
           <TransactionsToastList />
           <NotificationModal />
-          <SignTransactionsModals className='custom-class-for-modals' />
+          <SignTransactionsModals />
           <Routes>
             {routes.map((route: any, index: number) => (
               <Route

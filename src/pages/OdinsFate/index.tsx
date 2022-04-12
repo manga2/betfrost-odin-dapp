@@ -314,6 +314,7 @@ const OdinsFate = () => {
 
     return (
         <div className='fate-container'>
+          <div className={hasPendingTransactions ? 'fate-background-blocker' : ''} />
           <div className='fate-part-1'>
             <Container className='fate-inner-container fate-inner-top-container'>
               <div className='fate-title'>Odin&apos;s Fate</div>
