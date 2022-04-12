@@ -25,9 +25,10 @@ const Content = () => {
 
   return (
     <Layout>
-      <TransactionsToastList className='custom-tx-toast' />
+      <div className={hasPendingTransactions ? 'custom-background-blocker' : ''} />
+      <TransactionsToastList />
       <NotificationModal />
-      <SignTransactionsModals className='custom-class-for-modals' />
+      <SignTransactionsModals />
       <Routes>
         {routes.map((route: any, index: number) => (
           <Route
