@@ -19,4 +19,10 @@ export const TOKENS = {
         decimals: 6,
         url: "https://media.elrond.com/tokens/asset/USDC-c76f1f/logo.svg"
     },
+    "LUCKY-2cb58b": {
+        identifier: "LUCKY-2cb58b",
+        ticker: "LUCKY",
+        decimals: 18,
+        url: "https://media.elrond.com/tokens/asset/LUCKY-2cb58b/logo.svg"
+    },
 };
