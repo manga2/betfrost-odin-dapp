@@ -12,7 +12,7 @@ const Navbar = () => {
   const { address } = useGetAccountInfo();
 
   const handleLogout = () => {
-    logout(routeNames.home);
+    logout(`${window.location.origin}${routeNames.unlock}`);
   };
 
   const isLoggedIn = Boolean(address);
@@ -58,9 +58,12 @@ const Navbar = () => {
                 Disconnect
               </NavItem>
             ) : (
-              <NavItem className='auth-button gradient-button' onClick={() => {setConnectModalShow(true);}}>
+              // <NavItem className='auth-button gradient-button' onClick={() => {setConnectModalShow(true);}}>
+              //   Connect
+              // </NavItem>
+              <Link to={ routeNames.unlock } className='auth-button gradient-button'>
                 Connect
-              </NavItem>
+              </Link>
             )}
           </Nav>
         </BsNavbar.Collapse>

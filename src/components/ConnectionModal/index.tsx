@@ -52,7 +52,6 @@ const ConnectionModal = (props) => {
                     <LedgerLoginButton
                     loginButtonText={'Ledger'}
                     callbackRoute={data.callbackRoute}
-                    className={'test-class_name'}
                     />
                 </Col>
                 <Col {...colSizes}>
