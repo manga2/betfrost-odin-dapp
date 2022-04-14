@@ -393,7 +393,7 @@ const OdinsFate = () => {
                         >
                           {printAddress(v.user_address)}
                           {' '}
-                          <span className={v.success ? 'win' : 'lose'}>{v.success ? 'wisely earned' : 'threw away'}</span>
+                          <span className={v.success ? 'win' : 'lose'}>{v.success ? 'wisely earned' : 'sent to Hel'}</span>
                           {' '}
                           {printNumber(v.amount)}
                           {' '}
