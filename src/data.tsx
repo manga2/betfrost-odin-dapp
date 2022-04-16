@@ -29,7 +29,7 @@ export const TOKENS = {
         identifier: "MEX-455c57",
         ticker: "MEX",
         decimals: 18,
-        url: "https://media.elrond.com/tokens/asset/MEX-455c57/logo.png"
+        url: "https://media.elrond.com/tokens/asset/MEX-455c57/logo.svg"
     },
     "WEGLD-bd4d79": {
         identifier: "WEGLD-bd4d79",
