@@ -392,7 +392,7 @@ const OdinsFate = () => {
                         key={`flip-tx-text-${index}`}
                         >
                           {printAddress(v.user_address)}
-                          {' '}
+                          {'... '}
                           <span className={v.success ? 'win' : 'lose'}>{v.success ? 'wisely earned' : 'sent to Hel'}</span>
                           {' '}
                           {printNumber(v.amount)}
