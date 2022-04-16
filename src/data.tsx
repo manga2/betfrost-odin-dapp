@@ -37,4 +37,10 @@ export const TOKENS = {
         decimals: 18,
         url: "https://media.elrond.com/tokens/asset/WEGLD-bd4d79/logo.svg"
     },
+    "SUPER-507aa6": {
+        identifier: "SUPER-507aa6",
+        ticker: "SUPER",
+        decimals: 18,
+        url: "https://media.elrond.com/tokens/asset/SUPER-507aa6/logo.svg"
+    },
 };
