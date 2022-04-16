@@ -105,6 +105,7 @@ const OdinsFate = () => {
           console.log('getFlipPacks', items);
 
           const flipPacks = {};
+          let ids = [];
           for (const [_, item] of items) {
             const token_id = item.token_id.toString();
             const lp_fee = item.lp_fee.toNumber();
@@ -122,11 +123,19 @@ const OdinsFate = () => {
               fee,
               amounts,
             };
+            ids.push(token_id);
 
             flipPacks[flipPack.token_id] = flipPack;
           }
-          console.log('flipPacks', flipPacks);
-          setFlipPacks(flipPacks);
+
+          ids = ids.sort();
+          const newFlipPacks = {};
+          for (const id of ids) {
+            newFlipPacks[id] = flipPacks[id];
+          }
+
+          console.log('flipPacks', newFlipPacks);
+          setFlipPacks(newFlipPacks);
       })();
     }, [contractInteractor]);
 
