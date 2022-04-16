@@ -25,4 +25,16 @@ export const TOKENS = {
         decimals: 18,
         url: "https://media.elrond.com/tokens/asset/LUCKY-2cb58b/logo.svg"
     },
+    "MEX-455c57": {
+        identifier: "MEX-455c57",
+        ticker: "MEX",
+        decimals: 18,
+        url: "https://media.elrond.com/tokens/asset/MEX-455c57/logo.png"
+    },
+    "WEGLD-bd4d79": {
+        identifier: "WEGLD-bd4d79",
+        ticker: "WEGLD",
+        decimals: 18,
+        url: "https://media.elrond.com/tokens/asset/WEGLD-bd4d79/logo.svg"
+    },
 };
