@@ -43,4 +43,10 @@ export const TOKENS = {
         decimals: 18,
         url: "https://media.elrond.com/tokens/asset/SUPER-507aa6/logo.svg"
     },
+    "VITAL-bc0917": {
+        identifier: "VITAL-bc0917",
+        ticker: "VITAL",
+        decimals: 8,
+        url: "https://media.elrond.com/tokens/asset/VITAL-bc0917/logo.svg"
+    },
 };
