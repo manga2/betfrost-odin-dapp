@@ -1,0 +1,73 @@
+@import url('https://fonts.googleapis.com/css2?family=IM+Fell+English+SC&display=swap');
+
+.fryja-first-part {
+    background-image: url("../../assets/img/Grace of Fryja/Valhalla.png");
+    background-size: cover;
+    background-position: top;
+    background-repeat: no-repeat;
+    overflow-x: hidden;
+    min-height: 768px;
+}
+
+.fryja-second-part {
+    background-image: url("../../assets/img/Grace of Fryja/castle.png");
+    background-size: cover;
+    background-position: top;
+    background-repeat: no-repeat;
+    overflow-x: hidden;
+    min-height: 768px;
+}
+.fryja-inner-container {
+    max-width: 600px;
+}
+
+.fryja-title {
+    width: 50%;
+
+    @media (max-width: 768px) {
+        margin-top: 20px;
+        width: 80%;
+    }
+}
+
+.custom-timer {
+    margin-top: 1rem;
+    margin-bottom: 3rem;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    color: white;
+
+    .customer-timer-time {
+        font-size: 3rem;
+        font-family: 'IM FELL English SC';
+        text-shadow: 1px 3px 4px #000000;
+
+        @media (max-width: 768px) {
+            font-size: 2.2rem;
+        }
+    }
+}
+
+.buy-ticket-button {
+    background: rgba(18, 18, 18, 0.75);
+    border-radius: 5px;
+    padding: 25px;
+    width: 300px;
+    margin-top: 60px;
+    transition: .3s ease-in-out;
+
+    .but-title {
+        width: 80%;
+        @media (max-width: 768px) {
+            width: 60%;
+        }
+    }
+
+    &:hover {
+        background: rgba(18, 18, 18, 0.9);
+        cursor: pointer;
+    }
+}

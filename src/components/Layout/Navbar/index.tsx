@@ -53,12 +53,21 @@ const Navbar = () => {
         <BsNavbar.Toggle aria-controls='responsive-navbar-nav' />
         <BsNavbar.Collapse id='responsive-navbar-nav' className='nav-menu-wrap'>
           <Nav className='ml-auto'>
+
+            <Link to={routeNames.odinsfate} className='custom-navbar-button custom-navbar-normal-button'>
+              OdinsFate
+            </Link>
+
+            <Link to={routeNames.graceoffryja} className='custom-navbar-button custom-navbar-normal-button'>
+              GraceOfFryja
+            </Link>
+
             {isLoggedIn ? (
               <NavItem className='auth-button gradient-button' onClick={handleLogout}>
                 Disconnect
               </NavItem>
             ) : (
-              <NavItem className='auth-button gradient-button' onClick={() => {setConnectModalShow(true);}}>
+              <NavItem className='auth-button gradient-button' onClick={() => { setConnectModalShow(true); }}>
                 Connect
               </NavItem>
             )}

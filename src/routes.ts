@@ -1,12 +1,14 @@
 import { dAppName } from 'config';
 import withPageTitle from './components/PageTitle';
+import GraceOfFryja from './pages/GraceOfFryja';
 import OdinsFate from './pages/OdinsFate';
 
 export const routeNames = {
   ledger: '/ledger',
   walletconnect: '/walletconnect',
   home: '/',
-  odinsfate: '/odinsfate'
+  odinsfate: '/odinsfate',
+  graceoffryja: '/graceoffryja'
 };
 
 const routes: Array<any> = [
@@ -14,6 +16,12 @@ const routes: Array<any> = [
     path: routeNames.odinsfate,
     title: 'Odin\'s Fate',
     component: OdinsFate
+  },
+
+  {
+    path: routeNames.graceoffryja,
+    title: 'Grace Of Fryja',
+    component: GraceOfFryja
   },
 ];
 
