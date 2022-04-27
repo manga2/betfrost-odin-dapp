@@ -7,22 +7,46 @@ export const TOKENS = {
         decimals: 18,
         url: EgldLogo,
     },
-    "ODIN-d8c074": {
-        identifier: "ODIN-d8c074",
+    "ODIN-4d429b": {
+        identifier: "ODIN-4d429b",
         ticker: "ODIN",
         decimals: 6,
         url: "https://media.elrond.com/tokens/asset/ODIN-4d429b/logo.svg"
     },
-    "ASH-76f082": {
-        identifier: "ASH-76f082",
-        ticker: "ASH",
-        decimals: 18,
-        url: "https://testnet-media.elrond.com/tokens/asset/ASH-76f082/logo.svg"
-    },
-    "USDC-780dd8": {
-        identifier: "USDC-780dd8",
+    "USDC-c76f1f": {
+        identifier: "USDC-c76f1f",
         ticker: "USDC",
         decimals: 6,
         url: "https://media.elrond.com/tokens/asset/USDC-c76f1f/logo.svg"
+    },
+    "LUCKY-2cb58b": {
+        identifier: "LUCKY-2cb58b",
+        ticker: "LUCKY",
+        decimals: 18,
+        url: "https://media.elrond.com/tokens/asset/LUCKY-2cb58b/logo.svg"
+    },
+    "MEX-455c57": {
+        identifier: "MEX-455c57",
+        ticker: "MEX",
+        decimals: 18,
+        url: "https://media.elrond.com/tokens/asset/MEX-455c57/logo.svg"
+    },
+    "WEGLD-bd4d79": {
+        identifier: "WEGLD-bd4d79",
+        ticker: "WEGLD",
+        decimals: 18,
+        url: "https://media.elrond.com/tokens/asset/WEGLD-bd4d79/logo.svg"
+    },
+    "SUPER-507aa6": {
+        identifier: "SUPER-507aa6",
+        ticker: "SUPER",
+        decimals: 18,
+        url: "https://media.elrond.com/tokens/asset/SUPER-507aa6/logo.svg"
+    },
+    "VITAL-bc0917": {
+        identifier: "VITAL-bc0917",
+        ticker: "VITAL",
+        decimals: 8,
+        url: "https://media.elrond.com/tokens/asset/VITAL-bc0917/logo.svg"
     },
 };

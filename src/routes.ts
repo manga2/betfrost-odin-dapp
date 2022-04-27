@@ -4,6 +4,7 @@ import GraceOfFryja from './pages/GraceOfFryja';
 import OdinsFate from './pages/OdinsFate';
 
 export const routeNames = {
+  unlock: '/unlock',
   ledger: '/ledger',
   walletconnect: '/walletconnect',
   home: '/',
