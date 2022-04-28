@@ -1,4 +1,5 @@
 @import url('https://fonts.googleapis.com/css2?family=IM+Fell+English+SC&display=swap');
+@import '../../assets/sass/custom.scss';
 
 .fryja-first-part {
     background-image: url("../../assets/img/Grace of Fryja/Valhalla.png");
@@ -15,11 +16,20 @@
     background-position: top;
     background-repeat: no-repeat;
     overflow-x: hidden;
-    min-height: 768px;
+    // min-height: 1024px;
+}
+
+.fryja-third-part {
+    background-image: url("../../assets/img/Grace of Fryja/CoolGirl.png");
+    background-size: cover;
+    background-position: top;
+    background-repeat: no-repeat;
+    overflow-x: hidden;
+    min-height: 1200px;
 }
 
 .fryja-inner-container {
-    max-width: 600px;
+    max-width: 1024px;
 }
 
 .fryja-title {
@@ -62,6 +72,7 @@
 
     .but-title {
         width: 80%;
+
         @media (max-width: 768px) {
             width: 60%;
         }
@@ -70,5 +81,121 @@
     &:hover {
         background: rgba(18, 18, 18, 0.9);
         cursor: pointer;
+    }
+}
+
+.Buy-Ticket-Box {
+    display: flex;
+    flex-direction: column;
+    padding: 30px;
+    gap: 15px;
+    background: rgba(18, 18, 18, 0.6);
+    border-radius: 5px;
+}
+
+.custom-input {
+    width: 100%;
+    background-color: rgba(0, 0, 0, 0.6);
+    border-radius: 5px 5px 5px 5px;
+    border: none;
+    padding: 8px 20px;
+    color: white;
+
+    &:hover,
+    &:focus {
+        outline: none;
+    }
+}
+
+.Comment-Box {
+    display: flex;
+    flex-direction: column;
+    padding: 30px;
+    background: rgba(18, 18, 18, 0.6);
+    border-radius: 5px;
+}
+
+.Next-Draw {
+    font-size: 15px;
+    font-weight: 400;
+    color: #D3D3D3;
+}
+
+.Comment {
+    font-size: 13px;
+    font-weight: 400;
+    color: #D3D3D3;
+}
+
+.control-but {
+    background-color: rgba(0, 0, 0, 0.6);
+    padding: 5px;
+    width: 30px;
+    border-radius: 5px;
+    color: white;
+    transition: .3s ease-in-out;
+
+    &:hover {
+        transform: scale(1.1);
+        cursor: pointer;
+    }
+}
+
+.buy-tickets-but {
+    transition: .3s ease-in-out;
+
+    &:hover {
+        transform: scale(1.1);
+        cursor: pointer;
+    }
+}
+
+.fryja-center {
+    display: flex;
+    justify-content: center;
+    text-align: center;
+}
+
+.fryja-rounds {
+    position: relative;
+    margin-top: -300px;
+    min-height: 300px;
+
+    @media (max-width: 768px) {
+        margin-top: 0px;
+    }
+}
+
+.lottery-small-number-card {
+    background: rgba(18, 18, 18, 1);
+    width: 60px;
+    border: 1px solid #555555;
+    
+    .lottery-number {
+        font-family: 'IM FELL English SC';
+        font-size: 35px;
+        font-weight: 600;
+        background: -webkit-linear-gradient(90deg, #dac374 45%, #6c5b3b 90%, #AC6E35 100%);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+        filter: drop-shadow(1px 4px 4px #000000);
+    }
+}
+
+.circle-but {
+    background: rgba(18, 18, 18, 1);
+    border-radius: 50px;
+    border: 1px solid #555555;
+    width: 33px;
+    padding: 5px;
+
+    transition: .3s ease-in-out;
+
+    &:hover {
+        cursor: pointer;
+        background: #dac374;
+        border: 1px solid #000000;
+        color: #000000;
     }
 }

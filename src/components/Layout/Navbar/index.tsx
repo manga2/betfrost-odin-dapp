@@ -55,11 +55,11 @@ const Navbar = () => {
           <Nav className='ml-auto'>
 
             <Link to={routeNames.odinsfate} className='custom-navbar-button custom-navbar-normal-button'>
-              OdinsFate
+              Odins Fate
             </Link>
 
             <Link to={routeNames.graceoffryja} className='custom-navbar-button custom-navbar-normal-button'>
-              GraceOfFryja
+              Grace of Fryja
             </Link>
 
             {isLoggedIn ? (
