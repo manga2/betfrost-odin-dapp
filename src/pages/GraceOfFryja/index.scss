@@ -1,4 +1,5 @@
-@import url('https://fonts.googleapis.com/css2?family=IM+Fell+English+SC&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=IM+Fell+English+SC&family=Sorts+Mill+Goudy&display=swap');
+
 @import '../../assets/sass/custom.scss';
 
 .fryja-first-part {
@@ -25,7 +26,6 @@
     background-position: top;
     background-repeat: no-repeat;
     overflow-x: hidden;
-    min-height: 1200px;
 }
 
 .fryja-inner-container {
@@ -170,7 +170,7 @@
     background: rgba(18, 18, 18, 1);
     width: 60px;
     border: 1px solid #555555;
-    
+
     .lottery-number {
         font-family: 'IM FELL English SC';
         font-size: 35px;
@@ -197,5 +197,98 @@
         background: #dac374;
         border: 1px solid #000000;
         color: #000000;
+    }
+}
+
+.css-1h9z7r5-MuiButtonBase-root-MuiTab-root.Mui-selected {
+
+    color: #dac374 !important;
+}
+
+.css-1aquho2-MuiTabs-indicator {
+    background-color: #dac374 !important;
+}
+
+.css-8je8zh-MuiTouchRipple-root {
+    font-family: 'Sorts Mill Goudy', serif !important;
+}
+
+.token-id-toggle {
+    width: 100%;
+    border: none !important;
+    background-color: rgba(0, 0, 0, 0.6) !important;
+    transition: all 0.3s ease-in;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+
+    &:hover,
+    &:active,
+    &:focus {
+        background-color: rgba(250, 248, 109, 0.4) !important;
+        outline: none !important;
+    }
+
+    span {
+        line-height: 24px;
+        vertical-align: middle;
+        margin-right: .6rem;
+    }
+
+    img {
+        height: 16px;
+        margin-right: .4rem;
+    }
+}
+
+.dropdown-menu {
+    min-width: inherit !important;
+}
+
+.token-id-menu {
+    background-color: rgba(29, 26, 29, 0.9) !important;
+    margin-top: -4px !important;
+    width: 100%;
+
+    .dropdown-item {
+        color: $color-white-1;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+
+        &:hover {
+            background-color: #e9ecef44 !important;
+        }
+
+        span {
+            margin-right: 0.6rem;
+            line-height: 24px;
+            height: 24px;
+            vertical-align: middle;
+            width: 60%;
+        }
+
+        img {
+            height: 16px;
+            margin-right: 0.4rem;
+            line-height: 30px;
+        }
+    }
+}
+
+.info-box {
+    padding: 40px;
+    background-color: rgba(0, 0, 0, 0.2);
+
+    .step-info-title {
+        font-style: normal;
+        font-weight: 600;
+        font-size: 20px;
+        color: #B5B5B5;
+    }
+
+    .step-info-description {
+        color: #8A8A8A;
+        line-height: 25px;
     }
 }
