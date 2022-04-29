@@ -754,6 +754,10 @@
                 {
                     "name": "final_number",
                     "type": "u32"
+                },
+                {
+                    "name": "max_number_of_tickets_per_buy_or_claim",
+                    "type": "u32"
                 }
             ]
         },

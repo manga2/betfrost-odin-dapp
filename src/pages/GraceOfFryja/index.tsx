@@ -121,15 +121,18 @@ const GraceOfFryja = () => {
                 const number_of_bought_tickets = value.number_of_bought_tickets.toNumber();
 
                 const collected_tokens = value.collected_tokens.map(item => {
+                    const token_identifier = item.token_identifier.toString();
+                    const amount = convertWeiToEsdt(item.amount.toNumber(), TOKENS[token_identifier].decimals, FREYJA_DECIMALS_PRECISION);
                     return {
                         token_type: item.token_type.name,
-                        token_identifier: item.token_identifier.toString(),
+                        token_identifier: token_identifier,
                         token_nonce: item.token_nonce.toNumber(),
-                        amount: item.amount.toNumber(),
+                        amount: amount,
                     };
                 });
             
                 const final_number = value.final_number.toNumber();
+                const max_number_of_tickets_per_buy_or_claim = value.max_number_of_tickets_per_buy_or_claim.toNumber();
 
                 lotteries[lottery_id] = {
                     lottery_id,
@@ -145,6 +148,7 @@ const GraceOfFryja = () => {
                     number_of_bought_tickets,
                     collected_tokens,
                     final_number,
+                    max_number_of_tickets_per_buy_or_claim,
                 };
 
                 // set last lottery id as currentLotteryId
@@ -205,22 +209,50 @@ const GraceOfFryja = () => {
 
 
     /** for number of tickets */
-    const [ticketAmount, setTicketAmount] = useState<number | undefined>(0);
-    const handleSetTicketAmount = (amount) => {
-        if (amount >= 0 && amount < 10000) {
-            setTicketAmount(amount);
+    const [ticketCount, setTicketCount] = useState<number | undefined>(0);
+    const handleSetTicketCount = (ticketCount) => {
+        if (!address) {
+            alert('Connect your wallet.');
+            return;
+        }
+        if (!paymentTokens || !lotteries || !currentLotteryId) return;
+
+        const currentLottery = lotteries[currentLotteryId];
+        if (ticketCount >= 0 && ticketCount <= currentLottery.max_number_of_tickets_per_buy_or_claim) {
+            if (balance >= ticketCount * paymentTokens[selectedTokenIndex].amount) {
+                setTicketCount(ticketCount);
+            } else {
+                alert('Not enough balance.');
+            }
         }
     };
 
     /** for buy ticket modal */
     const [showModal, setShowModal] = useState(false);
     const handleBuyTicket = () => {
-        if (!(ticketAmount > 0 && ticketAmount < 10000)) {
-            console.log("invalid ticket amounts.");
+        if (!address) {
+            alert('Connect your wallet.');
             return;
         }
 
-        setShowModal(true);
+        if (!paymentTokens || !lotteries || !currentLotteryId) {
+            alert('Loading is not finished.');
+            return;
+        }
+
+        const currentLottery = lotteries[currentLotteryId];
+        if (ticketCount <= 0) {
+            alert('Invalid number of tickets.');
+            return;
+        } else if (ticketCount > currentLottery.max_number_of_tickets_per_buy_or_claim) {
+            alert(`Cannot buy more than ${currentLottery.max_number_of_tickets_per_buy_or_claim} tickets.`);
+            return;
+        } else if (balance < ticketCount * paymentTokens[selectedTokenIndex].amount) {
+            alert('Not enough balance.');
+            return;
+        } else {
+            setShowModal(true);
+        }
     };
 
     const handleModalOk = () => {
@@ -254,7 +286,7 @@ const GraceOfFryja = () => {
             return;
         }
 
-        if (ticketAmount == myTickets.length) {
+        if (ticketCount == myTickets.length) {
             console.log("can't buy tickets more.");
             return;
         }
@@ -341,12 +373,12 @@ const GraceOfFryja = () => {
                                                     </Dropdown.Menu>
                                                 </Dropdown>
 
-                                                <input className="custom-input" type='number' placeholder='Number of Tickets' value={ticketAmount ? ticketAmount : ''} onChange={(e) => handleSetTicketAmount(Number(e.target.value))} />
+                                                <input className="custom-input" type='number' placeholder='Number of Tickets' value={ticketCount ? ticketCount : ''} onChange={(e) => handleSetTicketCount(Number(e.target.value))} />
 
                                                 <div className="fryja-center">
                                                     <div style={{ justifyContent: "space-between", display: "flex", width: "100px" }}>
-                                                        <div className="control-but" onClick={() => handleSetTicketAmount(ticketAmount - 1)}>-</div>
-                                                        <div className="control-but" onClick={() => handleSetTicketAmount(ticketAmount + 1)}>+</div>
+                                                        <div className="control-but" onClick={() => handleSetTicketCount(ticketCount - 1)}>-</div>
+                                                        <div className="control-but" onClick={() => handleSetTicketCount(ticketCount + 1)}>+</div>
                                                     </div>
 
                                                 </div>
@@ -599,7 +631,7 @@ const GraceOfFryja = () => {
                         <h3 className='modalHeader'>Buy Your Tickets </h3>
                     </div>
                     <div className='modal-divider' />
-                    <p className="mt-1 mb-1">{"Generating: "} {ticketAmount - myTickets.length}</p>
+                    <p className="mt-1 mb-1">{"Generating: "} {ticketCount - myTickets.length}</p>
 
                     <div className="fryja-but mt-2">Generate Random</div>
                     <div className="d-flex justify-content-center">
