@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 import TabContext from '@mui/lab/TabContext';
 import TabList from '@mui/lab/TabList';
 import TabPanel from '@mui/lab/TabPanel';
@@ -14,40 +14,25 @@ import girl2Img from 'assets/img/Grace of Fryja/girl2.png';
 import titleImg from 'assets/img/Grace of Fryja/title.svg';
 import whowill from 'assets/img/Grace of Fryja/whowill.svg';
 import winingCreteria from 'assets/img/Grace of Fryja/Wining Criteria.svg';
+import winlost from 'assets/img/Grace of Fryja/winlost.svg';
 import CountDown from './CountDown';
 
 import * as data from './data';
 
 const GraceOfFryja = () => {
+    /** for tab changes */
     const [tabValue, setTabValue] = useState('1');
-    const [CurrentRoundID, setCurrentRoundID] = useState<number>(0); // for finished rounds
-
     const handleTabChange = (event: React.SyntheticEvent, newValue: string) => {
         setTabValue(newValue);
     };
 
-
     /** for finished rounds */
-    const handleDecCurrentRoundID = () => {
-        if (CurrentRoundID > 0) {
-            setCurrentRoundID(CurrentRoundID - 1);
+    const [CurrentRoundID, setCurrentRoundID] = useState<number>(0); // for finished rounds
+    const handleSetCurrentRoundID = (curID) => {
+        if (curID >= 0 && curID < data.rounds.length) {
+            setCurrentRoundID(curID);
         }
     };
-
-    const handleIncCurrentRoundID = () => {
-        if (CurrentRoundID < data.rounds.length - 1) {
-            setCurrentRoundID(CurrentRoundID + 1);
-        }
-    };
-
-    const handleFirstCurrentRoundID = () => {
-        setCurrentRoundID(0);
-    };
-
-    const handleLastCurrentRoundID = () => {
-        setCurrentRoundID(data.rounds.length - 1);
-    };
-
 
     /** for select tokens */
     const [selectedTokenId, setSelectedTokenId] = useState<number | undefined>(0);
@@ -61,6 +46,14 @@ const GraceOfFryja = () => {
         setSelectedMylotteryId(lottery_id);
     };
 
+
+    /** for number of tickets */
+    const [ticketAmount, setTicketAmount] = useState<number | undefined>(0);
+    const handleSetTicketAmount = (amount) => {
+        if (amount >= 0 && amount < 10000) {
+            setTicketAmount(amount);
+        }
+    };
 
     return (
         <>
@@ -88,7 +81,7 @@ const GraceOfFryja = () => {
                                 <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
                                     <TabList onChange={handleTabChange} aria-label="lab API tabs example">
                                         <Tab label="Current" value="1" />
-                                        <Tab label="Past" value="2" />
+                                        <Tab label="History" value="2" />
                                     </TabList>
                                 </Box>
 
@@ -118,12 +111,12 @@ const GraceOfFryja = () => {
                                                     </Dropdown.Menu>
                                                 </Dropdown>
 
-                                                <input className="custom-input" type='number' placeholder='Number of Tickets' />
+                                                <input className="custom-input" type='number' placeholder='Number of Tickets' value={ticketAmount ? ticketAmount : ''} onChange={(e) => handleSetTicketAmount(Number(e.target.value))} />
 
                                                 <div className="fryja-center">
                                                     <div style={{ justifyContent: "space-between", display: "flex", width: "100px" }}>
-                                                        <div className="control-but">-</div>
-                                                        <div className="control-but">+</div>
+                                                        <div className="control-but" onClick={() => handleSetTicketAmount(ticketAmount - 1)}>-</div>
+                                                        <div className="control-but" onClick={() => handleSetTicketAmount(ticketAmount + 1)}>+</div>
                                                     </div>
 
                                                 </div>
@@ -175,16 +168,16 @@ const GraceOfFryja = () => {
                                             </div>
 
                                             <div className="fryja-center" style={{ display: "flex", gap: "20px", marginTop: "20px", marginBottom: "30px" }}>
-                                                <div className="circle-but" onClick={handleFirstCurrentRoundID}>
+                                                <div className="circle-but" onClick={() => handleSetCurrentRoundID(0)}>
                                                     <span>{"<<"}</span>
                                                 </div>
-                                                <div className="circle-but" onClick={handleDecCurrentRoundID}>
+                                                <div className="circle-but" onClick={() => handleSetCurrentRoundID(CurrentRoundID - 1)}>
                                                     <span>{"<"}</span>
                                                 </div>
-                                                <div className="circle-but" onClick={handleIncCurrentRoundID}>
+                                                <div className="circle-but" onClick={() => handleSetCurrentRoundID(CurrentRoundID + 1)}>
                                                     <span>{">"}</span>
                                                 </div>
-                                                <div className="circle-but" onClick={handleLastCurrentRoundID}>
+                                                <div className="circle-but" onClick={() => handleSetCurrentRoundID(data.rounds.length - 1)}>
                                                     <span>{">>"}</span>
                                                 </div>
                                             </div>
@@ -199,6 +192,7 @@ const GraceOfFryja = () => {
 
                                 {/** tab for lottery histories */}
                                 <TabPanel value="2">
+
                                     <Row>
                                         <Col className="mt-2" lg="6">
                                             <Row>
@@ -253,32 +247,38 @@ const GraceOfFryja = () => {
                                         </Col>
 
                                         <Col className="mt-2" lg="6">
-                                            <div className="Comment-Box" style={{ background: "rgba(18,18,18,0.3)" }}>
-                                                <Row>
-                                                    {
-                                                        data.MyLotteries[selectedMylotteryId].tickets.map((ticket, index) => {
-                                                            const flag = ticket.match > 2 ? "win" : "lost";
+                                            <div className="Comment-Box p-0" style={{ background: "rgba(18,18,18,0.3)" }}>
+                                                <div className='text-center pl-5 pr-5 pt-5'>
+                                                    <img src={winlost} alt="win lost" style={{ width: "90%" }} />
+                                                </div>
+                                                <div className="custom-scroll-bar pl-5 pr-5" style={{ overflowY: "auto", height: "520px" }}>
+                                                    <Row>
+                                                        {
+                                                            data.MyLotteries[selectedMylotteryId].tickets.map((ticket, index) => {
+                                                                const flag = ticket.match > 2 ? "win" : "lost";
 
-                                                            return (
-                                                                <Col className="mt-3" sm="6" key={index}>
-                                                                    <div className={`ticket-box-${flag}`}>
-                                                                        <div className="ticket-medal ml-3">
-                                                                            <div className="ticket-medal-inner-box" >
-                                                                                <span>{ticket.match}</span>
+                                                                return (
+                                                                    <Col className="mt-4" sm="6" key={index}>
+                                                                        <div className={`ticket-box-${flag}`}>
+                                                                            <div className="ticket-medal ml-3">
+                                                                                <div className="ticket-medal-inner-box" >
+                                                                                    <span>{ticket.match}</span>
+                                                                                </div>
+                                                                            </div>
+                                                                            <div className="text-center ml-3" >
+                                                                                <span className="ml-2">{ticket.number[0]}</span>
+                                                                                <span className="ml-2">{ticket.number[1]}</span>
+                                                                                <span className="ml-2">{ticket.number[2]}</span>
+                                                                                <span className="ml-2">{ticket.number[3]}</span>
                                                                             </div>
                                                                         </div>
-                                                                        <div className="text-center ml-3" >
-                                                                            <span className="ml-3">{ticket.number[0]}</span>
-                                                                            <span className="ml-3">{ticket.number[1]}</span>
-                                                                            <span className="ml-3">{ticket.number[2]}</span>
-                                                                            <span className="ml-3">{ticket.number[3]}</span>
-                                                                        </div>
-                                                                    </div>
-                                                                </Col>
-                                                            );
-                                                        })
-                                                    }
-                                                </Row>
+                                                                    </Col>
+                                                                );
+                                                            })
+                                                        }
+                                                    </Row>
+                                                </div>
+
                                             </div>
                                         </Col>
                                     </Row>

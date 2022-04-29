@@ -123,6 +123,46 @@ export const MyLotteries = [
                 match: 3,
                 number: [3, 9, 1, 8]
             },
+            {
+                match: 1,
+                number: [3, 1, 2, 4]
+            },
+            {
+                match: 0,
+                number: [1, 2, 3, 4]
+            },
+            {
+                match: 2,
+                number: [2, 5, 6, 7]
+            },
+            {
+                match: 4,
+                number: [3, 9, 1, 5]
+            },
+            {
+                match: 3,
+                number: [3, 9, 1, 8]
+            },
+            {
+                match: 1,
+                number: [3, 1, 2, 4]
+            },
+            {
+                match: 0,
+                number: [1, 2, 3, 4]
+            },
+            {
+                match: 2,
+                number: [2, 5, 6, 7]
+            },
+            {
+                match: 4,
+                number: [3, 9, 1, 5]
+            },
+            {
+                match: 3,
+                number: [3, 9, 1, 8]
+            },
         ]
     },
     {

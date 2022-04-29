@@ -91,6 +91,14 @@
     gap: 15px;
     background: rgba(18, 18, 18, 0.6);
     border-radius: 5px;
+
+    // remove spin-button
+    input[type=number],
+    input[type=number]::-webkit-inner-spin-button,
+    input[type=number]::-webkit-outer-spin-button {
+        -moz-appearance: textfield;
+        -webkit-appearance: none;
+    }
 }
 
 .custom-input {
@@ -133,7 +141,6 @@
     width: 30px;
     border-radius: 5px;
     color: white;
-    transition: .3s ease-in-out;
 
     &:hover {
         transform: scale(1.1);
@@ -311,7 +318,7 @@
     .ticket-medal {
         width: 33px !important;
         padding: 2px;
-        background: linear-gradient(180deg, #6C6C6C 0%, #DCC575 100%);    
+        background: linear-gradient(180deg, #6C6C6C 0%, #DCC575 100%);
         border-radius: 50px;
 
         .ticket-medal-inner-box {
@@ -355,6 +362,25 @@
                 color: #B5B5B5;
                 text-shadow: 0px 2px 4px rgba(120, 112, 112, 0.6);
             }
+        }
+    }
+}
+
+.custom-scroll-bar {
+    overflow-y: "auto";
+    height: "520px";
+
+    &::-webkit-scrollbar {
+        width: 0.5em;
+        height: 0.5em;
+    }
+
+    &::-webkit-scrollbar-thumb {
+        background-color: rgba(255, 255, 255, .1);
+        border-radius: 3px;
+
+        &:hover {
+            background: rgba(255, 255, 255, .2);
         }
     }
 }
