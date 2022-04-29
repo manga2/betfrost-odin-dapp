@@ -1,10 +1,13 @@
 import axios from "axios";
-import { convertWeiToEsdt } from './convert';
+import {
+    convertWeiToEsdt,
+    convertWeiToEgld,
+} from './convert';
 
 export async function getBalanceOfToken(apiAddress, account, token_id) {
     try {
         if (token_id == 'EGLD') {
-            return convertWeiToEsdt(account.balance);
+            return convertWeiToEgld(account.balance);
         }
 
         const res = await axios.get(`${apiAddress}/accounts/${account.address.toString()}/tokens?identifier=${token_id}`);

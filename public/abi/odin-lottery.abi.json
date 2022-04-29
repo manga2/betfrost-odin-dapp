@@ -69,6 +69,20 @@
             ]
         },
         {
+            "docs": [
+                ""
+            ],
+            "name": "viewLotteries",
+            "mutability": "readonly",
+            "inputs": [],
+            "outputs": [
+                {
+                    "type": "variadic<Lottery>",
+                    "multi_result": true
+                }
+            ]
+        },
+        {
             "name": "viewTickets",
             "mutability": "readonly",
             "inputs": [

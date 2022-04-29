@@ -30,3 +30,5 @@ export const FLIP_LAST_TX_SEARCH_COUNT = 3;
 export const FREYJA_CONTRACT_ADDRESS = 'erd1qqqqqqqqqqqqqpgqxplu3fkhnqln8r7nh8gwk496uldkc8xvj9qstl5p84';
 export const FREYJA_CONTRACT_ABI_URL = '/abi/odin-lottery.abi.json';
 export const FREYJA_CONTRACT_NAME = 'OdinLottery';
+
+export const FREYJA_DECIMALS_PRECISION = 4;

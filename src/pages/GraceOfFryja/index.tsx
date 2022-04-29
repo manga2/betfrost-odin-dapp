@@ -48,20 +48,23 @@ import {
     getBalanceOfToken,
     convertEsdtToWei,
     IContractInteractor,
+    convertTimestampToDateTime,
 } from 'utils';
 import {
     FREYJA_CONTRACT_ADDRESS,
     FREYJA_CONTRACT_ABI_URL,
     FREYJA_CONTRACT_NAME,
+    FREYJA_DECIMALS_PRECISION,
 } from 'config';
 import {
     TOKENS
 } from 'data';
 import * as lotteryData from './lotteryData';
+import { convertWeiToEgld } from '../../utils/convert';
 
 const GraceOfFryja = () => {
     //
-    const { account } = useGetAccountInfo();
+    const { account, address } = useGetAccountInfo();
     const { network } = useGetNetworkConfig();
     const provider = new ProxyProvider(network.apiAddress, { timeout: TIMEOUT });
     const { hasPendingTransactions } = useGetPendingTransactions();
@@ -85,6 +88,95 @@ const GraceOfFryja = () => {
         loadContract();
     }, []); // [] makes useEffect run once
 
+    const [currentLotteryId, setCurrentLotteryId] = useState(0);
+
+    const [lotteries, setLotteries] = React.useState<any>();
+    React.useEffect(() => {
+        (async () => {
+            if (!contractInteractor || hasPendingTransactions) return;
+            const interaction = contractInteractor.contract.methods.viewLotteries();
+            const res = await contractInteractor.controller.query(interaction);
+
+            if (!res || !res.returnCode.isSuccess()) return;
+            const items = res.firstValue?.valueOf();
+            console.log('viewLotteries', items);
+
+            const lotteries = {};
+            for (let i = 0; i < items.length; i++) {
+                const value = items[i];
+
+                const lottery_id = value.lottery_id.toNumber();
+                const status = value.status.name;
+                const start_timestamp = new Date(value.start_timestamp.toNumber() * 1000);
+                const end_timestamp = new Date(value.end_timestamp.toNumber() * 1000);
+                const treasury_fee = value.treasury_fee.toNumber() / 100;
+
+                const ticket_token_ids = value.ticket_token_ids.map(item => item.toString());
+                const ticket_token_amounts = value.ticket_token_amounts.map(item => item.toString());
+
+                const number_of_brackets = value.number_of_brackets.toNumber();
+                const reward_percentage_per_bracket = value.reward_percentage_per_bracket.map(item => item.toNumber());
+                const number_of_winners_per_bracket = value.number_of_winners_per_bracket.map(item => item.toNumber());
+
+                const number_of_bought_tickets = value.number_of_bought_tickets.toNumber();
+
+                const collected_tokens = value.collected_tokens.map(item => {
+                    return {
+                        token_type: item.token_type.name,
+                        token_identifier: item.token_identifier.toString(),
+                        token_nonce: item.token_nonce.toNumber(),
+                        amount: item.amount.toNumber(),
+                    };
+                });
+            
+                const final_number = value.final_number.toNumber();
+
+                lotteries[lottery_id] = {
+                    lottery_id,
+                    status,
+                    start_timestamp,
+                    end_timestamp,
+                    treasury_fee,
+                    ticket_token_ids,
+                    ticket_token_amounts,
+                    number_of_brackets,
+                    reward_percentage_per_bracket,
+                    number_of_winners_per_bracket,
+                    number_of_bought_tickets,
+                    collected_tokens,
+                    final_number,
+                };
+
+                // set last lottery id as currentLotteryId
+                if (i == items.length - 1) {
+                    setCurrentLotteryId(lottery_id);
+                    console.log('currentLotteryId', lottery_id);
+                }
+            }
+
+            console.log('lotteries', lotteries);
+            setLotteries(lotteries);
+      })();
+    }, [contractInteractor, hasPendingTransactions]);
+
+    const [paymentTokens, setPaymentTokens] = useState<any>();
+    React.useEffect(() => {
+        if (!lotteries || lotteries.length == 0 || !currentLotteryId) return;
+
+        const currentLottery = lotteries[currentLotteryId];
+        const tokens = [];
+        for (let i = 0; i < currentLottery.ticket_token_ids.length; i++) {
+            const token_id = currentLottery.ticket_token_ids[i];
+            tokens.push({
+                ...TOKENS[token_id],
+                amount: convertWeiToEsdt(currentLottery.ticket_token_amounts[i], TOKENS[token_id].decimals, FREYJA_DECIMALS_PRECISION),
+            });
+        }
+
+        console.log('paymentTokens', tokens);
+        setPaymentTokens(tokens);
+    }, [lotteries, currentLotteryId]);
+
     /** for tab changes */
     const [tabValue, setTabValue] = useState('1');
     const handleTabChange = (event: React.SyntheticEvent, newValue: string) => {
@@ -100,13 +192,13 @@ const GraceOfFryja = () => {
     };
 
     /** for select tokens */
-    const [selectedTokenId, setSelectedTokenId] = useState<number | undefined>(0);
+    const [selectedTokenIndex, setSelectedTokenIndex] = useState<number>(0);
     const handleSelectTokenId = (token_id) => {
-        setSelectedTokenId(token_id);
+        setSelectedTokenIndex(token_id);
     };
 
     /** for select my lottery round */
-    const [selectedMylotteryId, setSelectedMylotteryId] = useState<number | undefined>(0);
+    const [selectedMylotteryId, setSelectedMylotteryId] = useState<number>(0);
     const handleSelectMylotteryId = (lottery_id) => {
         setSelectedMylotteryId(lottery_id);
     };
@@ -181,7 +273,18 @@ const GraceOfFryja = () => {
         setMyTickets(myTickets.filter((_, i) => index !== i));
     };
 
+    //////////////////////////////////////////////////////////////////////////////////////////////////
+    const [balance, setBalance] = useState<number>(0);
+    React.useEffect(() => {
+        (async () => {
+            if (!address || !paymentTokens || paymentTokens.length == 0 || hasPendingTransactions) return;
 
+            const balance = await getBalanceOfToken(network.apiAddress, account, paymentTokens[selectedTokenIndex].identifier);
+            setBalance(balance);
+        })();
+    }, [paymentTokens, selectedTokenIndex, hasPendingTransactions, address]);
+
+    //////////////////////////////////////////////////////////////////////////////////////////////////
     return (
         <>
             <div style={{ background: "#121212" }}>
@@ -221,14 +324,14 @@ const GraceOfFryja = () => {
                                                     <Dropdown.Toggle className='token-id-toggle' id="token-id">
                                                         {
                                                             <>
-                                                                <span>{lotteryData.tokens[selectedTokenId].ticker}</span>
-                                                                <img src={lotteryData.tokens[selectedTokenId].url} />
+                                                                <span>{paymentTokens && paymentTokens[selectedTokenIndex].ticker}</span>
+                                                                <img src={paymentTokens && paymentTokens[selectedTokenIndex].url} />
                                                             </>
                                                         }
                                                     </Dropdown.Toggle>
                                                     <Dropdown.Menu className='token-id-menu'>
                                                         {
-                                                            lotteryData.tokens.map((token, index) => (
+                                                            paymentTokens && paymentTokens.map((token, index) => (
                                                                 <Dropdown.Item eventKey={index} key={`token-id-menu-item-${token.identifier}`}>
                                                                     <span>{token.ticker}</span>
                                                                     <img src={token.url} />
@@ -248,8 +351,16 @@ const GraceOfFryja = () => {
 
                                                 </div>
                                                 <div className="text-center" style={{ color: "rgba(165, 165, 165, 1)", fontSize: "12x" }}>
-                                                    <span>Balance: 35 egld</span>
-                                                    <span style={{ paddingLeft: "20px" }}>Cost: 2 egld</span>
+                                                    <span>Balance: {address && paymentTokens ? balance : '-'}
+                                                        {' '}
+                                                        {address && paymentTokens && paymentTokens[selectedTokenIndex].ticker}
+                                                    </span>
+                                                    <span style={{ paddingLeft: "20px" }}>
+                                                        Cost:{' '}
+                                                        {paymentTokens ? paymentTokens[selectedTokenIndex].amount : '-'}
+                                                        {' '}
+                                                        {paymentTokens && paymentTokens[selectedTokenIndex].ticker}
+                                                    </span>
                                                 </div>
 
                                                 <div className="buy-tickets-but" onClick={handleBuyTicket}>
@@ -266,7 +377,7 @@ const GraceOfFryja = () => {
                                             <Row>
                                                 <Col sm='7'>
                                                     <div className="Comment-Box">
-                                                        <p className="Next-Draw">Next Draw is on &nbsp;<span style={{ color: "#EEC98A" }}>Apr 18 2022, 11:39AM</span></p>
+                                                        <p className="Next-Draw">Next Draw is on &nbsp;<span style={{ color: "#EEC98A" }}>{currentLotteryId && lotteries ? convertTimestampToDateTime(lotteries[currentLotteryId].end_timestamp) : '-'}</span></p>
                                                         <p className="Comment">She is waiting for your prayers, buy tickets with caution. Good luck</p>
 
                                                         <p className="Next-Draw"># Prize Pool &nbsp;<span style={{ color: "#EEC98A" }}>{"$15225"}</span></p>
