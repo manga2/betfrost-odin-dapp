@@ -9,7 +9,7 @@ export const routeNames = {
   walletconnect: '/walletconnect',
   home: '/',
   odinsfate: '/odinsfate',
-  graceoffryja: '/graceoffryja'
+  graceoffryja: '/graceoffreyja'
 };
 
 const routes: Array<any> = [
@@ -21,7 +21,7 @@ const routes: Array<any> = [
 
   {
     path: routeNames.graceoffryja,
-    title: 'Grace Of Fryja',
+    title: 'Grace Of Freyja',
     component: GraceOfFryja
   },
 ];

@@ -59,7 +59,7 @@ const Navbar = () => {
             </Link>
 
             <Link to={routeNames.graceoffryja} className='custom-navbar-button custom-navbar-normal-button'>
-              Grace of Fryja
+              Grace Of Freyja
             </Link>
 
             {isLoggedIn ? (

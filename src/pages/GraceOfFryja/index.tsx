@@ -8,6 +8,29 @@ import { Container, Row, Col, Dropdown } from 'react-bootstrap';
 import Modal from 'react-modal';
 import ReactPinField from "react-pin-field";
 
+import {
+    refreshAccount,
+    sendTransactions,
+    useGetAccountInfo,
+    useGetNetworkConfig,
+    useGetPendingTransactions,
+  } from '@elrondnetwork/dapp-core';
+  import {
+    Address,
+    AbiRegistry,
+    SmartContractAbi,
+    SmartContract,
+    ProxyProvider,
+    TypedValue,
+    BytesValue,
+    BigUIntValue,
+    ArgSerializer,
+    GasLimit,
+    DefaultSmartContractController,
+    OptionalValue,
+    U32Value,
+  } from '@elrondnetwork/erdjs';
+
 import './index.scss';
 import buyTicketImg from 'assets/img/Grace of Fryja/Buy Ticket.svg';
 import buyTicketsButImg from 'assets/img/Grace of Fryja/Buy Tickets But.svg';
@@ -19,9 +42,49 @@ import winingCreteria from 'assets/img/Grace of Fryja/Wining Criteria.svg';
 import winlost from 'assets/img/Grace of Fryja/winlost.svg';
 import CountDown from './CountDown';
 
-import * as data from './data';
+import {
+    TIMEOUT,
+    convertWeiToEsdt,
+    getBalanceOfToken,
+    convertEsdtToWei,
+    IContractInteractor,
+} from 'utils';
+import {
+    FREYJA_CONTRACT_ADDRESS,
+    FREYJA_CONTRACT_ABI_URL,
+    FREYJA_CONTRACT_NAME,
+} from 'config';
+import {
+    TOKENS
+} from 'data';
+import * as lotteryData from './lotteryData';
 
 const GraceOfFryja = () => {
+    //
+    const { account } = useGetAccountInfo();
+    const { network } = useGetNetworkConfig();
+    const provider = new ProxyProvider(network.apiAddress, { timeout: TIMEOUT });
+    const { hasPendingTransactions } = useGetPendingTransactions();
+
+    // load smart contract abi and parse it to SmartContract object for tx
+    const [contractInteractor, setContractInteractor] = React.useState<IContractInteractor | undefined>();
+    React.useEffect(() => {
+        async function loadContract() {
+            const registry = await AbiRegistry.load({ urls: [FREYJA_CONTRACT_ABI_URL] });
+            const abi = new SmartContractAbi(registry, [FREYJA_CONTRACT_NAME]);
+            const contract = new SmartContract({ address: new Address(FREYJA_CONTRACT_ADDRESS), abi: abi });
+            const controller = new DefaultSmartContractController(abi, provider);
+
+            console.log(contract, controller);
+            setContractInteractor({
+                contract,
+                controller,
+            });
+        }
+
+        loadContract();
+    }, []); // [] makes useEffect run once
+
     /** for tab changes */
     const [tabValue, setTabValue] = useState('1');
     const handleTabChange = (event: React.SyntheticEvent, newValue: string) => {
@@ -31,7 +94,7 @@ const GraceOfFryja = () => {
     /** for finished rounds */
     const [CurrentRoundID, setCurrentRoundID] = useState<number>(0); // for finished rounds
     const handleSetCurrentRoundID = (curID) => {
-        if (curID >= 0 && curID < data.rounds.length) {
+        if (curID >= 0 && curID < lotteryData.rounds.length) {
             setCurrentRoundID(curID);
         }
     };
@@ -158,14 +221,14 @@ const GraceOfFryja = () => {
                                                     <Dropdown.Toggle className='token-id-toggle' id="token-id">
                                                         {
                                                             <>
-                                                                <span>{data.tokens[selectedTokenId].ticker}</span>
-                                                                <img src={data.tokens[selectedTokenId].url} />
+                                                                <span>{lotteryData.tokens[selectedTokenId].ticker}</span>
+                                                                <img src={lotteryData.tokens[selectedTokenId].url} />
                                                             </>
                                                         }
                                                     </Dropdown.Toggle>
                                                     <Dropdown.Menu className='token-id-menu'>
                                                         {
-                                                            data.tokens.map((token, index) => (
+                                                            lotteryData.tokens.map((token, index) => (
                                                                 <Dropdown.Item eventKey={index} key={`token-id-menu-item-${token.identifier}`}>
                                                                     <span>{token.ticker}</span>
                                                                     <img src={token.url} />
@@ -218,11 +281,11 @@ const GraceOfFryja = () => {
 
                                     <div className="fryja-rounds fryja-center">
                                         <div style={{ color: "white" }}>
-                                            <p style={{ fontFamily: "IM FELL English SC", fontSize: "18px" }}>Draw: {data.rounds[CurrentRoundID].date} </p>
+                                            <p style={{ fontFamily: "IM FELL English SC", fontSize: "18px" }}>Draw: {lotteryData.rounds[CurrentRoundID].date} </p>
 
                                             <div className="fryja-center" style={{ display: "flex", gap: "20px" }}>
                                                 {
-                                                    data.rounds[CurrentRoundID].result.map((roundResult, index) => {
+                                                    lotteryData.rounds[CurrentRoundID].result.map((roundResult, index) => {
                                                         return (
                                                             <div className="lottery-small-number-card" key={index}>
                                                                 <span className="lottery-number">{roundResult}</span>
@@ -242,7 +305,7 @@ const GraceOfFryja = () => {
                                                 <div className="circle-but" onClick={() => handleSetCurrentRoundID(CurrentRoundID + 1)}>
                                                     <span>{">"}</span>
                                                 </div>
-                                                <div className="circle-but" onClick={() => handleSetCurrentRoundID(data.rounds.length - 1)}>
+                                                <div className="circle-but" onClick={() => handleSetCurrentRoundID(lotteryData.rounds.length - 1)}>
                                                     <span>{">>"}</span>
                                                 </div>
                                             </div>
@@ -275,16 +338,16 @@ const GraceOfFryja = () => {
                                                             <Dropdown.Toggle className='token-id-toggle' id="token-id">
                                                                 {
                                                                     <>
-                                                                        <span>#{data.MyLotteries[selectedMylotteryId].round_id}</span>
-                                                                        <span>{data.rounds[data.MyLotteries[selectedMylotteryId].round_id - 1].date}</span>
+                                                                        <span>#{lotteryData.MyLotteries[selectedMylotteryId].round_id}</span>
+                                                                        <span>{lotteryData.rounds[lotteryData.MyLotteries[selectedMylotteryId].round_id - 1].date}</span>
                                                                     </>
                                                                 }
                                                             </Dropdown.Toggle>
                                                             <Dropdown.Menu className='token-id-menu'>
                                                                 {
-                                                                    data.MyLotteries.map((myLottery, index) => (
+                                                                    lotteryData.MyLotteries.map((myLottery, index) => (
                                                                         <Dropdown.Item eventKey={index} key={`MyLottery-id-menu-item-${index}`}>
-                                                                            <span>{data.rounds[myLottery.round_id - 1].date}</span>
+                                                                            <span>{lotteryData.rounds[myLottery.round_id - 1].date}</span>
                                                                         </Dropdown.Item>
                                                                     ))
                                                                 }
@@ -296,7 +359,7 @@ const GraceOfFryja = () => {
                                                         <div className="Comment-Box" style={{ background: "rgba(18,18,18,0.3)" }}>
                                                             <div className="fryja-center" style={{ display: "flex", gap: "20px" }}>
                                                                 {
-                                                                    data.rounds[data.MyLotteries[selectedMylotteryId].round_id - 1].result.map((roundResult, index) => {
+                                                                    lotteryData.rounds[lotteryData.MyLotteries[selectedMylotteryId].round_id - 1].result.map((roundResult, index) => {
                                                                         return (
                                                                             <div className="lottery-small-number-card" key={index}>
                                                                                 <span className="lottery-number" style={{ fontFamily: "Arial", fontSize: "23px" }}>{roundResult}</span>
@@ -319,7 +382,7 @@ const GraceOfFryja = () => {
                                                 <div className="custom-scroll-bar pl-5 pr-5" style={{ overflowY: "auto", height: "520px" }}>
                                                     <Row>
                                                         {
-                                                            data.MyLotteries[selectedMylotteryId].tickets.map((ticket, index) => {
+                                                            lotteryData.MyLotteries[selectedMylotteryId].tickets.map((ticket, index) => {
                                                                 const flag = ticket.match > 2 ? "win" : "lost";
 
                                                                 return (
