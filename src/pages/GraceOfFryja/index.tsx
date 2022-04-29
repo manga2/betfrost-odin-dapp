@@ -9,7 +9,8 @@ import { Container, Row, Col, Dropdown } from 'react-bootstrap';
 import './index.scss';
 import buyTicketImg from 'assets/img/Grace of Fryja/Buy Ticket.svg';
 import buyTicketsButImg from 'assets/img/Grace of Fryja/Buy Tickets But.svg';
-import girl1Img from 'assets/img/Grace of Fryja/girl1.svg';
+import girl1Img from 'assets/img/Grace of Fryja/girl1.png';
+import girl2Img from 'assets/img/Grace of Fryja/girl2.png';
 import titleImg from 'assets/img/Grace of Fryja/title.svg';
 import whowill from 'assets/img/Grace of Fryja/whowill.svg';
 import winingCreteria from 'assets/img/Grace of Fryja/Wining Criteria.svg';
@@ -48,10 +49,18 @@ const GraceOfFryja = () => {
     };
 
 
+    /** for select tokens */
     const [selectedTokenId, setSelectedTokenId] = useState<number | undefined>(0);
     const handleSelectTokenId = (token_id) => {
         setSelectedTokenId(token_id);
     };
+
+    /** for select my lottery round */
+    const [selectedMylotteryId, setSelectedMylotteryId] = useState<number | undefined>(0);
+    const handleSelectMylotteryId = (lottery_id) => {
+        setSelectedMylotteryId(lottery_id);
+    };
+
 
     return (
         <>
@@ -125,6 +134,10 @@ const GraceOfFryja = () => {
                                                 <div className="buy-tickets-but">
                                                     <img src={buyTicketsButImg} style={{ width: "100%" }} />
                                                 </div>
+
+                                                <div className="text-center" style={{ color: '#dac374' }}>
+                                                    {"You got 0 tickets."}
+                                                </div>
                                             </div>
                                         </Col>
 
@@ -134,6 +147,8 @@ const GraceOfFryja = () => {
                                                     <div className="Comment-Box">
                                                         <p className="Next-Draw">Next Draw is on &nbsp;<span style={{ color: "#EEC98A" }}>Apr 18 2022, 11:39AM</span></p>
                                                         <p className="Comment">She is waiting for your prayers, buy tickets with caution. Good luck</p>
+
+                                                        <p className="Next-Draw"># Prize Pool &nbsp;<span style={{ color: "#EEC98A" }}>{"$15225"}</span></p>
                                                     </div>
                                                 </Col>
                                                 <Col sm="5">
@@ -184,7 +199,89 @@ const GraceOfFryja = () => {
 
                                 {/** tab for lottery histories */}
                                 <TabPanel value="2">
-                                    <p>{"If the digits on your tickets match the winning numbers in the correct order, you win a portion of the prize pool."}</p>
+                                    <Row>
+                                        <Col className="mt-2" lg="6">
+                                            <Row>
+                                                <Col sm="5">
+                                                    <img src={girl2Img} style={{ marginTop: "-30px", marginLeft: "-80px" }} />
+                                                </Col>
+                                                <Col sm="7">
+                                                    <div className="Comment-Box text-center">
+                                                        <p className="Next-Draw"><span style={{ color: "#EEC98A" }}>Welcome!</span></p>
+                                                        <p className="Comment">Choose date for grace of fryja.</p>
+                                                    </div>
+
+                                                    <div className="mt-2">
+                                                        <Dropdown onSelect={handleSelectMylotteryId} drop='down'>
+                                                            <Dropdown.Toggle className='token-id-toggle' id="token-id">
+                                                                {
+                                                                    <>
+                                                                        <span>#{data.MyLotteries[selectedMylotteryId].round_id}</span>
+                                                                        <span>{data.rounds[data.MyLotteries[selectedMylotteryId].round_id - 1].date}</span>
+                                                                    </>
+                                                                }
+                                                            </Dropdown.Toggle>
+                                                            <Dropdown.Menu className='token-id-menu'>
+                                                                {
+                                                                    data.MyLotteries.map((myLottery, index) => (
+                                                                        <Dropdown.Item eventKey={index} key={`MyLottery-id-menu-item-${index}`}>
+                                                                            <span>{data.rounds[myLottery.round_id - 1].date}</span>
+                                                                        </Dropdown.Item>
+                                                                    ))
+                                                                }
+                                                            </Dropdown.Menu>
+                                                        </Dropdown>
+                                                    </div>
+
+                                                    <div className='mt-2'>
+                                                        <div className="Comment-Box" style={{ background: "rgba(18,18,18,0.3)" }}>
+                                                            <div className="fryja-center" style={{ display: "flex", gap: "20px" }}>
+                                                                {
+                                                                    data.rounds[data.MyLotteries[selectedMylotteryId].round_id - 1].result.map((roundResult, index) => {
+                                                                        return (
+                                                                            <div className="lottery-small-number-card" key={index}>
+                                                                                <span className="lottery-number" style={{ fontFamily: "Arial", fontSize: "23px" }}>{roundResult}</span>
+                                                                            </div>
+                                                                        );
+                                                                    })
+                                                                }
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </Col>
+                                            </Row>
+                                        </Col>
+
+                                        <Col className="mt-2" lg="6">
+                                            <div className="Comment-Box" style={{ background: "rgba(18,18,18,0.3)" }}>
+                                                <Row>
+                                                    {
+                                                        data.MyLotteries[selectedMylotteryId].tickets.map((ticket, index) => {
+                                                            const flag = ticket.match > 2 ? "win" : "lost";
+
+                                                            return (
+                                                                <Col className="mt-3" sm="6" key={index}>
+                                                                    <div className={`ticket-box-${flag}`}>
+                                                                        <div className="ticket-medal ml-3">
+                                                                            <div className="ticket-medal-inner-box" >
+                                                                                <span>{ticket.match}</span>
+                                                                            </div>
+                                                                        </div>
+                                                                        <div className="text-center ml-3" >
+                                                                            <span className="ml-3">{ticket.number[0]}</span>
+                                                                            <span className="ml-3">{ticket.number[1]}</span>
+                                                                            <span className="ml-3">{ticket.number[2]}</span>
+                                                                            <span className="ml-3">{ticket.number[3]}</span>
+                                                                        </div>
+                                                                    </div>
+                                                                </Col>
+                                                            );
+                                                        })
+                                                    }
+                                                </Row>
+                                            </div>
+                                        </Col>
+                                    </Row>
                                 </TabPanel>
                             </TabContext>
                         </Box>

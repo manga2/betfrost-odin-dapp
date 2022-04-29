@@ -78,3 +78,96 @@ export const tokens = [
         url: "https://media.elrond.com/tokens/asset/VITAL-bc0917/logo.svg"
     },
 ];
+
+export const MyLotteries = [
+    {
+        round_id: 2,
+        tickets: [
+            {
+                match: 1,
+                number: [3, 1, 2, 4]
+            },
+            {
+                match: 0,
+                number: [1, 2, 3, 4]
+            },
+            {
+                match: 2,
+                number: [2, 5, 6, 7]
+            },
+            {
+                match: 4,
+                number: [3, 9, 1, 5]
+            },
+            {
+                match: 3,
+                number: [3, 9, 1, 8]
+            },
+            {
+                match: 1,
+                number: [3, 1, 2, 4]
+            },
+            {
+                match: 0,
+                number: [1, 2, 3, 4]
+            },
+            {
+                match: 2,
+                number: [2, 5, 6, 7]
+            },
+            {
+                match: 4,
+                number: [3, 9, 1, 5]
+            },
+            {
+                match: 3,
+                number: [3, 9, 1, 8]
+            },
+        ]
+    },
+    {
+        round_id: 5,
+        tickets: [
+            {
+                match: 2,
+                number: [1, 2, 3, 4]
+            },
+            {
+                match: 3,
+                number: [1, 2, 5, 4]
+            },
+            {
+                match: 0,
+                number: [2, 5, 6, 7]
+            },
+            {
+                match: 1,
+                number: [1, 3, 5, 7]
+            },
+            {
+                match: 0,
+                number: [3, 9, 1, 8]
+            },
+            {
+                match: 2,
+                number: [1, 2, 3, 4]
+            },
+            {
+                match: 3,
+                number: [1, 2, 5, 4]
+            },
+            {
+                match: 0,
+                number: [2, 5, 6, 7]
+            },
+            {
+                match: 1,
+                number: [1, 3, 5, 7]
+            },
+            {
+                match: 0,
+                number: [3, 9, 1, 8]
+            },
+        ]
+    }
+];
