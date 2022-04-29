@@ -130,8 +130,12 @@ const OdinsFate = () => {
 
           ids = ids.sort();
           const newFlipPacks = {};
+          const EGLD_ID = 'EGLD';
+          newFlipPacks[EGLD_ID] = flipPacks[EGLD_ID];
           for (const id of ids) {
-            newFlipPacks[id] = flipPacks[id];
+            if (id != EGLD_ID) {
+              newFlipPacks[id] = flipPacks[id];
+            }
           }
 
           console.log('flipPacks', newFlipPacks);

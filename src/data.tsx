@@ -49,4 +49,16 @@ export const TOKENS = {
         decimals: 8,
         url: "https://media.elrond.com/tokens/asset/VITAL-bc0917/logo.svg"
     },
+    "EFFORT-a13513": {
+        identifier: "EFFORT-a13513",
+        ticker: "EFFORT",
+        decimals: 18,
+        url: "https://media.elrond.com/tokens/asset/EFFORT-a13513/logo.svg"
+    },
+    "DICE-9749cc": {
+        identifier: "DICE-9749cc",
+        ticker: "DICE",
+        decimals: 6,
+        url: "https://media.elrond.com/tokens/asset/DICE-9749cc/logo.svg"
+    },
 };
