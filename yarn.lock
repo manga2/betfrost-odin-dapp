@@ -2208,6 +2208,11 @@
   dependencies:
     "@sinonjs/commons" "^1.7.0"
 
+"@soywod/pin-field@^0.2":
+  version "0.2.2"
+  resolved "https://registry.yarnpkg.com/@soywod/pin-field/-/pin-field-0.2.2.tgz#60f1e6be27db41d73e0406c20bce8f96c1a6a160"
+  integrity sha512-R0kpLXHn+Nbi3D4Eb0dHNQbx+yYWuvMWxy5hPEoVok+RfpUIpAMrhJQC4Qmg3FkkFrROPejO9VWyPGMID+Dv+Q==
+
 "@surma/rollup-plugin-off-main-thread@^1.1.1":
   version "1.4.2"
   resolved "https://registry.yarnpkg.com/@surma/rollup-plugin-off-main-thread/-/rollup-plugin-off-main-thread-1.4.2.tgz#e6786b6af5799f82f7ab3a82e53f6182d2b91a58"
@@ -11611,6 +11616,16 @@ react-modal@^3.14.4:
     prop-types "^15.7.2"
     react-lifecycles-compat "^3.0.0"
     warning "^4.0.3"
+
+react-pin-field@^2.0.0-beta.3:
+  version "2.0.0-beta.3"
+  resolved "https://registry.yarnpkg.com/react-pin-field/-/react-pin-field-2.0.0-beta.3.tgz#7d2767169e86e3da10feb7f176adfd13ae6ba150"
+  integrity sha512-fzOOaqG9ymUnxPYtL6O80Kix1+HhH15ghcOAfTa708vbtEtHBGHXIJ4jS0BCgCaMSlDgPYrifeW235TdjZUk/A==
+
+react-pin-input@^1.1.0:
+  version "1.1.0"
+  resolved "https://registry.yarnpkg.com/react-pin-input/-/react-pin-input-1.1.0.tgz#dd73b72820fe94c0353eedbd4c677a64d68d8bbd"
+  integrity sha512-3N9FoSRRlhNqBAc1eErLC8JmagBEgEvbhPYtfl1oq+4tzIanMnX65urHMSvHIn66z+YPrChdNQ+1HShyoga4gg==
 
 react-redux@7.2.6:
   version "7.2.6"

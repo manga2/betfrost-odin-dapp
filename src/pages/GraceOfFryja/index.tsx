@@ -5,6 +5,8 @@ import TabPanel from '@mui/lab/TabPanel';
 import Box from '@mui/material/Box';
 import Tab from '@mui/material/Tab';
 import { Container, Row, Col, Dropdown } from 'react-bootstrap';
+import Modal from 'react-modal';
+import ReactPinField from "react-pin-field";
 
 import './index.scss';
 import buyTicketImg from 'assets/img/Grace of Fryja/Buy Ticket.svg';
@@ -54,6 +56,68 @@ const GraceOfFryja = () => {
             setTicketAmount(amount);
         }
     };
+
+    /** for buy ticket modal */
+    const [showModal, setShowModal] = useState(false);
+    const handleBuyTicket = () => {
+        if (!(ticketAmount > 0 && ticketAmount < 10000)) {
+            console.log("invalid ticket amounts.");
+            return;
+        }
+
+        setShowModal(true);
+    };
+
+    const handleModalOk = () => {
+        setShowModal(false);
+    };
+
+    const handleModalCancel = () => {
+        setMyTickets([]);
+        setShowModal(false);
+    };
+
+    /** for generate tickets */
+    const pinfieldRef = useRef(null);
+
+    const [myTickets, setMyTickets] = useState<any>([]);
+    const handleGenerateMyTickets = (newTicket) => {
+        setMyTickets((prevTickets) => [
+            ...prevTickets,
+            newTicket
+        ]);
+    };
+
+    const handleAddMyTicket = () => {
+        const value1 = pinfieldRef.current.inputs[0].value;
+        const value2 = pinfieldRef.current.inputs[1].value;
+        const value3 = pinfieldRef.current.inputs[2].value;
+        const value4 = pinfieldRef.current.inputs[3].value;
+
+        if (value1 == '' || value2 == '' || value3 == '' || value4 == '') {
+            console.log("invalid number input");
+            return;
+        }
+
+        if (ticketAmount == myTickets.length) {
+            console.log("can't buy tickets more.");
+            return;
+        }
+
+        for (let i = 0; i < myTickets.length; i++) {
+            if (myTickets[i][0] == value1 && myTickets[i][1] == value2 && myTickets[i][2] == value3 && myTickets[i][3] == value4) {
+                console.log("duplicated number");
+                return;
+            }
+        }
+
+        handleGenerateMyTickets([value1, value2, value3, value4]);
+    };
+
+    const handleRemoveTicket = (index) => {
+        setMyTickets(myTickets.filter((_, i) => index !== i));
+    };
+
 
     return (
         <>
@@ -124,12 +188,13 @@ const GraceOfFryja = () => {
                                                     <span>Balance: 35 egld</span>
                                                     <span style={{ paddingLeft: "20px" }}>Cost: 2 egld</span>
                                                 </div>
-                                                <div className="buy-tickets-but">
+
+                                                <div className="buy-tickets-but" onClick={handleBuyTicket}>
                                                     <img src={buyTicketsButImg} style={{ width: "100%" }} />
                                                 </div>
 
                                                 <div className="text-center" style={{ color: '#dac374' }}>
-                                                    {"You got 0 tickets."}
+                                                    {"You got " + myTickets.length + " tickets."}
                                                 </div>
                                             </div>
                                         </Col>
@@ -349,6 +414,60 @@ const GraceOfFryja = () => {
                         </div>
                     </Container>
                 </div>
+
+
+                <Modal
+                    isOpen={showModal}
+                    ariaHideApp={false}
+                    className='modalcard box-shadow'
+                >
+                    <div className='modaldiv'>
+                        <h3 className='modalHeader'>Buy Your Tickets </h3>
+                    </div>
+                    <div className='modal-divider' />
+                    <p className="mt-1 mb-1">{"Generating: "} {ticketAmount - myTickets.length}</p>
+
+                    <div className="fryja-but mt-2">Generate Random</div>
+                    <div className="d-flex justify-content-center">
+                        <ReactPinField ref={pinfieldRef} className="pin-field" length={4} validate="0123456789" inputMode="numeric" />
+                    </div>
+
+                    <div className="d-flex justify-content-center">
+                        <div className="control-but text-center" onClick={handleAddMyTicket}>+</div>
+                    </div>
+
+                    <div className='modal-divider mt-2' />
+                    <p className="mt-1">{"Generated: "} {myTickets.length}</p>
+
+
+                    <div className="custom-scroll-bar" style={{ overflowY: "auto" }}>
+                        <Row className="text-center ml-0 mr-0">
+                            {
+                                myTickets.map((ticket, index) => {
+                                    return (
+                                        <div className="normal-ticket m-2" key={index} style={{ alignItems: "center" }} onClick={() => handleRemoveTicket(index)}>
+                                            <span>{ticket[0]}</span>
+                                            <span className="ml-1">{ticket[1]}</span>
+                                            <span className="ml-1">{ticket[2]}</span>
+                                            <span className="ml-1">{ticket[3]}</span>
+                                            <div className=" ml-2 close-but">X</div>
+                                        </div>
+                                    );
+                                })
+                            }
+                        </Row>
+                    </div>
+
+                    <Row className="mt-2">
+                        <Col xs="6">
+                            <div className="fryja-but mt-2" onClick={handleModalOk}>ok</div>
+                        </Col>
+                        <Col xs="6">
+                            <div className="fryja-but mt-2" onClick={handleModalCancel}>cancel</div>
+                        </Col>
+                    </Row>
+
+                </Modal>
             </div>
         </>
     );
