@@ -88,74 +88,85 @@ const GraceOfFryja = () => {
         loadContract();
     }, []); // [] makes useEffect run once
 
-    const [currentLotteryId, setCurrentLotteryId] = useState(0);
+    function parseLottery(value: any) {
+        const lottery_id = value.lottery_id.toNumber();
+        const status = value.status.name;
+        const start_timestamp = new Date(value.start_timestamp.toNumber() * 1000);
+        const end_timestamp = new Date(value.end_timestamp.toNumber() * 1000);
+        const treasury_fee = value.treasury_fee.toNumber() / 100;
+
+        const ticket_token_ids = value.ticket_token_ids.map(item => item.toString());
+        const ticket_token_amounts = value.ticket_token_amounts.map(item => item.toString());
+
+        const number_of_brackets = value.number_of_brackets.toNumber();
+        const reward_percentage_per_bracket = value.reward_percentage_per_bracket.map(item => item.toNumber());
+        const number_of_winners_per_bracket = value.number_of_winners_per_bracket.map(item => item.toNumber());
+
+        const number_of_bought_tickets = value.number_of_bought_tickets.toNumber();
+
+        const collected_tokens = value.collected_tokens.map(item => {
+            const token_identifier = item.token_identifier.toString();
+            const amount = convertWeiToEsdt(item.amount.toNumber(), TOKENS[token_identifier].decimals, FREYJA_DECIMALS_PRECISION);
+            return {
+                token_type: item.token_type.name,
+                token_identifier: token_identifier,
+                token_nonce: item.token_nonce.toNumber(),
+                amount: amount,
+            };
+        });
+
+        const final_number = value.final_number.toNumber();
+        const max_number_of_tickets_per_buy_or_claim = value.max_number_of_tickets_per_buy_or_claim.toNumber();
+
+        return {
+            lottery_id,
+            status,
+            start_timestamp,
+            end_timestamp,
+            treasury_fee,
+            ticket_token_ids,
+            ticket_token_amounts,
+            number_of_brackets,
+            reward_percentage_per_bracket,
+            number_of_winners_per_bracket,
+            number_of_bought_tickets,
+            collected_tokens,
+            final_number,
+            max_number_of_tickets_per_buy_or_claim,
+        };
+    }
+
+    const [currentLottery, setCurrentLottery] = React.useState<any>();
+    React.useEffect(() => {
+        (async () => {
+            if (!contractInteractor || hasPendingTransactions) return;
+            const interaction = contractInteractor.contract.methods.viewCurrentLottery();
+            const res = await contractInteractor.controller.query(interaction);
+
+            if (!res || !res.returnCode.isSuccess()) return;
+            const value = res.firstValue?.valueOf();
+
+            const currentLottery = parseLottery(value);
+
+            console.log('currentLottery', currentLottery);
+            setCurrentLottery(currentLottery);
+      })();
+    }, [contractInteractor, hasPendingTransactions]);
 
     const [lotteries, setLotteries] = React.useState<any>();
     React.useEffect(() => {
         (async () => {
             if (!contractInteractor || hasPendingTransactions) return;
-            const interaction = contractInteractor.contract.methods.viewLotteries();
+            const interaction = contractInteractor.contract.methods.viewClaimableLotteries();
             const res = await contractInteractor.controller.query(interaction);
 
             if (!res || !res.returnCode.isSuccess()) return;
             const items = res.firstValue?.valueOf();
-            console.log('viewLotteries', items);
 
-            const lotteries = {};
+            const lotteries = [];
             for (let i = 0; i < items.length; i++) {
                 const value = items[i];
-
-                const lottery_id = value.lottery_id.toNumber();
-                const status = value.status.name;
-                const start_timestamp = new Date(value.start_timestamp.toNumber() * 1000);
-                const end_timestamp = new Date(value.end_timestamp.toNumber() * 1000);
-                const treasury_fee = value.treasury_fee.toNumber() / 100;
-
-                const ticket_token_ids = value.ticket_token_ids.map(item => item.toString());
-                const ticket_token_amounts = value.ticket_token_amounts.map(item => item.toString());
-
-                const number_of_brackets = value.number_of_brackets.toNumber();
-                const reward_percentage_per_bracket = value.reward_percentage_per_bracket.map(item => item.toNumber());
-                const number_of_winners_per_bracket = value.number_of_winners_per_bracket.map(item => item.toNumber());
-
-                const number_of_bought_tickets = value.number_of_bought_tickets.toNumber();
-
-                const collected_tokens = value.collected_tokens.map(item => {
-                    const token_identifier = item.token_identifier.toString();
-                    const amount = convertWeiToEsdt(item.amount.toNumber(), TOKENS[token_identifier].decimals, FREYJA_DECIMALS_PRECISION);
-                    return {
-                        token_type: item.token_type.name,
-                        token_identifier: token_identifier,
-                        token_nonce: item.token_nonce.toNumber(),
-                        amount: amount,
-                    };
-                });
-            
-                const final_number = value.final_number.toNumber();
-                const max_number_of_tickets_per_buy_or_claim = value.max_number_of_tickets_per_buy_or_claim.toNumber();
-
-                lotteries[lottery_id] = {
-                    lottery_id,
-                    status,
-                    start_timestamp,
-                    end_timestamp,
-                    treasury_fee,
-                    ticket_token_ids,
-                    ticket_token_amounts,
-                    number_of_brackets,
-                    reward_percentage_per_bracket,
-                    number_of_winners_per_bracket,
-                    number_of_bought_tickets,
-                    collected_tokens,
-                    final_number,
-                    max_number_of_tickets_per_buy_or_claim,
-                };
-
-                // set last lottery id as currentLotteryId
-                if (i == items.length - 1) {
-                    setCurrentLotteryId(lottery_id);
-                    console.log('currentLotteryId', lottery_id);
-                }
+                lotteries.push(parseLottery(value));
             }
 
             console.log('lotteries', lotteries);
@@ -165,9 +176,8 @@ const GraceOfFryja = () => {
 
     const [paymentTokens, setPaymentTokens] = useState<any>();
     React.useEffect(() => {
-        if (!lotteries || lotteries.length == 0 || !currentLotteryId) return;
+        if (!currentLottery) return;
 
-        const currentLottery = lotteries[currentLotteryId];
         const tokens = [];
         for (let i = 0; i < currentLottery.ticket_token_ids.length; i++) {
             const token_id = currentLottery.ticket_token_ids[i];
@@ -179,7 +189,7 @@ const GraceOfFryja = () => {
 
         console.log('paymentTokens', tokens);
         setPaymentTokens(tokens);
-    }, [lotteries, currentLotteryId]);
+    }, [currentLottery]);
 
     /** for tab changes */
     const [tabValue, setTabValue] = useState('1');
@@ -215,9 +225,8 @@ const GraceOfFryja = () => {
             alert('Connect your wallet.');
             return;
         }
-        if (!paymentTokens || !lotteries || !currentLotteryId) return;
+        if (!paymentTokens || !currentLottery) return;
 
-        const currentLottery = lotteries[currentLotteryId];
         if (ticketCount >= 0 && ticketCount <= currentLottery.max_number_of_tickets_per_buy_or_claim) {
             if (balance >= ticketCount * paymentTokens[selectedTokenIndex].amount) {
                 setTicketCount(ticketCount);
@@ -235,12 +244,11 @@ const GraceOfFryja = () => {
             return;
         }
 
-        if (!paymentTokens || !lotteries || !currentLotteryId) {
+        if (!paymentTokens || !currentLottery) {
             alert('Loading is not finished.');
             return;
         }
 
-        const currentLottery = lotteries[currentLotteryId];
         if (ticketCount <= 0) {
             alert('Invalid number of tickets.');
             return;
@@ -324,7 +332,7 @@ const GraceOfFryja = () => {
                 <div className='fryja-first-part'>
                     <Container className='fryja-inner-container text-center' style={{ paddingTop: "100px" }}>
                         <img className="fryja-title" src={titleImg} alt="Grace of Fryja" />
-                        <CountDown />
+                        <CountDown targetTimestamp={currentLottery ? currentLottery.end_timestamp : 60000} />
                         <div style={{ display: "flex", justifyContent: "center", textAlign: "center" }}>
                             <a href="#buyTickets">
                                 <div className="buy-ticket-button" >
@@ -409,7 +417,7 @@ const GraceOfFryja = () => {
                                             <Row>
                                                 <Col sm='7'>
                                                     <div className="Comment-Box">
-                                                        <p className="Next-Draw">Next Draw is on &nbsp;<span style={{ color: "#EEC98A" }}>{currentLotteryId && lotteries ? convertTimestampToDateTime(lotteries[currentLotteryId].end_timestamp) : '-'}</span></p>
+                                                        <p className="Next-Draw">Next Draw is on &nbsp;<span style={{ color: "#EEC98A" }}>{currentLottery ? convertTimestampToDateTime(currentLottery.end_timestamp) : '-'}</span></p>
                                                         <p className="Comment">She is waiting for your prayers, buy tickets with caution. Good luck</p>
 
                                                         <p className="Next-Draw"># Prize Pool &nbsp;<span style={{ color: "#EEC98A" }}>{"$15225"}</span></p>

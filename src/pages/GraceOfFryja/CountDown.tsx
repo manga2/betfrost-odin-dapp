@@ -4,12 +4,6 @@ import Countdown from 'react-countdown';
 import { paddingTwoDigits } from '../../utils/convert';
 
 const CountDown = (props) => {
-  const [leftTime, setTargetTimestamp] = React.useState<number>(600000000);
-  React.useEffect(() => {
-    setTargetTimestamp(props.saleStatus ? props.saleStatus.leftTimestamp - Date.now() : 600000000);
-  }, [props.saleStatus]);
-
-  
   interface Props {
     days: number;
     hours: number;
@@ -27,7 +21,7 @@ const CountDown = (props) => {
   };
 
   return (
-    <Countdown date={Date.now() + leftTime} renderer={renderer} />
+    <Countdown date={new Date(props.targetTimestamp)} renderer={renderer} />
   );
 };
 

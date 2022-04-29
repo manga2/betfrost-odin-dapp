@@ -72,7 +72,17 @@
             "docs": [
                 ""
             ],
-            "name": "viewLotteries",
+            "name": "viewCurrentLottery",
+            "mutability": "readonly",
+            "inputs": [],
+            "outputs": [
+                {
+                    "type": "Lottery"
+                }
+            ]
+        },
+        {
+            "name": "viewClaimableLotteries",
             "mutability": "readonly",
             "inputs": [],
             "outputs": [
@@ -83,6 +93,9 @@
             ]
         },
         {
+            "docs": [
+                ""
+            ],
             "name": "viewTickets",
             "mutability": "readonly",
             "inputs": [
