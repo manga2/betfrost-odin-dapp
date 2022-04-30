@@ -14,8 +14,8 @@ import {
     useGetAccountInfo,
     useGetNetworkConfig,
     useGetPendingTransactions,
-  } from '@elrondnetwork/dapp-core';
-  import {
+} from '@elrondnetwork/dapp-core';
+import {
     Address,
     AbiRegistry,
     SmartContractAbi,
@@ -30,13 +30,14 @@ import {
     OptionalValue,
     U32Value,
     AddressValue,
-  } from '@elrondnetwork/erdjs';
+} from '@elrondnetwork/erdjs';
 
 import './index.scss';
 import buyTicketImg from 'assets/img/Grace of Freyja/Buy Ticket.svg';
 import buyTicketsButImg from 'assets/img/Grace of Freyja/Buy Tickets But.svg';
 import girl1Img from 'assets/img/Grace of Freyja/girl1.png';
 import girl2Img from 'assets/img/Grace of Freyja/girl2.png';
+import moneyImg from 'assets/img/Grace of Freyja/money.png';
 import titleImg from 'assets/img/Grace of Freyja/title.svg';
 import whowill from 'assets/img/Grace of Freyja/whowill.svg';
 import winingCreteria from 'assets/img/Grace of Freyja/Wining Criteria.svg';
@@ -72,6 +73,17 @@ function parseTicketNumber(ticketNumber: number, number_of_brackets: number) {
         digits.push(parseInt(s[i]));
     }
     return digits;
+}
+
+const usedIndexes = new Set();
+function getUniqueRandomNumber(max) {
+    const newNumber = Math.floor(Math.random() * max);
+    if (usedIndexes.has(newNumber)) {
+        return this.getUniqueRandomNumber(max);
+    } else {
+        usedIndexes.add(newNumber);
+        return newNumber;
+    }
 }
 
 const GraceOfFreyja = () => {
@@ -171,7 +183,7 @@ const GraceOfFreyja = () => {
 
             console.log('currentLottery', currentLottery);
             setCurrentLottery(currentLottery);
-      })();
+        })();
     }, [contractInteractor, hasPendingTransactions]);
 
     /** for finished rounds */
@@ -205,7 +217,7 @@ const GraceOfFreyja = () => {
 
             console.log('lotteries', lotteries);
             setLotteries(lotteries);
-      })();
+        })();
     }, [contractInteractor, hasPendingTransactions]);
 
     const [paymentTokens, setPaymentTokens] = useState<any>();
@@ -265,7 +277,7 @@ const GraceOfFreyja = () => {
             const oldTickets = [];
             for (let i = 0; i < items.length; i++) {
                 const value = items[i];
-                
+
                 const number = parseTicketNumber(value.number.toNumber(), lottery.number_of_brackets);
                 const claimed = value.claimed;
                 const win_bracket = value.win_bracket.toNumber();
@@ -283,11 +295,14 @@ const GraceOfFreyja = () => {
 
             console.log('oldTickets', oldTickets);
             setOldTickets(oldTickets);
-      })();
+        })();
     }, [contractInteractor, address, lotteries, selectedMylotteryId]);
 
 
     /** for number of tickets */
+    const maxTicketCountPerOrder = 100;
+    const maxTicketCountPerRound = 1000;
+
     const [ticketCount, setTicketCount] = useState<number | undefined>(0);
     const handleSetTicketCount = (ticketCount) => {
         if (!address) {
@@ -303,6 +318,10 @@ const GraceOfFreyja = () => {
                 alert('Not enough balance.');
             }
         }
+    };
+
+    const handleMax = () => {
+        setTicketCount(maxTicketCountPerOrder);
     };
 
     /** for buy ticket modal */
@@ -328,58 +347,43 @@ const GraceOfFreyja = () => {
             alert('Not enough balance.');
             return;
         } else {
+            for (let i = 0; i < ticketCount; i++) {
+                handleGenerateCurrentOrderTickets([]);
+            }
             setShowModal(true);
         }
     };
 
     const handleModalOk = () => {
+
         setShowModal(false);
     };
 
     const handleModalCancel = () => {
-        setMyTickets([]);
+        setCurrentOrderTickets([]);
         setShowModal(false);
     };
 
     /** for generate tickets */
-    const pinfieldRef = useRef(null);
-
-    const [myTickets, setMyTickets] = useState<any>([]);
-    const handleGenerateMyTickets = (newTicket) => {
-        setMyTickets((prevTickets) => [
+    const pinfieldsRef = useRef([]);
+    const [CurrentOrderTickets, setCurrentOrderTickets] = useState<any>([]);
+    const handleGenerateCurrentOrderTickets = (newTicket) => {
+        setCurrentOrderTickets((prevTickets) => [
             ...prevTickets,
             newTicket
         ]);
     };
 
-    const handleAddMyTicket = () => {
-        const value1 = pinfieldRef.current.inputs[0].value;
-        const value2 = pinfieldRef.current.inputs[1].value;
-        const value3 = pinfieldRef.current.inputs[2].value;
-        const value4 = pinfieldRef.current.inputs[3].value;
+    const handleGenerateRandom = () => {
+        const maxN = 9999;
 
-        if (value1 == '' || value2 == '' || value3 == '' || value4 == '') {
-            console.log("invalid number input");
-            return;
+        for (let i = 0; i < ticketCount; i++) {
+            const ranN = getUniqueRandomNumber(maxN);
+            pinfieldsRef.current[i].inputs[0].value = Math.floor(ranN / 1000);
+            pinfieldsRef.current[i].inputs[1].value = Math.floor(ranN / 100 % 10);
+            pinfieldsRef.current[i].inputs[2].value = Math.floor(ranN % 100 / 10);
+            pinfieldsRef.current[i].inputs[3].value = Math.floor(ranN % 10);
         }
-
-        if (ticketCount == myTickets.length) {
-            console.log("can't buy tickets more.");
-            return;
-        }
-
-        for (let i = 0; i < myTickets.length; i++) {
-            if (myTickets[i][0] == value1 && myTickets[i][1] == value2 && myTickets[i][2] == value3 && myTickets[i][3] == value4) {
-                console.log("duplicated number");
-                return;
-            }
-        }
-
-        handleGenerateMyTickets([value1, value2, value3, value4]);
-    };
-
-    const handleRemoveTicket = (index) => {
-        setMyTickets(myTickets.filter((_, i) => index !== i));
     };
 
     //////////////////////////////////////////////////////////////////////////////////////////////////
@@ -409,6 +413,16 @@ const GraceOfFreyja = () => {
                                 </div>
                             </a>
                         </div>
+
+                        <div className='freyja-center mt-5'>
+                            <div className="prize-pool-box">
+                                <span style={{ fontSize: "20px", color: "white" }}>PRIZE POOL</span>
+                                <span className='mt-2' style={{ fontFamily: "Segoe UI", fontWeight: "600", fontSize: "16px" }}>134.23 EGLD</span>
+                                <span className='mt-1' style={{ fontFamily: "Segoe UI", fontWeight: "600", fontSize: "16px" }}>1234314.234 MEX</span>
+                                <span className='mt-1' style={{ fontFamily: "Segoe UI", fontWeight: "600", fontSize: "16px" }}>123424 LKMEX</span>
+                                <span className='mt-1 mb-3' style={{ fontFamily: "Segoe UI", fontWeight: "600", fontSize: "16px" }}>Total: $ 154344</span>
+                            </div>
+                        </div>
                     </Container>
                 </div>
 
@@ -429,6 +443,7 @@ const GraceOfFreyja = () => {
                                     <Row>
                                         <Col md="5" style={{ marginTop: "20px" }}>
                                             <div className="Buy-Ticket-Box" >
+                                                <span style={{ fontSize: "12px", color: "gray" }}>Payment Token</span>
                                                 <Dropdown onSelect={handleSelectTokenId} drop='down'>
                                                     <Dropdown.Toggle className='token-id-toggle' id="token-id">
                                                         {
@@ -450,7 +465,14 @@ const GraceOfFreyja = () => {
                                                     </Dropdown.Menu>
                                                 </Dropdown>
 
-                                                <input className="custom-input" type='number' placeholder='Number of Tickets' value={ticketCount ? ticketCount : ''} onChange={(e) => handleSetTicketCount(Number(e.target.value))} />
+                                                <span style={{ fontSize: "12px", color: "gray" }}>Number of Tickets</span>
+                                                <div className="d-flex" >
+                                                    <input className="custom-input" type='number' value={ticketCount ? ticketCount : ''} onChange={(e) => handleSetTicketCount(Number(e.target.value))} />
+
+                                                    <div className="max-but ml-2" onClick={handleMax}>Max</div>
+                                                </div>
+
+
 
                                                 <div className="freyja-center">
                                                     <div style={{ justifyContent: "space-between", display: "flex", width: "100px" }}>
@@ -459,29 +481,42 @@ const GraceOfFreyja = () => {
                                                     </div>
 
                                                 </div>
-                                                <div className="text-center" style={{ color: "rgba(165, 165, 165, 1)", fontSize: "12x" }}>
-                                                    <span>Balance: {address && paymentTokens ? balance : '-'}
-                                                        {' '}
-                                                        {address && paymentTokens && paymentTokens[selectedTokenIndex].ticker}
-                                                    </span>
-                                                    <span style={{ paddingLeft: "20px" }}>
-                                                        Ticket Price:{' '}
-                                                        {paymentTokens ? paymentTokens[selectedTokenIndex].amount : '-'}
-                                                        {' '}
-                                                        {paymentTokens && paymentTokens[selectedTokenIndex].ticker}
-                                                        {' ($'}
-                                                        {paymentTokens ? paymentTokens[selectedTokenIndex].ticket_price_in_usd : '-'}
-                                                        {')'}
-                                                    </span>
-                                                    <span style={{ paddingLeft: "20px" }}>
-                                                        Total Cost:{' '}
-                                                        {paymentTokens ? paymentTokens[selectedTokenIndex].amount * ticketCount : '-'}
-                                                        {' '}
-                                                        {paymentTokens && paymentTokens[selectedTokenIndex].ticker}
-                                                        {' ($'}
-                                                        {paymentTokens ? precisionfloor(paymentTokens[selectedTokenIndex].ticket_price_in_usd * ticketCount) : '-'}
-                                                        {')'}
-                                                    </span>
+
+                                                <div>
+                                                    <div style={{ color: "rgba(165, 165, 165, 1)", fontSize: "12x" }}>
+                                                        <div style={{ display: "flex", justifyContent: "space-between" }}>
+                                                            <span>Balance:</span>
+                                                            <span>
+                                                                {address && paymentTokens ? balance : '-'}
+                                                                {' '}
+                                                                {address && paymentTokens && paymentTokens[selectedTokenIndex].ticker}
+                                                            </span>
+                                                        </div>
+
+                                                        <div style={{ display: "flex", justifyContent: "space-between" }}>
+                                                            <span>Ticket Price:</span>
+                                                            <span>
+                                                                {paymentTokens ? paymentTokens[selectedTokenIndex].amount : '-'}
+                                                                {' '}
+                                                                {paymentTokens && paymentTokens[selectedTokenIndex].ticker}
+                                                                {' ($'}
+                                                                {paymentTokens ? paymentTokens[selectedTokenIndex].ticket_price_in_usd : '-'}
+                                                                {')'}
+                                                            </span>
+                                                        </div>
+
+                                                        <div style={{ display: "flex", justifyContent: "space-between" }}>
+                                                            <span>Total Cost:</span>
+                                                            <span>
+                                                                {paymentTokens ? paymentTokens[selectedTokenIndex].amount * ticketCount : '-'}
+                                                                {' '}
+                                                                {paymentTokens && paymentTokens[selectedTokenIndex].ticker}
+                                                                {' ($'}
+                                                                {paymentTokens ? precisionfloor(paymentTokens[selectedTokenIndex].ticket_price_in_usd * ticketCount) : '-'}
+                                                                {')'}
+                                                            </span>
+                                                        </div>
+                                                    </div>
                                                 </div>
 
                                                 <div className="buy-tickets-but" onClick={handleBuyTicket}>
@@ -489,7 +524,7 @@ const GraceOfFreyja = () => {
                                                 </div>
 
                                                 <div className="text-center" style={{ color: '#dac374' }}>
-                                                    {"You got " + myTickets.length + " tickets."}
+                                                    {"You got " + CurrentOrderTickets.length + " tickets."}
                                                 </div>
                                             </div>
                                         </Col>
@@ -501,7 +536,21 @@ const GraceOfFreyja = () => {
                                                         <p className="Next-Draw">Next Draw is on &nbsp;<span style={{ color: "#EEC98A" }}>{currentLottery ? convertTimestampToDateTime(currentLottery.end_timestamp) : '-'}</span></p>
                                                         <p className="Comment">She is waiting for your prayers, buy tickets with caution. Good luck</p>
 
-                                                        <p className="Next-Draw"># Prize Pool &nbsp;<span style={{ color: "#EEC98A" }}>{'$'}{currentLottery ? currentLottery.total_value_in_usd : '-'}</span></p>
+                                                        <Row>
+                                                            <Col xs="6">
+                                                                <span className="Next-Draw"># Prize Pool</span>
+                                                                <div className="d-flex" style={{ flexDirection: "column", color: "white" }}>
+                                                                    <span className='mt-2 Comment'>134.23 EGLD</span>
+                                                                    <span className='mt-1 Comment'>1234314.234 MEX</span>
+                                                                    <span className='mt-1 Comment'>123424 LKMEX</span>
+                                                                    <span className='mt-1 mb-3' style={{ color: "#EEC98A" }}>Total: {'$'}{currentLottery ? currentLottery.total_value_in_usd : '-'}</span>
+
+                                                                </div>
+                                                            </Col>
+                                                            <Col xs="6" style={{ display: "flex", alignItems: "center" }}>
+                                                                <img className="w-100" src={moneyImg} alt="coin money" />
+                                                            </Col>
+                                                        </Row>
                                                     </div>
                                                 </Col>
                                                 <Col sm="5">
@@ -569,11 +618,11 @@ const GraceOfFreyja = () => {
                                                         <Dropdown onSelect={handleSelectMylotteryId} drop='down'>
                                                             <Dropdown.Toggle className='token-id-toggle' id="token-id">
                                                                 {
-                                                                    lotteries ? 
-                                                                    (<>
-                                                                        <span>#{lotteries[selectedMylotteryId].lottery_id}</span>
-                                                                        <span>{convertTimestampToDateTime(lotteries[selectedMylotteryId].end_timestamp)}</span>
-                                                                    </>) : '-'
+                                                                    lotteries ?
+                                                                        (<>
+                                                                            <span>#{lotteries[selectedMylotteryId].lottery_id}</span>
+                                                                            <span>{convertTimestampToDateTime(lotteries[selectedMylotteryId].end_timestamp)}</span>
+                                                                        </>) : '-'
                                                                 }
                                                             </Dropdown.Toggle>
                                                             <Dropdown.Menu className='token-id-menu'>
@@ -601,6 +650,12 @@ const GraceOfFreyja = () => {
                                                                         );
                                                                     })
                                                                 }
+                                                            </div>
+
+                                                            <div className="freyja-center mt-5">
+                                                                <div className="claim-but">
+                                                                    Claim
+                                                                </div>
                                                             </div>
                                                         </div>
                                                     </div>
@@ -718,50 +773,40 @@ const GraceOfFreyja = () => {
                     ariaHideApp={false}
                     className='modalcard box-shadow'
                 >
+                    <div className="right">
+                        <div className="close-but float-right" onClick={handleModalCancel}>X</div>
+                    </div>
                     <div className='modaldiv'>
                         <h3 className='modalHeader'>Buy Your Tickets </h3>
                     </div>
                     <div className='modal-divider' />
-                    <p className="mt-1 mb-1">{"Generating: "} {ticketCount - myTickets.length}</p>
-
-                    <div className="freyja-but mt-2">Generate Random</div>
-                    <div className="d-flex justify-content-center">
-                        <ReactPinField ref={pinfieldRef} className="pin-field" length={4} validate="0123456789" inputMode="numeric" />
-                    </div>
-
-                    <div className="d-flex justify-content-center">
-                        <div className="control-but text-center" onClick={handleAddMyTicket}>+</div>
-                    </div>
-
-                    <div className='modal-divider mt-2' />
-                    <p className="mt-1">{"Generated: "} {myTickets.length}</p>
-
+                    <p className="mt-2">{"Tickets: "} {ticketCount}</p>
 
                     <div className="custom-scroll-bar" style={{ overflowY: "auto" }}>
                         <Row className="text-center ml-0 mr-0">
                             {
-                                myTickets.map((ticket, index) => {
+                                CurrentOrderTickets.map((ticket, index) => {
                                     return (
-                                        <div className="normal-ticket m-2" key={index} style={{ alignItems: "center" }} onClick={() => handleRemoveTicket(index)}>
-                                            <span>{ticket[0]}</span>
-                                            <span className="ml-1">{ticket[1]}</span>
-                                            <span className="ml-1">{ticket[2]}</span>
-                                            <span className="ml-1">{ticket[3]}</span>
-                                            <div className=" ml-2 close-but">X</div>
-                                        </div>
+                                        <Col xs="12" sm="6" key={index}>
+                                            <div className="text-left"><span>#{index + 1}</span></div>
+                                            <div className="d-flex justify-content-center" >
+                                                <ReactPinField ref={el => (pinfieldsRef.current = [...pinfieldsRef.current, el])} className="pin-field" length={4} validate="0123456789" inputMode="numeric" />
+                                            </div>
+                                        </Col>
                                     );
                                 })
                             }
                         </Row>
                     </div>
 
-                    <Row className="mt-2">
+                    <Row className="mt-5">
                         <Col xs="6">
-                            <div className="freyja-but mt-2" onClick={handleModalOk}>ok</div>
+                            <div className="freyja-but mt-2" onClick={handleGenerateRandom}>Generate Random</div>
                         </Col>
                         <Col xs="6">
-                            <div className="freyja-but mt-2" onClick={handleModalCancel}>cancel</div>
+                            <div className="freyja-but mt-2" onClick={handleModalOk}>Confim and Buy</div>
                         </Col>
+
                     </Row>
 
                 </Modal>
