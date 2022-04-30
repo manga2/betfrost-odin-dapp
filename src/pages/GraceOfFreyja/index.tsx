@@ -266,6 +266,7 @@ const GraceOfFreyja = () => {
     };
 
     const [oldTickets, setOldTickets] = React.useState<any>();
+    const [oldAccount, setOldAccount] = React.useState<any>();
     React.useEffect(() => {
         (async () => {
             if (!contractInteractor || !lotteries || !address) return;
@@ -281,6 +282,15 @@ const GraceOfFreyja = () => {
             if (!res || !res.returnCode.isSuccess()) return;
             const items = res.firstValue?.valueOf();
 
+            const number_of_win_brackets = {
+                1: 0,
+                2: 0,
+                3: 0,
+                4: 0,
+            };
+            let total_number_of_win_brackets = 0;
+            let total_win_percentage = 0;
+
             const oldTickets = [];
             for (let i = 0; i < items.length; i++) {
                 const value = items[i];
@@ -289,6 +299,12 @@ const GraceOfFreyja = () => {
                 const claimed = value.claimed;
                 const win_bracket = value.win_bracket.toNumber();
                 const win_percentage = value.win_percentage.toNumber() / 1000000;
+
+                if (win_bracket > 0 && !claimed) {
+                    number_of_win_brackets[win_bracket] += 1;
+                    total_number_of_win_brackets += 1;
+                    total_win_percentage += win_percentage;
+                }
 
                 const result = {
                     number,
@@ -302,6 +318,16 @@ const GraceOfFreyja = () => {
 
             console.log('oldTickets', oldTickets);
             setOldTickets(oldTickets);
+
+            const total_value_in_usd = precisionfloor(lottery.total_value_in_usd * total_win_percentage / 100, FREYJA_DECIMALS_PRECISION);
+            const oldAccount = {
+                number_of_win_brackets,
+                total_number_of_win_brackets,
+                total_win_percentage,
+                total_value_in_usd,
+            };
+            console.log(oldAccount);
+            setOldAccount(oldAccount);
         })();
     }, [contractInteractor, address, lotteries, selectedMylotteryId]);
 
@@ -466,6 +492,41 @@ const GraceOfFreyja = () => {
         })();
     };
 
+    function claimTickets() {
+        if (!address) {
+            alert('Connect your wallet.');
+            return;
+        }
+
+        if (!paymentTokens || !currentLottery || !oldAccount) {
+            alert('Loading is not finished.');
+            return;
+        }
+
+        if (oldAccount.total_number_of_win_brackets == 0) {
+            alert('There are no claimable ticket.');
+            return;
+        }
+
+        (async() => {
+            const args: TypedValue[] = [
+                new U32Value(lotteries[selectedMylotteryId].lottery_id),	// lottery_id
+            ];
+        
+            const { argumentsString } = new ArgSerializer().valuesToString(args);
+            const data = `claimTickets@${argumentsString}`;
+        
+            const tx = {
+                receiver: FREYJA_CONTRACT_ADDRESS,
+                data: data,
+                gasLimit: new GasLimit(3000000 * oldAccount.total_number_of_win_brackets),
+            };
+    
+            await refreshAccount();
+            await sendTransactions({transactions: tx});
+        })();
+    }
+
     const handleModalCancel = () => {
         setCurrentOrderTickets([]);
         setShowModal(false);
@@ -481,7 +542,6 @@ const GraceOfFreyja = () => {
             setBalance(balance);
         })();
     }, [paymentTokens, selectedTokenIndex, hasPendingTransactions, address]);
-
     //////////////////////////////////////////////////////////////////////////////////////////////////
 
     const [isRoundDetailOpened, setCollapseOpen] = useState<boolean>(false);
@@ -782,9 +842,15 @@ const GraceOfFreyja = () => {
                                                                     })
                                                                 }
                                                             </div>
-
+                                                            <div className="mt-4" style={{color: 'white'}}>
+                                                                <div>Match 1: {oldAccount ? oldAccount.number_of_win_brackets[1] : '-'}</div>
+                                                                <div>Match 2: {oldAccount ? oldAccount.number_of_win_brackets[2] : '-'}</div>
+                                                                <div>Match 3: {oldAccount ? oldAccount.number_of_win_brackets[3] : '-'}</div>
+                                                                <div>Match 4: {oldAccount ? oldAccount.number_of_win_brackets[4] : '-'}</div>
+                                                                <div>Total Reward: {oldAccount ? `$${oldAccount.total_value_in_usd}`: '-'}</div>
+                                                            </div>
                                                             <div className="freyja-center mt-5">
-                                                                <div className="claim-but">
+                                                                <div className="claim-but" onClick={claimTickets}>
                                                                     Claim Rewards
                                                                 </div>
                                                             </div>
@@ -807,7 +873,23 @@ const GraceOfFreyja = () => {
 
                                                                 return (
                                                                     <Col className="mt-4" sm="6" key={index}>
-                                                                        <Badge color={ticket.claimed ? "primary" : "secondary"} badgeContent={ticket.claimed ? "Claimable" : " Claimed"} >
+                                                                        {ticket.win_bracket > 0 ? (
+                                                                            <Badge color={ticket.claimed ? "primary" : "secondary"} badgeContent={ticket.claimed ? "Claimed" : "Claimable"} >
+                                                                                <div className={`ticket-box-${flag}`}>
+                                                                                    <div className="ticket-medal">
+                                                                                        <div className="ticket-medal-inner-box" >
+                                                                                            <span>{ticket.win_bracket}</span>
+                                                                                        </div>
+                                                                                    </div>
+                                                                                    <div className="text-center ml-3" >
+                                                                                        <span className="ml-2">{ticket.number[0]}</span>
+                                                                                        <span className="ml-2">{ticket.number[1]}</span>
+                                                                                        <span className="ml-2">{ticket.number[2]}</span>
+                                                                                        <span className="ml-2">{ticket.number[3]}</span>
+                                                                                    </div>
+                                                                                </div>
+                                                                            </Badge>
+                                                                        ) : (
                                                                             <div className={`ticket-box-${flag}`}>
                                                                                 <div className="ticket-medal">
                                                                                     <div className="ticket-medal-inner-box" >
@@ -820,9 +902,8 @@ const GraceOfFreyja = () => {
                                                                                     <span className="ml-2">{ticket.number[2]}</span>
                                                                                     <span className="ml-2">{ticket.number[3]}</span>
                                                                                 </div>
-
                                                                             </div>
-                                                                        </Badge>
+                                                                        )}
                                                                     </Col>
                                                                 );
                                                             })
