@@ -52,6 +52,7 @@ import {
     convertTimestampToDateTime,
     getCurrentTimestamp,
     convertWeiToEgld,
+    precisionfloor,
 } from 'utils';
 import {
     FREYJA_CONTRACT_ADDRESS,
@@ -115,14 +116,20 @@ const GraceOfFreyja = () => {
 
         const number_of_bought_tickets = value.number_of_bought_tickets.toNumber();
 
+        let total_value_in_usd = 0;
         const collected_tokens = value.collected_tokens.map(item => {
             const token_identifier = item.token_identifier.toString();
             const amount = convertWeiToEsdt(item.amount.toNumber(), TOKENS[token_identifier].decimals, FREYJA_DECIMALS_PRECISION);
+            const price_in_usd = amount * TOKENS[token_identifier].unit_price_in_usd;
+
+            total_value_in_usd += price_in_usd;
+
             return {
                 token_type: item.token_type.name,
                 token_identifier: token_identifier,
                 token_nonce: item.token_nonce.toNumber(),
                 amount: amount,
+                price_in_usd: price_in_usd,
             };
         });
 
@@ -144,6 +151,8 @@ const GraceOfFreyja = () => {
             collected_tokens,
             final_number,
             max_number_of_tickets_per_buy_or_claim,
+
+            total_value_in_usd,
         };
     }
 
@@ -206,9 +215,12 @@ const GraceOfFreyja = () => {
         const tokens = [];
         for (let i = 0; i < currentLottery.ticket_token_ids.length; i++) {
             const token_id = currentLottery.ticket_token_ids[i];
+            const amount = convertWeiToEsdt(currentLottery.ticket_token_amounts[i], TOKENS[token_id].decimals, FREYJA_DECIMALS_PRECISION);
+            const ticket_price_in_usd = precisionfloor(amount * TOKENS[token_id].unit_price_in_usd, FREYJA_DECIMALS_PRECISION);
             tokens.push({
                 ...TOKENS[token_id],
-                amount: convertWeiToEsdt(currentLottery.ticket_token_amounts[i], TOKENS[token_id].decimals, FREYJA_DECIMALS_PRECISION),
+                amount: amount,
+                ticket_price_in_usd: ticket_price_in_usd,
             });
         }
 
@@ -453,10 +465,22 @@ const GraceOfFreyja = () => {
                                                         {address && paymentTokens && paymentTokens[selectedTokenIndex].ticker}
                                                     </span>
                                                     <span style={{ paddingLeft: "20px" }}>
-                                                        Cost:{' '}
+                                                        Ticket Price:{' '}
                                                         {paymentTokens ? paymentTokens[selectedTokenIndex].amount : '-'}
                                                         {' '}
                                                         {paymentTokens && paymentTokens[selectedTokenIndex].ticker}
+                                                        {' ($'}
+                                                        {paymentTokens ? paymentTokens[selectedTokenIndex].ticket_price_in_usd : '-'}
+                                                        {')'}
+                                                    </span>
+                                                    <span style={{ paddingLeft: "20px" }}>
+                                                        Total Cost:{' '}
+                                                        {paymentTokens ? paymentTokens[selectedTokenIndex].amount * ticketCount : '-'}
+                                                        {' '}
+                                                        {paymentTokens && paymentTokens[selectedTokenIndex].ticker}
+                                                        {' ($'}
+                                                        {paymentTokens ? precisionfloor(paymentTokens[selectedTokenIndex].ticket_price_in_usd * ticketCount) : '-'}
+                                                        {')'}
                                                     </span>
                                                 </div>
 
@@ -477,7 +501,7 @@ const GraceOfFreyja = () => {
                                                         <p className="Next-Draw">Next Draw is on &nbsp;<span style={{ color: "#EEC98A" }}>{currentLottery ? convertTimestampToDateTime(currentLottery.end_timestamp) : '-'}</span></p>
                                                         <p className="Comment">She is waiting for your prayers, buy tickets with caution. Good luck</p>
 
-                                                        <p className="Next-Draw"># Prize Pool &nbsp;<span style={{ color: "#EEC98A" }}>{"$15225"}</span></p>
+                                                        <p className="Next-Draw"># Prize Pool &nbsp;<span style={{ color: "#EEC98A" }}>{'$'}{currentLottery ? currentLottery.total_value_in_usd : '-'}</span></p>
                                                     </div>
                                                 </Col>
                                                 <Col sm="5">
