@@ -49,6 +49,8 @@ import {
     convertEsdtToWei,
     IContractInteractor,
     convertTimestampToDateTime,
+    getCurrentTimestamp,
+    convertWeiToEgld,
 } from 'utils';
 import {
     FREYJA_CONTRACT_ADDRESS,
@@ -60,7 +62,15 @@ import {
     TOKENS
 } from 'data';
 import * as lotteryData from './lotteryData';
-import { convertWeiToEgld } from '../../utils/convert';
+
+function parseFinalNumber(finalNumber: number, number_of_brackets: number) {
+    const digits = [];
+    const s = String(finalNumber).padStart(number_of_brackets, '0').split('').reverse().join('');
+    for (let i = 0; i < number_of_brackets; i++) {
+        digits.push(parseInt(s[i]));
+    }
+    return digits;
+}
 
 const GraceOfFryja = () => {
     //
@@ -115,7 +125,7 @@ const GraceOfFryja = () => {
             };
         });
 
-        const final_number = value.final_number.toNumber();
+        const final_number = parseFinalNumber(value.final_number.toNumber(), number_of_brackets);
         const max_number_of_tickets_per_buy_or_claim = value.max_number_of_tickets_per_buy_or_claim.toNumber();
 
         return {
@@ -145,6 +155,7 @@ const GraceOfFryja = () => {
 
             if (!res || !res.returnCode.isSuccess()) return;
             const value = res.firstValue?.valueOf();
+            console.log('currentLottery value', value);
 
             const currentLottery = parseLottery(value);
 
@@ -152,6 +163,15 @@ const GraceOfFryja = () => {
             setCurrentLottery(currentLottery);
       })();
     }, [contractInteractor, hasPendingTransactions]);
+
+    /** for finished rounds */
+    const [selectedClaimableRoundIndex, setSelectedClaimableRoundIndex] = useState<number>(0); // for finished rounds
+    const handlesetSelectedClaimableRoundIndex = (curID) => {
+        if (!lotteries || lotteries.length == 0) return;
+        if (curID >= 0 && curID < lotteries.length) {
+            setSelectedClaimableRoundIndex(curID);
+        }
+    };
 
     const [lotteries, setLotteries] = React.useState<any>();
     React.useEffect(() => {
@@ -167,6 +187,10 @@ const GraceOfFryja = () => {
             for (let i = 0; i < items.length; i++) {
                 const value = items[i];
                 lotteries.push(parseLottery(value));
+            }
+
+            if (items.length > 0) {
+                setSelectedClaimableRoundIndex(items.length - 1);
             }
 
             console.log('lotteries', lotteries);
@@ -195,14 +219,6 @@ const GraceOfFryja = () => {
     const [tabValue, setTabValue] = useState('1');
     const handleTabChange = (event: React.SyntheticEvent, newValue: string) => {
         setTabValue(newValue);
-    };
-
-    /** for finished rounds */
-    const [CurrentRoundID, setCurrentRoundID] = useState<number>(0); // for finished rounds
-    const handleSetCurrentRoundID = (curID) => {
-        if (curID >= 0 && curID < lotteryData.rounds.length) {
-            setCurrentRoundID(curID);
-        }
     };
 
     /** for select tokens */
@@ -332,7 +348,7 @@ const GraceOfFryja = () => {
                 <div className='fryja-first-part'>
                     <Container className='fryja-inner-container text-center' style={{ paddingTop: "100px" }}>
                         <img className="fryja-title" src={titleImg} alt="Grace of Fryja" />
-                        <CountDown targetTimestamp={currentLottery ? currentLottery.end_timestamp : 60000} />
+                        <CountDown targetTimestamp={currentLottery ? currentLottery.end_timestamp : getCurrentTimestamp() + 60000000} />
                         <div style={{ display: "flex", justifyContent: "center", textAlign: "center" }}>
                             <a href="#buyTickets">
                                 <div className="buy-ticket-button" >
@@ -432,11 +448,11 @@ const GraceOfFryja = () => {
 
                                     <div className="fryja-rounds fryja-center">
                                         <div style={{ color: "white" }}>
-                                            <p style={{ fontFamily: "IM FELL English SC", fontSize: "18px" }}>Draw: {lotteryData.rounds[CurrentRoundID].date} </p>
+                                            <p style={{ fontFamily: "IM FELL English SC", fontSize: "18px" }}>Draw: {lotteries ? convertTimestampToDateTime(lotteries[selectedClaimableRoundIndex].end_timestamp) : '-'} </p>
 
                                             <div className="fryja-center" style={{ display: "flex", gap: "20px" }}>
                                                 {
-                                                    lotteryData.rounds[CurrentRoundID].result.map((roundResult, index) => {
+                                                    lotteries && lotteries[selectedClaimableRoundIndex].final_number.map((roundResult, index) => {
                                                         return (
                                                             <div className="lottery-small-number-card" key={index}>
                                                                 <span className="lottery-number">{roundResult}</span>
@@ -447,21 +463,21 @@ const GraceOfFryja = () => {
                                             </div>
 
                                             <div className="fryja-center" style={{ display: "flex", gap: "20px", marginTop: "20px", marginBottom: "30px" }}>
-                                                <div className="circle-but" onClick={() => handleSetCurrentRoundID(0)}>
+                                                <div className="circle-but" onClick={() => handlesetSelectedClaimableRoundIndex(0)}>
                                                     <span>{"<<"}</span>
                                                 </div>
-                                                <div className="circle-but" onClick={() => handleSetCurrentRoundID(CurrentRoundID - 1)}>
+                                                <div className="circle-but" onClick={() => handlesetSelectedClaimableRoundIndex(selectedClaimableRoundIndex - 1)}>
                                                     <span>{"<"}</span>
                                                 </div>
-                                                <div className="circle-but" onClick={() => handleSetCurrentRoundID(CurrentRoundID + 1)}>
+                                                <div className="circle-but" onClick={() => handlesetSelectedClaimableRoundIndex(selectedClaimableRoundIndex + 1)}>
                                                     <span>{">"}</span>
                                                 </div>
-                                                <div className="circle-but" onClick={() => handleSetCurrentRoundID(lotteryData.rounds.length - 1)}>
+                                                <div className="circle-but" onClick={() => lotteries && handlesetSelectedClaimableRoundIndex(lotteries.length - 1)}>
                                                     <span>{">>"}</span>
                                                 </div>
                                             </div>
 
-                                            <p style={{ fontFamily: "IM FELL English SC", fontSize: "18px", color: "#BDBDBD", marginBottom: "30px" }}>Finished Round: #{CurrentRoundID + 1} </p>
+                                            <p style={{ fontFamily: "IM FELL English SC", fontSize: "18px", color: "#BDBDBD", marginBottom: "30px" }}>Finished Round: #{lotteries ? lotteries[selectedClaimableRoundIndex].lottery_id : '-'} </p>
 
                                             <img src={whowill} style={{ width: "100%" }} alt="who will recieve the grace of fryja" />
                                         </div>
@@ -488,17 +504,19 @@ const GraceOfFryja = () => {
                                                         <Dropdown onSelect={handleSelectMylotteryId} drop='down'>
                                                             <Dropdown.Toggle className='token-id-toggle' id="token-id">
                                                                 {
-                                                                    <>
-                                                                        <span>#{lotteryData.MyLotteries[selectedMylotteryId].round_id}</span>
-                                                                        <span>{lotteryData.rounds[lotteryData.MyLotteries[selectedMylotteryId].round_id - 1].date}</span>
-                                                                    </>
+                                                                    lotteries ? 
+                                                                    (<>
+                                                                        <span>#{lotteries[selectedMylotteryId].lottery_id}</span>
+                                                                        <span>{convertTimestampToDateTime(lotteries[selectedMylotteryId].end_timestamp)}</span>
+                                                                    </>) : '-'
                                                                 }
                                                             </Dropdown.Toggle>
                                                             <Dropdown.Menu className='token-id-menu'>
                                                                 {
-                                                                    lotteryData.MyLotteries.map((myLottery, index) => (
+                                                                    lotteries && lotteries.map((myLottery, index) => (
                                                                         <Dropdown.Item eventKey={index} key={`MyLottery-id-menu-item-${index}`}>
-                                                                            <span>{lotteryData.rounds[myLottery.round_id - 1].date}</span>
+                                                                            <span>#{myLottery.lottery_id}</span>
+                                                                            <span>{convertTimestampToDateTime(myLottery.end_timestamp)}</span>
                                                                         </Dropdown.Item>
                                                                     ))
                                                                 }
@@ -510,7 +528,7 @@ const GraceOfFryja = () => {
                                                         <div className="Comment-Box" style={{ background: "rgba(18,18,18,0.3)" }}>
                                                             <div className="fryja-center" style={{ display: "flex", gap: "20px" }}>
                                                                 {
-                                                                    lotteryData.rounds[lotteryData.MyLotteries[selectedMylotteryId].round_id - 1].result.map((roundResult, index) => {
+                                                                    lotteries && lotteries[selectedMylotteryId].final_number.map((roundResult, index) => {
                                                                         return (
                                                                             <div className="lottery-small-number-card" key={index}>
                                                                                 <span className="lottery-number" style={{ fontFamily: "Arial", fontSize: "23px" }}>{roundResult}</span>

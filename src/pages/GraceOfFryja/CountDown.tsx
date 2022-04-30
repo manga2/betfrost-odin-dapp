@@ -4,6 +4,7 @@ import Countdown from 'react-countdown';
 import { paddingTwoDigits } from '../../utils/convert';
 
 const CountDown = (props) => {
+  console.log('CountDown props', props);
   interface Props {
     days: number;
     hours: number;
