@@ -2,6 +2,7 @@ import React, { useState, useRef } from 'react';
 import TabContext from '@mui/lab/TabContext';
 import TabList from '@mui/lab/TabList';
 import TabPanel from '@mui/lab/TabPanel';
+import Badge from '@mui/material/Badge';
 import Box from '@mui/material/Box';
 import Tab from '@mui/material/Tab';
 import { Container, Row, Col, Dropdown } from 'react-bootstrap';
@@ -654,7 +655,7 @@ const GraceOfFreyja = () => {
 
                                                             <div className="freyja-center mt-5">
                                                                 <div className="claim-but">
-                                                                    Claim
+                                                                    Claim Rewards
                                                                 </div>
                                                             </div>
                                                         </div>
@@ -676,19 +677,22 @@ const GraceOfFreyja = () => {
 
                                                                 return (
                                                                     <Col className="mt-4" sm="6" key={index}>
-                                                                        <div className={`ticket-box-${flag}`}>
-                                                                            <div className="ticket-medal ml-3">
-                                                                                <div className="ticket-medal-inner-box" >
-                                                                                    <span>{ticket.win_bracket}</span>
+                                                                        <Badge color={ticket.claimed ? "primary" : "secondary"} badgeContent={ticket.claimed ? "Claimable" : " Claimed"} >
+                                                                            <div className={`ticket-box-${flag}`}>
+                                                                                <div className="ticket-medal ml-3">
+                                                                                    <div className="ticket-medal-inner-box" >
+                                                                                        <span>{ticket.win_bracket}</span>
+                                                                                    </div>
                                                                                 </div>
+                                                                                <div className="text-center ml-3" >
+                                                                                    <span className="ml-2">{ticket.number[0]}</span>
+                                                                                    <span className="ml-2">{ticket.number[1]}</span>
+                                                                                    <span className="ml-2">{ticket.number[2]}</span>
+                                                                                    <span className="ml-2">{ticket.number[3]}</span>
+                                                                                </div>
+
                                                                             </div>
-                                                                            <div className="text-center ml-3" >
-                                                                                <span className="ml-2">{ticket.number[0]}</span>
-                                                                                <span className="ml-2">{ticket.number[1]}</span>
-                                                                                <span className="ml-2">{ticket.number[2]}</span>
-                                                                                <span className="ml-2">{ticket.number[3]}</span>
-                                                                            </div>
-                                                                        </div>
+                                                                        </Badge>
                                                                     </Col>
                                                                 );
                                                             })
