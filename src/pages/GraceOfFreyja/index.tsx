@@ -32,6 +32,8 @@ import {
     OptionalValue,
     U32Value,
     AddressValue,
+    Balance,
+    TransactionPayload,
 } from '@elrondnetwork/erdjs';
 
 import './index.scss';
@@ -303,6 +305,45 @@ const GraceOfFreyja = () => {
         })();
     }, [contractInteractor, address, lotteries, selectedMylotteryId]);
 
+    const [newTickets, setNewTickets] = React.useState<any>();
+    React.useEffect(() => {
+        (async () => {
+            if (!contractInteractor || !currentLottery || !address || hasPendingTransactions) return;
+
+            const args = [
+                new AddressValue(new Address(address)),
+                new U32Value(currentLottery.lottery_id),
+            ];
+            const interaction = contractInteractor.contract.methods.viewTickets(args);
+            const res = await contractInteractor.controller.query(interaction);
+
+            if (!res || !res.returnCode.isSuccess()) return;
+            const items = res.firstValue?.valueOf();
+
+            const newTickets = [];
+            for (let i = 0; i < items.length; i++) {
+                const value = items[i];
+
+                const number = parseTicketNumber(value.number.toNumber(), currentLottery.number_of_brackets);
+                const claimed = value.claimed;
+                const win_bracket = value.win_bracket.toNumber();
+                const win_percentage = value.win_percentage.toNumber() / 1000000;
+
+                const result = {
+                    number,
+                    claimed,
+                    win_bracket,
+                    win_percentage,
+                };
+
+                newTickets.push(result);
+            }
+
+            console.log('newTickets', newTickets);
+            setNewTickets(newTickets);
+        })();
+    }, [contractInteractor, address, currentLottery, hasPendingTransactions]);
+
 
     /** for number of tickets */
     const maxTicketCountPerOrder = 100;
@@ -351,22 +392,16 @@ const GraceOfFreyja = () => {
         } else if (balance < ticketCount * paymentTokens[selectedTokenIndex].amount) {
             alert('Not enough balance.');
             return;
+        } else if (currentLottery.status != 'Open') {
+            alert('Round is closed.');
+            return;
         } else {
             for (let i = 0; i < ticketCount; i++) {
                 handleGenerateCurrentOrderTickets([]);
             }
+
             setShowModal(true);
         }
-    };
-
-    const handleModalOk = () => {
-
-        setShowModal(false);
-    };
-
-    const handleModalCancel = () => {
-        setCurrentOrderTickets([]);
-        setShowModal(false);
     };
 
     /** for generate tickets */
@@ -389,6 +424,51 @@ const GraceOfFreyja = () => {
             pinfieldsRef.current[i].inputs[2].value = Math.floor(ranN % 100 / 10);
             pinfieldsRef.current[i].inputs[3].value = Math.floor(ranN % 10);
         }
+    };
+
+    const handleModalOk = () => {
+        (async() => {
+            const numbers = [];
+            for (let i = 0; i < ticketCount; i++) {
+                let number = 0;
+                number += parseInt(pinfieldsRef.current[i].inputs[0].value);
+                number += parseInt(pinfieldsRef.current[i].inputs[1].value) * 10;
+                number += parseInt(pinfieldsRef.current[i].inputs[2].value) * 100;
+                number += parseInt(pinfieldsRef.current[i].inputs[3].value) * 1000;
+
+                numbers.push(number);
+            }
+            console.log('numbers', numbers);
+
+            if (paymentTokens[selectedTokenIndex].identifier == 'EGLD') {
+                const args: TypedValue[] = [
+                    new U32Value(currentLottery.lottery_id),	// lottery_id
+                ];
+                for (let i = 0; i < numbers.length; i++) {
+                    args.push(new U32Value(numbers[i]));
+                }
+            
+                const { argumentsString } = new ArgSerializer().valuesToString(args);
+                const data = `buyTickets@${argumentsString}`;
+            
+                const tx = {
+                    receiver: FREYJA_CONTRACT_ADDRESS,
+                    data: data,
+                    value: Balance.egld(paymentTokens[selectedTokenIndex].amount * numbers.length),
+                    gasLimit: new GasLimit(3000000 * numbers.length),
+                };
+
+                await refreshAccount();
+                await sendTransactions({transactions: tx});
+            }
+
+            setShowModal(false);
+        })();
+    };
+
+    const handleModalCancel = () => {
+        setCurrentOrderTickets([]);
+        setShowModal(false);
     };
 
     //////////////////////////////////////////////////////////////////////////////////////////////////
@@ -533,7 +613,7 @@ const GraceOfFreyja = () => {
                                                 </div>
 
                                                 <div className="text-center" style={{ color: '#dac374' }}>
-                                                    {"You got " + CurrentOrderTickets.length + " tickets."}
+                                                    {newTickets && ("You bought " + newTickets.length + " tickets.")}
                                                 </div>
                                             </div>
                                         </Col>
@@ -546,17 +626,19 @@ const GraceOfFreyja = () => {
                                                         <p className="Comment">She is waiting for your prayers, buy tickets with caution. Good luck</p>
 
                                                         <Row>
-                                                            <Col xs="6">
+                                                            <Col sm='12' lg="6">
                                                                 <span className="Next-Draw"># Prize Pool</span>
                                                                 <div className="d-flex" style={{ flexDirection: "column", color: "white" }}>
-                                                                    <span className='mt-2 Comment'>134.23 EGLD</span>
-                                                                    <span className='mt-1 Comment'>1234314.234 MEX</span>
-                                                                    <span className='mt-1 Comment'>123424 LKMEX</span>
-                                                                    <span className='mt-1 mb-3' style={{ color: "#EEC98A" }}>Total: {'$'}{currentLottery ? currentLottery.total_value_in_usd : '-'}</span>
+                                                                    
+                                                                    <span className='mt-2' style={{ color: "#EEC98A" }}>Total: {'$'}{currentLottery ? currentLottery.total_value_in_usd : '-'}</span>
 
+                                                                    {
+                                                                        currentLottery && currentLottery.collected_tokens.map((collected_token, index) => (<span className='mt-2 Comment' key={`second-prize-pool-${index}`}>{collected_token.amount}{' '}{collected_token.token_ticker}</span>))
+                                                                    }
+                                                                    <span className='mb-3'></span>
                                                                 </div>
                                                             </Col>
-                                                            <Col xs="6" style={{ display: "flex", alignItems: "center" }}>
+                                                            <Col sm='12' lg="6" style={{ display: "flex", alignItems: "center" }}>
                                                                 <img className="w-100" src={moneyImg} alt="coin money" />
                                                             </Col>
                                                         </Row>
@@ -602,11 +684,11 @@ const GraceOfFreyja = () => {
 
                                             <p style={{ fontFamily: "IM FELL English SC", fontSize: "18px", color: "#BDBDBD", marginBottom: "30px" }}>
                                                 Finished Round: #{lotteries ? lotteries[selectedClaimableRoundIndex].lottery_id : '-'}
-                                                <span className="details ml-3" onClick={() => setCollapseOpen(!isRoundDetailOpened)}>{!isRoundDetailOpened ? "DETAILS" : "HIDE"}</span>
+                                                {/* <span className="details ml-3" onClick={() => setCollapseOpen(!isRoundDetailOpened)}>{!isRoundDetailOpened ? "DETAILS" : "HIDE"}</span> */}
                                             </p>
 
-                                            <Collapse isOpened={isRoundDetailOpened} style={{ marginTop: "-20px" }}>
-                                                <div className='Collapse-Box mb-2' >
+                                            <Collapse isOpened={true} style={{ marginTop: "-20px" }}>
+                                                <div className='Collapse-Box mb-4' >
                                                     <span style={{ fontSize: "12px", color: "#bdbdbd" }}>{"Match the winning number in the same order to share prizes. Current prizes up for grabs:"}</span>
 
                                                     <Row className="d-flex justify-content-center">
