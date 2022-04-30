@@ -63,14 +63,14 @@ const Navbar = () => {
             </Link>
 
             {isLoggedIn ? (
-              <NavItem className='auth-button gradient-button' onClick={handleLogout}>
+              <NavItem className='auth-button' onClick={handleLogout}>
                 Disconnect
               </NavItem>
             ) : (
               // <NavItem className='auth-button gradient-button' onClick={() => {setConnectModalShow(true);}}>
               //   Connect
               // </NavItem>
-              <Link to={ routeNames.unlock } className='auth-button gradient-button'>
+              <Link to={ routeNames.unlock } className='auth-button'>
                 Connect
               </Link>
             )}

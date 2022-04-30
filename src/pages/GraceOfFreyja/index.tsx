@@ -80,7 +80,7 @@ const usedIndexes = new Set();
 function getUniqueRandomNumber(max) {
     const newNumber = Math.floor(Math.random() * max);
     if (usedIndexes.has(newNumber)) {
-        return this.getUniqueRandomNumber(max);
+        return getUniqueRandomNumber(max);
     } else {
         usedIndexes.add(newNumber);
         return newNumber;
@@ -559,7 +559,7 @@ const GraceOfFreyja = () => {
                                                     </div>
                                                 </Col>
                                                 <Col sm="5">
-                                                    <img src={girl1Img} style={{ marginTop: "-80px" }} />
+                                                    <img className="girl1" src={girl1Img}/>
                                                 </Col>
                                             </Row>
                                         </Col>
@@ -611,7 +611,7 @@ const GraceOfFreyja = () => {
                                         <Col className="mt-2" lg="6">
                                             <Row>
                                                 <Col sm="5">
-                                                    <img src={girl2Img} style={{ marginTop: "-30px", marginLeft: "-80px" }} />
+                                                    <img className="girl2" src={girl2Img} />
                                                 </Col>
                                                 <Col sm="7">
                                                     <div className="Comment-Box text-center">
@@ -683,7 +683,7 @@ const GraceOfFreyja = () => {
                                                                     <Col className="mt-4" sm="6" key={index}>
                                                                         <Badge color={ticket.claimed ? "primary" : "secondary"} badgeContent={ticket.claimed ? "Claimable" : " Claimed"} >
                                                                             <div className={`ticket-box-${flag}`}>
-                                                                                <div className="ticket-medal ml-3">
+                                                                                <div className="ticket-medal">
                                                                                     <div className="ticket-medal-inner-box" >
                                                                                         <span>{ticket.win_bracket}</span>
                                                                                     </div>
