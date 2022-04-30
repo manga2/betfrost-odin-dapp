@@ -2,7 +2,7 @@
 
 @import '../../assets/sass/custom.scss';
 
-.fryja-first-part {
+.freyja-first-part {
     background-image: url("../../assets/img/Grace of Fryja/Valhalla.png");
     background-size: cover;
     background-position: top;
@@ -11,7 +11,7 @@
     min-height: 768px;
 }
 
-.fryja-second-part {
+.freyja-second-part {
     background-image: url("../../assets/img/Grace of Fryja/castle.png");
     background-size: cover;
     background-position: top;
@@ -20,7 +20,7 @@
     // min-height: 1024px;
 }
 
-.fryja-third-part {
+.freyja-third-part {
     background-image: url("../../assets/img/Grace of Fryja/CoolGirl.png");
     background-size: cover;
     background-position: top;
@@ -28,11 +28,11 @@
     overflow-x: hidden;
 }
 
-.fryja-inner-container {
+.freyja-inner-container {
     max-width: 1024px;
 }
 
-.fryja-title {
+.freyja-title {
     width: 50%;
 
     @media (max-width: 768px) {
@@ -157,13 +157,13 @@
     }
 }
 
-.fryja-center {
+.freyja-center {
     display: flex;
     justify-content: center;
     text-align: center;
 }
 
-.fryja-rounds {
+.freyja-rounds {
     position: relative;
     margin-top: -300px;
     min-height: 300px;
@@ -500,7 +500,7 @@
     }
 }
 
-.fryja-but {
+.freyja-but {
     background: rgba(0, 0, 0, 0.3);
     padding: 15px;
     text-align: center;

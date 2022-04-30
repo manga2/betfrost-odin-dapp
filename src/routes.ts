@@ -1,6 +1,6 @@
 import { dAppName } from 'config';
 import withPageTitle from './components/PageTitle';
-import GraceOfFryja from './pages/GraceOfFryja';
+import GraceOfFreyja from './pages/GraceOfFreyja';
 import OdinsFate from './pages/OdinsFate';
 
 export const routeNames = {
@@ -9,7 +9,7 @@ export const routeNames = {
   walletconnect: '/walletconnect',
   home: '/',
   odinsfate: '/odinsfate',
-  graceoffryja: '/graceoffreyja'
+  graceoffryja: '/freyja'
 };
 
 const routes: Array<any> = [
@@ -22,7 +22,7 @@ const routes: Array<any> = [
   {
     path: routeNames.graceoffryja,
     title: 'Grace Of Freyja',
-    component: GraceOfFryja
+    component: GraceOfFreyja
   },
 ];
 

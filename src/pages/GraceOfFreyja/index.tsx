@@ -32,14 +32,14 @@ import {
   } from '@elrondnetwork/erdjs';
 
 import './index.scss';
-import buyTicketImg from 'assets/img/Grace of Fryja/Buy Ticket.svg';
-import buyTicketsButImg from 'assets/img/Grace of Fryja/Buy Tickets But.svg';
-import girl1Img from 'assets/img/Grace of Fryja/girl1.png';
-import girl2Img from 'assets/img/Grace of Fryja/girl2.png';
-import titleImg from 'assets/img/Grace of Fryja/title.svg';
-import whowill from 'assets/img/Grace of Fryja/whowill.svg';
-import winingCreteria from 'assets/img/Grace of Fryja/Wining Criteria.svg';
-import winlost from 'assets/img/Grace of Fryja/winlost.svg';
+import buyTicketImg from 'assets/img/Grace of Freyja/Buy Ticket.svg';
+import buyTicketsButImg from 'assets/img/Grace of Freyja/Buy Tickets But.svg';
+import girl1Img from 'assets/img/Grace of Freyja/girl1.png';
+import girl2Img from 'assets/img/Grace of Freyja/girl2.png';
+import titleImg from 'assets/img/Grace of Freyja/title.svg';
+import whowill from 'assets/img/Grace of Freyja/whowill.svg';
+import winingCreteria from 'assets/img/Grace of Freyja/Wining Criteria.svg';
+import winlost from 'assets/img/Grace of Freyja/winlost.svg';
 import CountDown from './CountDown';
 
 import {
@@ -72,7 +72,7 @@ function parseFinalNumber(finalNumber: number, number_of_brackets: number) {
     return digits;
 }
 
-const GraceOfFryja = () => {
+const GraceOfFreyja = () => {
     //
     const { account, address } = useGetAccountInfo();
     const { network } = useGetNetworkConfig();
@@ -345,9 +345,9 @@ const GraceOfFryja = () => {
         <>
             <div style={{ background: "#121212" }}>
                 {/** first part : Lottery Home */}
-                <div className='fryja-first-part'>
-                    <Container className='fryja-inner-container text-center' style={{ paddingTop: "100px" }}>
-                        <img className="fryja-title" src={titleImg} alt="Grace of Fryja" />
+                <div className='freyja-first-part'>
+                    <Container className='freyja-inner-container text-center' style={{ paddingTop: "100px" }}>
+                        <img className="freyja-title" src={titleImg} alt="Grace of Freyja" />
                         <CountDown targetTimestamp={currentLottery ? currentLottery.end_timestamp : getCurrentTimestamp() + 60000000} />
                         <div style={{ display: "flex", justifyContent: "center", textAlign: "center" }}>
                             <a href="#buyTickets">
@@ -360,7 +360,7 @@ const GraceOfFryja = () => {
                 </div>
 
                 {/** second part : Control Lottery */}
-                <div className='fryja-second-part' id="buyTickets">
+                <div className='freyja-second-part' id="buyTickets">
                     <Container style={{ paddingTop: "80px" }}>
                         <Box sx={{ width: '100%', typography: 'body1' }}>
                             <TabContext value={tabValue}>
@@ -399,7 +399,7 @@ const GraceOfFryja = () => {
 
                                                 <input className="custom-input" type='number' placeholder='Number of Tickets' value={ticketCount ? ticketCount : ''} onChange={(e) => handleSetTicketCount(Number(e.target.value))} />
 
-                                                <div className="fryja-center">
+                                                <div className="freyja-center">
                                                     <div style={{ justifyContent: "space-between", display: "flex", width: "100px" }}>
                                                         <div className="control-but" onClick={() => handleSetTicketCount(ticketCount - 1)}>-</div>
                                                         <div className="control-but" onClick={() => handleSetTicketCount(ticketCount + 1)}>+</div>
@@ -446,11 +446,11 @@ const GraceOfFryja = () => {
                                         </Col>
                                     </Row>
 
-                                    <div className="fryja-rounds fryja-center">
+                                    <div className="freyja-rounds freyja-center">
                                         <div style={{ color: "white" }}>
                                             <p style={{ fontFamily: "IM FELL English SC", fontSize: "18px" }}>Draw: {lotteries ? convertTimestampToDateTime(lotteries[selectedClaimableRoundIndex].end_timestamp) : '-'} </p>
 
-                                            <div className="fryja-center" style={{ display: "flex", gap: "20px" }}>
+                                            <div className="freyja-center" style={{ display: "flex", gap: "20px" }}>
                                                 {
                                                     lotteries && lotteries[selectedClaimableRoundIndex].final_number.map((roundResult, index) => {
                                                         return (
@@ -462,7 +462,7 @@ const GraceOfFryja = () => {
                                                 }
                                             </div>
 
-                                            <div className="fryja-center" style={{ display: "flex", gap: "20px", marginTop: "20px", marginBottom: "30px" }}>
+                                            <div className="freyja-center" style={{ display: "flex", gap: "20px", marginTop: "20px", marginBottom: "30px" }}>
                                                 <div className="circle-but" onClick={() => handlesetSelectedClaimableRoundIndex(0)}>
                                                     <span>{"<<"}</span>
                                                 </div>
@@ -479,7 +479,7 @@ const GraceOfFryja = () => {
 
                                             <p style={{ fontFamily: "IM FELL English SC", fontSize: "18px", color: "#BDBDBD", marginBottom: "30px" }}>Finished Round: #{lotteries ? lotteries[selectedClaimableRoundIndex].lottery_id : '-'} </p>
 
-                                            <img src={whowill} style={{ width: "100%" }} alt="who will recieve the grace of fryja" />
+                                            <img src={whowill} style={{ width: "100%" }} alt="who will recieve the grace of freyja" />
                                         </div>
                                     </div>
 
@@ -497,7 +497,7 @@ const GraceOfFryja = () => {
                                                 <Col sm="7">
                                                     <div className="Comment-Box text-center">
                                                         <p className="Next-Draw"><span style={{ color: "#EEC98A" }}>Welcome!</span></p>
-                                                        <p className="Comment">Choose date for grace of fryja.</p>
+                                                        <p className="Comment">Choose date for grace of freyja.</p>
                                                     </div>
 
                                                     <div className="mt-2">
@@ -526,7 +526,7 @@ const GraceOfFryja = () => {
 
                                                     <div className='mt-2'>
                                                         <div className="Comment-Box" style={{ background: "rgba(18,18,18,0.3)" }}>
-                                                            <div className="fryja-center" style={{ display: "flex", gap: "20px" }}>
+                                                            <div className="freyja-center" style={{ display: "flex", gap: "20px" }}>
                                                                 {
                                                                     lotteries && lotteries[selectedMylotteryId].final_number.map((roundResult, index) => {
                                                                         return (
@@ -586,7 +586,7 @@ const GraceOfFryja = () => {
                 </div>
 
                 {/** Third Part : How to play */}
-                <div className='fryja-third-part pb-5'>
+                <div className='freyja-third-part pb-5'>
                     <Container style={{ paddingTop: "60px" }}>
                         <div className="text-center">
                             <p style={{ color: "#616161" }}>{"If the digits on your tickets match the winning numbers in the correct order, you win a portion of the prize pool."}</p>
@@ -624,7 +624,7 @@ const GraceOfFryja = () => {
                                 </Col>
 
                                 <Col sm="4">
-                                    <div className='fryja-center'>
+                                    <div className='freyja-center'>
                                         <img className="w-100" src={winingCreteria} alt="wining creteria" />
                                     </div>
                                 </Col>
@@ -659,7 +659,7 @@ const GraceOfFryja = () => {
                     <div className='modal-divider' />
                     <p className="mt-1 mb-1">{"Generating: "} {ticketCount - myTickets.length}</p>
 
-                    <div className="fryja-but mt-2">Generate Random</div>
+                    <div className="freyja-but mt-2">Generate Random</div>
                     <div className="d-flex justify-content-center">
                         <ReactPinField ref={pinfieldRef} className="pin-field" length={4} validate="0123456789" inputMode="numeric" />
                     </div>
@@ -692,10 +692,10 @@ const GraceOfFryja = () => {
 
                     <Row className="mt-2">
                         <Col xs="6">
-                            <div className="fryja-but mt-2" onClick={handleModalOk}>ok</div>
+                            <div className="freyja-but mt-2" onClick={handleModalOk}>ok</div>
                         </Col>
                         <Col xs="6">
-                            <div className="fryja-but mt-2" onClick={handleModalCancel}>cancel</div>
+                            <div className="freyja-but mt-2" onClick={handleModalCancel}>cancel</div>
                         </Col>
                     </Row>
 
@@ -705,4 +705,4 @@ const GraceOfFryja = () => {
     );
 };
 
-export default GraceOfFryja;
+export default GraceOfFreyja;
