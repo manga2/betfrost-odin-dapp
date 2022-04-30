@@ -132,19 +132,22 @@ const GraceOfFreyja = () => {
         let total_value_in_usd = 0;
         const collected_tokens = value.collected_tokens.map(item => {
             const token_identifier = item.token_identifier.toString();
+            const token_ticker = token_identifier.split('-')[0];
             const amount = convertWeiToEsdt(item.amount.toNumber(), TOKENS[token_identifier].decimals, FREYJA_DECIMALS_PRECISION);
-            const price_in_usd = amount * TOKENS[token_identifier].unit_price_in_usd;
+            const price_in_usd = precisionfloor(amount * TOKENS[token_identifier].unit_price_in_usd, FREYJA_DECIMALS_PRECISION);
 
             total_value_in_usd += price_in_usd;
 
             return {
                 token_type: item.token_type.name,
                 token_identifier: token_identifier,
+                token_ticker: token_ticker,
                 token_nonce: item.token_nonce.toNumber(),
                 amount: amount,
                 price_in_usd: price_in_usd,
             };
         });
+        total_value_in_usd = precisionfloor(total_value_in_usd, FREYJA_DECIMALS_PRECISION);
 
         const final_number = parseTicketNumber(value.final_number.toNumber(), number_of_brackets);
         const max_number_of_tickets_per_buy_or_claim = value.max_number_of_tickets_per_buy_or_claim.toNumber();
@@ -418,10 +421,11 @@ const GraceOfFreyja = () => {
                         <div className='freyja-center mt-5'>
                             <div className="prize-pool-box">
                                 <span style={{ fontSize: "20px", color: "white" }}>PRIZE POOL</span>
-                                <span className='mt-2' style={{ fontFamily: "Segoe UI", fontWeight: "600", fontSize: "16px" }}>134.23 EGLD</span>
-                                <span className='mt-1' style={{ fontFamily: "Segoe UI", fontWeight: "600", fontSize: "16px" }}>1234314.234 MEX</span>
-                                <span className='mt-1' style={{ fontFamily: "Segoe UI", fontWeight: "600", fontSize: "16px" }}>123424 LKMEX</span>
-                                <span className='mt-1 mb-3' style={{ fontFamily: "Segoe UI", fontWeight: "600", fontSize: "16px" }}>Total: $ 154344</span>
+                                <span className='mt-1' style={{ fontFamily: "Segoe UI", fontWeight: "600", fontSize: "24px" }}>Total: ${currentLottery ? currentLottery.total_value_in_usd : '-'}</span>
+                                {
+                                    currentLottery && currentLottery.collected_tokens.map((collected_token, index) => (<span className='mt-2' key={`home-prize-pool-${index}`} style={{ fontFamily: "Segoe UI", fontWeight: "600", fontSize: "16px" }}>{collected_token.amount}{' '}{collected_token.token_ticker}</span>))
+                                }
+                                <span className='mb-3'></span>
                             </div>
                         </div>
                     </Container>
