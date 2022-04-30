@@ -6,6 +6,7 @@ import Badge from '@mui/material/Badge';
 import Box from '@mui/material/Box';
 import Tab from '@mui/material/Tab';
 import { Container, Row, Col, Dropdown } from 'react-bootstrap';
+import { Collapse } from 'react-collapse';
 import Modal from 'react-modal';
 import ReactPinField from "react-pin-field";
 
@@ -402,6 +403,9 @@ const GraceOfFreyja = () => {
     }, [paymentTokens, selectedTokenIndex, hasPendingTransactions, address]);
 
     //////////////////////////////////////////////////////////////////////////////////////////////////
+
+    const [isRoundDetailOpened, setCollapseOpen] = useState<boolean>(false);
+
     return (
         <>
             <div style={{ background: "#121212" }}>
@@ -559,7 +563,7 @@ const GraceOfFreyja = () => {
                                                     </div>
                                                 </Col>
                                                 <Col sm="5">
-                                                    <img className="girl1" src={girl1Img}/>
+                                                    <img className="girl1" src={girl1Img} />
                                                 </Col>
                                             </Row>
                                         </Col>
@@ -596,7 +600,47 @@ const GraceOfFreyja = () => {
                                                 </div>
                                             </div>
 
-                                            <p style={{ fontFamily: "IM FELL English SC", fontSize: "18px", color: "#BDBDBD", marginBottom: "30px" }}>Finished Round: #{lotteries ? lotteries[selectedClaimableRoundIndex].lottery_id : '-'} </p>
+                                            <p style={{ fontFamily: "IM FELL English SC", fontSize: "18px", color: "#BDBDBD", marginBottom: "30px" }}>
+                                                Finished Round: #{lotteries ? lotteries[selectedClaimableRoundIndex].lottery_id : '-'}
+                                                <span className="details ml-3" onClick={() => setCollapseOpen(!isRoundDetailOpened)}>{!isRoundDetailOpened ? "DETAILS" : "HIDE"}</span>
+                                            </p>
+
+                                            <Collapse isOpened={isRoundDetailOpened} style={{ marginTop: "-20px" }}>
+                                                <div className='Collapse-Box mb-2' >
+                                                    <span style={{ fontSize: "12px", color: "#bdbdbd" }}>{"Match the winning number in the same order to share prizes. Current prizes up for grabs:"}</span>
+
+                                                    <Row className="d-flex justify-content-center">
+                                                        <Col className="mt-3" xs="6" sm="3">
+                                                            <div className="d-flex flex-column">
+                                                                <span style={{ fontSize: "16px", fontWeight: "600" }}> Match first 1 </span>
+                                                                <span className="mt-2"> 405 Odin </span>
+                                                                <span className="mt-1" style={{ fontSize: "12px", color: "#F1DA8A" }}> ~ $3,137</span>
+                                                            </div>
+                                                        </Col>
+                                                        <Col className="mt-3" xs="6" sm="3">
+                                                            <div className="d-flex flex-column">
+                                                                <span style={{ fontSize: "16px", fontWeight: "600" }}> Match first 2 </span>
+                                                                <span className="mt-2"> 405 Odin </span>
+                                                                <span className="mt-1" style={{ fontSize: "12px", color: "#F1DA8A" }}> ~ $3,137</span>
+                                                            </div>
+                                                        </Col>
+                                                        <Col className="mt-3" xs="6" sm="3">
+                                                            <div className="d-flex flex-column">
+                                                                <span style={{ fontSize: "16px", fontWeight: "600" }}> Match first 3 </span>
+                                                                <span className="mt-2"> 405 Odin </span>
+                                                                <span className="mt-1" style={{ fontSize: "12px", color: "#F1DA8A" }}> ~ $3,137</span>
+                                                            </div>
+                                                        </Col>
+                                                        <Col className="mt-3" xs="6" sm="3">
+                                                            <div className="d-flex flex-column">
+                                                                <span style={{ fontSize: "16px", fontWeight: "600" }}> Match first 4 </span>
+                                                                <span className="mt-2"> 405 Odin </span>
+                                                                <span className="mt-1" style={{ fontSize: "12px", color: "#F1DA8A" }}> ~ $3,137</span>
+                                                            </div>
+                                                        </Col>
+                                                    </Row>
+                                                </div>
+                                            </Collapse>
 
                                             <img src={whowill} style={{ width: "100%" }} alt="who will recieve the grace of freyja" />
                                         </div>

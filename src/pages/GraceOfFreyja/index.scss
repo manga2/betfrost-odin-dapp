@@ -153,7 +153,7 @@
 
     &:hover {
         transform: scale(1.1);
-        background-color: rgba(0,0,0,0.15);
+        background-color: rgba(0, 0, 0, 0.15);
         border-radius: 50px;
         cursor: pointer;
     }
@@ -167,7 +167,7 @@
 
 .freyja-rounds {
     position: relative;
-    margin-top: -300px;
+    margin-top: -320px;
     min-height: 300px;
 
     @media (max-width: 768px) {
@@ -570,7 +570,7 @@
     &:hover {
         cursor: pointer;
         background-color: #F1DA8A;
-        color:black;
+        color: black;
     }
 }
 
@@ -581,6 +581,7 @@
     width: 100%;
 
     transition: .2s ease-in-out;
+
     &:hover {
         cursor: pointer;
         background-color: gray;
@@ -600,11 +601,13 @@
 
 .girl1 {
     margin-top: -80px;
+
     @media (max-width: 576px) {
         margin-top: -40px;
         width: 70%;
     }
 }
+
 .girl2 {
     margin-top: -30px;
     margin-left: -80px;
@@ -613,4 +616,26 @@
         width: 70%;
         margin-left: 0px;
     }
+}
+
+.details {
+    text-decoration: underline;
+    cursor: pointer;
+
+    &:hover {
+        color: white;
+    }
+}
+
+.ReactCollapse--collapse {
+    transition: height 500ms;
+    margin-top: -20px;
+}
+
+.Collapse-Box {
+    display: flex;
+    flex-direction: column;
+    padding: 20px;
+    background: rgba(18, 18, 18, 0.6);
+    border-radius: 5px;
 }
