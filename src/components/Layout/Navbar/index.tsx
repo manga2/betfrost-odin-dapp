@@ -58,7 +58,7 @@ const Navbar = () => {
               Odins Fate
             </Link>
 
-            <Link to={routeNames.graceoffryja} className='custom-navbar-button custom-navbar-normal-button'>
+            <Link to={routeNames.graceoffreyja} className='custom-navbar-button custom-navbar-normal-button'>
               Grace Of Freyja
             </Link>
 

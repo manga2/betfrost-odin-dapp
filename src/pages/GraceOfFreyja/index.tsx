@@ -29,6 +29,7 @@ import {
     DefaultSmartContractController,
     OptionalValue,
     U32Value,
+    AddressValue,
   } from '@elrondnetwork/erdjs';
 
 import './index.scss';
@@ -63,9 +64,9 @@ import {
 } from 'data';
 import * as lotteryData from './lotteryData';
 
-function parseFinalNumber(finalNumber: number, number_of_brackets: number) {
+function parseTicketNumber(ticketNumber: number, number_of_brackets: number) {
     const digits = [];
-    const s = String(finalNumber).padStart(number_of_brackets, '0').split('').reverse().join('');
+    const s = String(ticketNumber).padStart(number_of_brackets, '0').split('').reverse().join('');
     for (let i = 0; i < number_of_brackets; i++) {
         digits.push(parseInt(s[i]));
     }
@@ -125,7 +126,7 @@ const GraceOfFreyja = () => {
             };
         });
 
-        const final_number = parseFinalNumber(value.final_number.toNumber(), number_of_brackets);
+        const final_number = parseTicketNumber(value.final_number.toNumber(), number_of_brackets);
         const max_number_of_tickets_per_buy_or_claim = value.max_number_of_tickets_per_buy_or_claim.toNumber();
 
         return {
@@ -232,6 +233,46 @@ const GraceOfFreyja = () => {
     const handleSelectMylotteryId = (lottery_id) => {
         setSelectedMylotteryId(lottery_id);
     };
+
+    const [oldTickets, setOldTickets] = React.useState<any>();
+    React.useEffect(() => {
+        (async () => {
+            if (!contractInteractor || !lotteries || !address) return;
+            const lottery = lotteries[selectedMylotteryId];
+
+            const args = [
+                new AddressValue(new Address(address)),
+                new U32Value(lottery.lottery_id),
+            ];
+            const interaction = contractInteractor.contract.methods.viewTickets(args);
+            const res = await contractInteractor.controller.query(interaction);
+
+            if (!res || !res.returnCode.isSuccess()) return;
+            const items = res.firstValue?.valueOf();
+
+            const oldTickets = [];
+            for (let i = 0; i < items.length; i++) {
+                const value = items[i];
+                
+                const number = parseTicketNumber(value.number.toNumber(), lottery.number_of_brackets);
+                const claimed = value.claimed;
+                const win_bracket = value.win_bracket.toNumber();
+                const win_percentage = value.win_percentage.toNumber() / 1000000;
+
+                const result = {
+                    number,
+                    claimed,
+                    win_bracket,
+                    win_percentage,
+                };
+
+                oldTickets.push(result);
+            }
+
+            console.log('oldTickets', oldTickets);
+            setOldTickets(oldTickets);
+      })();
+    }, [contractInteractor, address, lotteries, selectedMylotteryId]);
 
 
     /** for number of tickets */
@@ -551,15 +592,15 @@ const GraceOfFreyja = () => {
                                                 <div className="custom-scroll-bar pl-5 pr-5" style={{ overflowY: "auto", height: "520px" }}>
                                                     <Row>
                                                         {
-                                                            lotteryData.MyLotteries[selectedMylotteryId].tickets.map((ticket, index) => {
-                                                                const flag = ticket.match > 2 ? "win" : "lost";
+                                                            oldTickets && oldTickets.map((ticket, index) => {
+                                                                const flag = ticket.win_bracket > 0 ? "win" : "lost";
 
                                                                 return (
                                                                     <Col className="mt-4" sm="6" key={index}>
                                                                         <div className={`ticket-box-${flag}`}>
                                                                             <div className="ticket-medal ml-3">
                                                                                 <div className="ticket-medal-inner-box" >
-                                                                                    <span>{ticket.match}</span>
+                                                                                    <span>{ticket.win_bracket}</span>
                                                                                 </div>
                                                                             </div>
                                                                             <div className="text-center ml-3" >

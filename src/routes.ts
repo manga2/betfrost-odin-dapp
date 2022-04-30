@@ -9,7 +9,7 @@ export const routeNames = {
   walletconnect: '/walletconnect',
   home: '/',
   odinsfate: '/odinsfate',
-  graceoffryja: '/freyja'
+  graceoffreyja: '/freyja'
 };
 
 const routes: Array<any> = [
@@ -20,7 +20,7 @@ const routes: Array<any> = [
   },
 
   {
-    path: routeNames.graceoffryja,
+    path: routeNames.graceoffreyja,
     title: 'Grace Of Freyja',
     component: GraceOfFreyja
   },
@@ -28,8 +28,8 @@ const routes: Array<any> = [
 
 const mappedRoutes = routes.map((route) => {
   const title = route.title
-    ? `${route.title} • Elrond ${dAppName}`
-    : `Elrond ${dAppName}`;
+    ? `${route.title} • ${dAppName}`
+    : `${dAppName}`;
 
   const requiresAuth = Boolean(route.authenticatedRoute);
   const wrappedComponent = withPageTitle(title, route.component);
