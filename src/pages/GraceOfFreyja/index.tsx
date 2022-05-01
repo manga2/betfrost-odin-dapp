@@ -365,7 +365,7 @@ const GraceOfFreyja = () => {
                 newTickets.push(result);
             }
 
-            console.log('newTickets', newTickets);
+            console.log("newTickets ===========", newTickets);
             setNewTickets(newTickets);
         })();
     }, [contractInteractor, address, currentLottery, hasPendingTransactions]);
