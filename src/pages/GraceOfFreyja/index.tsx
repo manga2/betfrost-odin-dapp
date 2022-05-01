@@ -38,7 +38,8 @@ import {
 
 import './index.scss';
 import buyTicketImg from 'assets/img/Grace of Freyja/Buy Ticket.svg';
-import buyTicketsButImg from 'assets/img/Grace of Freyja/Buy Tickets But.svg';
+import buyImg1 from 'assets/img/Grace of Freyja/buyImg1.png';
+import buyImg2 from 'assets/img/Grace of Freyja/buyImg2.png';
 import girl1Img from 'assets/img/Grace of Freyja/girl1.png';
 import girl2Img from 'assets/img/Grace of Freyja/girl2.png';
 import moneyImg from 'assets/img/Grace of Freyja/money.png';
@@ -338,7 +339,7 @@ const GraceOfFreyja = () => {
         })();
     }, [contractInteractor, address, lotteries, selectedMylotteryId]);
 
-    const [newTickets, setNewTickets] = React.useState<any>();
+    const [newTickets, setNewTickets] = React.useState<any>([]);
     React.useEffect(() => {
         (async () => {
             if (!contractInteractor || !currentLottery || !address || hasPendingTransactions) return;
@@ -431,7 +432,7 @@ const GraceOfFreyja = () => {
         } else {
             const TicketBin = [];
             for (let i = 0; i < ticketCount; i++) {
-                TicketBin.push([]);    
+                TicketBin.push([]);
             }
             setCurrentOrderTickets(TicketBin);
             setShowModal(true);
@@ -448,11 +449,11 @@ const GraceOfFreyja = () => {
 
         for (let i = 0; i < ticketCount; i++) {
             const ranN = getUniqueRandomNumber(maxN);
-            
-            pinfieldsRef.current[len-ticketCount + i].inputs[0].value = Math.floor(ranN / 1000);
-            pinfieldsRef.current[len-ticketCount + i].inputs[1].value = Math.floor(ranN / 100 % 10);
-            pinfieldsRef.current[len-ticketCount + i].inputs[2].value = Math.floor(ranN % 100 / 10);
-            pinfieldsRef.current[len-ticketCount + i].inputs[3].value = Math.floor(ranN % 10);
+
+            pinfieldsRef.current[len - ticketCount + i].inputs[0].value = Math.floor(ranN / 1000);
+            pinfieldsRef.current[len - ticketCount + i].inputs[1].value = Math.floor(ranN / 100 % 10);
+            pinfieldsRef.current[len - ticketCount + i].inputs[2].value = Math.floor(ranN % 100 / 10);
+            pinfieldsRef.current[len - ticketCount + i].inputs[3].value = Math.floor(ranN % 10);
         }
     };
 
@@ -462,10 +463,10 @@ const GraceOfFreyja = () => {
             const len = pinfieldsRef.current.length;
             for (let i = 0; i < ticketCount; i++) {
                 let number = 0;
-                number += parseInt(pinfieldsRef.current[len-ticketCount + i].inputs[0].value);
-                number += parseInt(pinfieldsRef.current[len-ticketCount + i].inputs[1].value) * 10;
-                number += parseInt(pinfieldsRef.current[len-ticketCount + i].inputs[2].value) * 100;
-                number += parseInt(pinfieldsRef.current[len-ticketCount + i].inputs[3].value) * 1000;
+                number += parseInt(pinfieldsRef.current[len - ticketCount + i].inputs[0].value);
+                number += parseInt(pinfieldsRef.current[len - ticketCount + i].inputs[1].value) * 10;
+                number += parseInt(pinfieldsRef.current[len - ticketCount + i].inputs[2].value) * 100;
+                number += parseInt(pinfieldsRef.current[len - ticketCount + i].inputs[3].value) * 1000;
 
                 numbers.push(number);
             }
@@ -550,6 +551,8 @@ const GraceOfFreyja = () => {
     //////////////////////////////////////////////////////////////////////////////////////////////////
 
     const [isRoundDetailOpened, setCollapseOpen] = useState<boolean>(false);
+
+    const [showBoughtTicketsModal, setShowBoughtTicketsModal] = useState(false);
 
     return (
         <>
@@ -675,11 +678,13 @@ const GraceOfFreyja = () => {
                                                 </div>
 
                                                 <div className="buy-tickets-but" onClick={handleBuyTicket}>
-                                                    <img src={buyTicketsButImg} style={{ width: "100%" }} />
+                                                    <img src={buyImg1} style={{ width: "20%" }} />
+                                                    <span className="ml-3"> Buy Tickets </span>
+                                                    <img src={buyImg2} className="ml-3" style={{ width: "20%" }} />
                                                 </div>
 
-                                                <div className="text-center" style={{ color: '#dac374' }}>
-                                                    {newTickets && ("You bought " + newTickets.length + " tickets.")}
+                                                <div className="text-center mt-2 show-tickets" onClick={() => setShowBoughtTicketsModal(true)}>
+                                                    {"You bought " + newTickets.length + " tickets. Click to look."}
                                                 </div>
                                             </div>
                                         </Col>
@@ -692,7 +697,7 @@ const GraceOfFreyja = () => {
                                                         <p className="Comment">She is waiting for your prayers, buy tickets with caution. Good luck</p>
 
                                                         <Row>
-                                                            <Col sm='12' lg="6">
+                                                            <Col xs='6'>
                                                                 <span className="Next-Draw"># Prize Pool</span>
                                                                 <div className="d-flex" style={{ flexDirection: "column", color: "white" }}>
 
@@ -704,13 +709,13 @@ const GraceOfFreyja = () => {
                                                                     <span className='mb-3'></span>
                                                                 </div>
                                                             </Col>
-                                                            <Col sm='12' lg="6" style={{ display: "flex", alignItems: "center" }}>
+                                                            <Col xs='6' className="d-flex align-items-center">
                                                                 <img className="w-100" src={moneyImg} alt="coin money" />
                                                             </Col>
                                                         </Row>
                                                     </div>
                                                 </Col>
-                                                <Col sm="5">
+                                                <Col sm="5" className="justify-content-center d-flex">
                                                     <img className="girl1" src={girl1Img} />
                                                 </Col>
                                             </Row>
@@ -806,7 +811,7 @@ const GraceOfFreyja = () => {
                                     <Row>
                                         <Col className="mt-2" lg="6">
                                             <Row>
-                                                <Col sm="5">
+                                                <Col sm="5" className="d-flex justify-content-center">
                                                     <img className="girl2" src={girl2Img} />
                                                 </Col>
                                                 <Col sm="7">
@@ -857,7 +862,7 @@ const GraceOfFreyja = () => {
                                                                 <div>Match First 2: {oldAccount ? oldAccount.number_of_win_brackets[2] : '-'}</div>
                                                                 <div>Match First 3: {oldAccount ? oldAccount.number_of_win_brackets[3] : '-'}</div>
                                                                 <div>Match First 4: {oldAccount ? oldAccount.number_of_win_brackets[4] : '-'}</div>
-                                                                <div className="mt-2" style={{color:"#F1DA8A"}}>Total Reward: {oldAccount ? `$${oldAccount.total_value_in_usd}` : '-'}</div>
+                                                                <div className="mt-2" style={{ color: "#F1DA8A" }}>Total Reward: {oldAccount ? `$${oldAccount.total_value_in_usd}` : '-'}</div>
                                                             </div>
                                                             <div className="freyja-center mt-5">
                                                                 <div className="claim-but" onClick={claimTickets}>
@@ -1031,8 +1036,47 @@ const GraceOfFreyja = () => {
                         <Col xs="6">
                             <div className="freyja-but mt-2" onClick={handleModalOk}>Confim and Buy</div>
                         </Col>
-
                     </Row>
+
+                </Modal>
+
+                <Modal
+                    isOpen={showBoughtTicketsModal}
+                    ariaHideApp={false}
+                    className='modalcard box-shadow'
+                    onRequestClose={() => {
+                        setShowBoughtTicketsModal(false);
+                    }}
+                >
+                    <div className="right">
+                        <div className="close-but float-right" onClick={() => setShowBoughtTicketsModal(false)}>X</div>
+                    </div>
+
+                    <div className='modaldiv  mb-3'>
+                        <h3 className='modalHeader'>My Tickets</h3>
+                    </div>
+
+                    <div className='custom-scroll-bar' style={{ overflowY: "auto", height: "520px" }}>
+                        <Row>
+                            {
+                                lotteryData.MyLotteries[0].tickets.map((ticket, index) => {
+                                    return (
+                                        <Col className="mt-3" xs="6" sm="4" key={index}>
+                                            <span className="ml-2">#{index}</span>
+                                            <div className="ticket-box-lost">
+                                                <div className="text-center" >
+                                                    <span className="ml-2">{ticket.number[0]}</span>
+                                                    <span className="ml-2">{ticket.number[1]}</span>
+                                                    <span className="ml-2">{ticket.number[2]}</span>
+                                                    <span className="ml-2">{ticket.number[3]}</span>
+                                                </div>
+                                            </div>
+                                        </Col>
+                                    );
+                                })
+                            }
+                        </Row>
+                    </div>
 
                 </Modal>
             </div>

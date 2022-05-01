@@ -149,13 +149,16 @@
 }
 
 .buy-tickets-but {
+    padding: 5px;
+    text-align: center;
+    color: white;
+    cursor: pointer;
+    background-color: rgba(0, 0, 0, 0.15);
+    border-radius: 5px;
     transition: .3s ease-in-out;
 
     &:hover {
-        transform: scale(1.1);
-        background-color: rgba(0, 0, 0, 0.15);
-        border-radius: 50px;
-        cursor: pointer;
+        background-color: #8180496b;
     }
 }
 
@@ -210,11 +213,10 @@
 }
 
 .css-1h9z7r5-MuiButtonBase-root-MuiTab-root.Mui-selected {
-
     color: #dac374 !important;
 }
 
-.css-1aquho2-MuiTabs-indicator {
+.MuiTabs-indicator {
     background-color: #dac374 !important;
 }
 
@@ -601,10 +603,12 @@
 
 .girl1 {
     margin-top: -80px;
+    margin-left: 100px;
 
     @media (max-width: 576px) {
         margin-top: -40px;
-        width: 70%;
+        width: 50%;
+        margin-left: 0px;
     }
 }
 
@@ -613,7 +617,7 @@
     margin-left: -80px;
 
     @media (max-width: 576px) {
-        width: 70%;
+        width: 50%;
         margin-left: 0px;
     }
 }
@@ -652,5 +656,15 @@
 
     @media (max-width: 576px) {
         font-size: 22px;
+    }
+}
+
+.show-tickets {
+    color: #dac374;
+    text-decoration: underline;
+    cursor: pointer;
+
+    &:hover {
+        color: #da7474;
     }
 }
