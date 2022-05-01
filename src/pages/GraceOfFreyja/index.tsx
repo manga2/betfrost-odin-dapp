@@ -127,7 +127,7 @@ const GraceOfFreyja = () => {
         const ticket_token_amounts = value.ticket_token_amounts.map(item => item.toString());
 
         const number_of_brackets = value.number_of_brackets.toNumber();
-        const reward_percentage_per_bracket = value.reward_percentage_per_bracket.map(item => item.toNumber());
+        const reward_percentage_per_bracket = value.reward_percentage_per_bracket.map(item => item.toNumber() / 100);
         const number_of_winners_per_bracket = value.number_of_winners_per_bracket.map(item => item.toNumber());
 
         const number_of_bought_tickets = value.number_of_bought_tickets.toNumber();
@@ -152,6 +152,12 @@ const GraceOfFreyja = () => {
         });
         total_value_in_usd = precisionfloor(total_value_in_usd, FREYJA_DECIMALS_PRECISION);
 
+        const brackets = reward_percentage_per_bracket.map((v: any) => {
+            return {
+                total_value_in_usd: precisionfloor(total_value_in_usd * v / 100, FREYJA_DECIMALS_PRECISION),
+            };
+        });
+
         const final_number = parseTicketNumber(value.final_number.toNumber(), number_of_brackets);
         const max_number_of_tickets_per_buy_or_claim = value.max_number_of_tickets_per_buy_or_claim.toNumber();
 
@@ -172,6 +178,7 @@ const GraceOfFreyja = () => {
             max_number_of_tickets_per_buy_or_claim,
 
             total_value_in_usd,
+            brackets,
         };
     }
 
@@ -582,7 +589,7 @@ const GraceOfFreyja = () => {
                                 <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
                                     <TabList onChange={handleTabChange} aria-label="lab API tabs example">
                                         <Tab label="Current" value="1" />
-                                        <Tab label="History" value="2" />
+                                        <Tab label="Claim" value="2" />
                                     </TabList>
                                 </Box>
 
@@ -754,29 +761,33 @@ const GraceOfFreyja = () => {
                                                         <Col className="mt-3" xs="6" sm="3">
                                                             <div className="d-flex flex-column">
                                                                 <span style={{ fontSize: "16px", fontWeight: "600" }}> Match first 1 </span>
-                                                                <span className="mt-2"> 405 Odin </span>
-                                                                <span className="mt-1" style={{ fontSize: "12px", color: "#F1DA8A" }}> ~ $3,137</span>
+                                                                {/* <span className="mt-2"> 405 Odin </span> */}
+                                                                <span className="mt-1" style={{ fontSize: "12px", color: "#F1DA8A" }}> ~ ${lotteries ? lotteries[selectedClaimableRoundIndex].brackets[0].total_value_in_usd : '-'}</span>
+                                                                <span className="mt-1" style={{ fontSize: "12px", color: "#fff" }}> {lotteries && `${lotteries[selectedClaimableRoundIndex].number_of_winners_per_bracket[0]} Win Tickets`}</span>
                                                             </div>
                                                         </Col>
                                                         <Col className="mt-3" xs="6" sm="3">
                                                             <div className="d-flex flex-column">
                                                                 <span style={{ fontSize: "16px", fontWeight: "600" }}> Match first 2 </span>
-                                                                <span className="mt-2"> 405 Odin </span>
-                                                                <span className="mt-1" style={{ fontSize: "12px", color: "#F1DA8A" }}> ~ $3,137</span>
+                                                                {/* <span className="mt-2"> 405 Odin </span> */}
+                                                                <span className="mt-1" style={{ fontSize: "12px", color: "#F1DA8A" }}> ~ ${lotteries ? lotteries[selectedClaimableRoundIndex].brackets[1].total_value_in_usd : '-'}</span>
+                                                                <span className="mt-1" style={{ fontSize: "12px", color: "#fff" }}> {lotteries && `${lotteries[selectedClaimableRoundIndex].number_of_winners_per_bracket[1]} Win Tickets`}</span>
                                                             </div>
                                                         </Col>
                                                         <Col className="mt-3" xs="6" sm="3">
                                                             <div className="d-flex flex-column">
                                                                 <span style={{ fontSize: "16px", fontWeight: "600" }}> Match first 3 </span>
-                                                                <span className="mt-2"> 405 Odin </span>
-                                                                <span className="mt-1" style={{ fontSize: "12px", color: "#F1DA8A" }}> ~ $3,137</span>
+                                                                {/* <span className="mt-2"> 405 Odin </span> */}
+                                                                <span className="mt-1" style={{ fontSize: "12px", color: "#F1DA8A" }}> ~ ${lotteries ? lotteries[selectedClaimableRoundIndex].brackets[2].total_value_in_usd : '-'}</span>
+                                                                <span className="mt-1" style={{ fontSize: "12px", color: "#fff" }}> {lotteries && `${lotteries[selectedClaimableRoundIndex].number_of_winners_per_bracket[2]} Win Tickets`}</span>
                                                             </div>
                                                         </Col>
                                                         <Col className="mt-3" xs="6" sm="3">
                                                             <div className="d-flex flex-column">
                                                                 <span style={{ fontSize: "16px", fontWeight: "600" }}> Match first 4 </span>
-                                                                <span className="mt-2"> 405 Odin </span>
-                                                                <span className="mt-1" style={{ fontSize: "12px", color: "#F1DA8A" }}> ~ $3,137</span>
+                                                                {/* <span className="mt-2"> 405 Odin </span> */}
+                                                                <span className="mt-1" style={{ fontSize: "12px", color: "#F1DA8A" }}> ~ ${lotteries ? lotteries[selectedClaimableRoundIndex].brackets[3].total_value_in_usd : '-'}</span>
+                                                                <span className="mt-1" style={{ fontSize: "12px", color: "#fff" }}> {lotteries && `${lotteries[selectedClaimableRoundIndex].number_of_winners_per_bracket[3]} Win Tickets`}</span>
                                                             </div>
                                                         </Col>
                                                     </Row>
@@ -842,10 +853,10 @@ const GraceOfFreyja = () => {
                                                                 }
                                                             </div>
                                                             <div className="mt-4" style={{ color: 'white' }}>
-                                                                <div>Match 1: {oldAccount ? oldAccount.number_of_win_brackets[1] : '-'}</div>
-                                                                <div>Match 2: {oldAccount ? oldAccount.number_of_win_brackets[2] : '-'}</div>
-                                                                <div>Match 3: {oldAccount ? oldAccount.number_of_win_brackets[3] : '-'}</div>
-                                                                <div>Match 4: {oldAccount ? oldAccount.number_of_win_brackets[4] : '-'}</div>
+                                                                <div>Match First 1: {oldAccount ? oldAccount.number_of_win_brackets[1] : '-'}</div>
+                                                                <div>Match First 2: {oldAccount ? oldAccount.number_of_win_brackets[2] : '-'}</div>
+                                                                <div>Match First 3: {oldAccount ? oldAccount.number_of_win_brackets[3] : '-'}</div>
+                                                                <div>Match First 4: {oldAccount ? oldAccount.number_of_win_brackets[4] : '-'}</div>
                                                                 <div className="mt-2" style={{color:"#F1DA8A"}}>Total Reward: {oldAccount ? `$${oldAccount.total_value_in_usd}` : '-'}</div>
                                                             </div>
                                                             <div className="freyja-center mt-5">
