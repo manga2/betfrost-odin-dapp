@@ -491,6 +491,28 @@ const GraceOfFreyja = () => {
 
                 await refreshAccount();
                 await sendTransactions({ transactions: tx });
+            } else {
+                const args: TypedValue[] = [
+                    BytesValue.fromUTF8(paymentTokens[selectedTokenIndex].identifier),
+                    new BigUIntValue(convertEsdtToWei(paymentTokens[selectedTokenIndex].amount * numbers.length, paymentTokens[selectedTokenIndex].decimals)),
+                    BytesValue.fromUTF8('buyTickets'),
+                    new U32Value(currentLottery.lottery_id),	// lottery_id
+                ];
+                for (let i = 0; i < numbers.length; i++) {
+                    args.push(new U32Value(numbers[i]));
+                }
+            
+                const { argumentsString } = new ArgSerializer().valuesToString(args);
+                const data = new TransactionPayload(`ESDTTransfer@${argumentsString}`);
+
+                const tx = {
+                    receiver: FREYJA_CONTRACT_ADDRESS,
+                    data: data,
+                    gasLimit: new GasLimit(6000000 + 3000000 * numbers.length),
+                };
+
+                await refreshAccount();
+                await sendTransactions({ transactions: tx });
             }
 
             setShowModal(false);
