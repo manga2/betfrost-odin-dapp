@@ -376,16 +376,16 @@ const GraceOfFreyja = () => {
     const maxTicketCountPerRound = 1000;
 
     const [ticketCount, setTicketCount] = useState<number | undefined>(0);
-    const handleSetTicketCount = (ticketCount) => {
+    const handleSetTicketCount = (ticketAmount) => {
         if (!address) {
             alert('Connect your wallet.');
             return;
         }
         if (!paymentTokens || !currentLottery) return;
 
-        if (ticketCount >= 0 && ticketCount <= currentLottery.max_number_of_tickets_per_buy_or_claim) {
-            if (balance >= ticketCount * paymentTokens[selectedTokenIndex].amount) {
-                setTicketCount(ticketCount);
+        if (ticketAmount >= 0 && ticketAmount <= currentLottery.max_number_of_tickets_per_buy_or_claim) {
+            if (balance >= ticketAmount * paymentTokens[selectedTokenIndex].amount) {
+                setTicketCount(ticketAmount);
             } else {
                 alert('Not enough balance.');
             }
@@ -422,10 +422,11 @@ const GraceOfFreyja = () => {
             alert('Round is closed.');
             return;
         } else {
+            const TicketBin = [];
             for (let i = 0; i < ticketCount; i++) {
-                handleGenerateCurrentOrderTickets([]);
+                TicketBin.push([]);    
             }
-
+            setCurrentOrderTickets(TicketBin);
             setShowModal(true);
         }
     };
@@ -433,34 +434,31 @@ const GraceOfFreyja = () => {
     /** for generate tickets */
     const pinfieldsRef = useRef([]);
     const [CurrentOrderTickets, setCurrentOrderTickets] = useState<any>([]);
-    const handleGenerateCurrentOrderTickets = (newTicket) => {
-        setCurrentOrderTickets((prevTickets) => [
-            ...prevTickets,
-            newTicket
-        ]);
-    };
 
     const handleGenerateRandom = () => {
         const maxN = 9999;
+        const len = pinfieldsRef.current.length;
 
         for (let i = 0; i < ticketCount; i++) {
             const ranN = getUniqueRandomNumber(maxN);
-            pinfieldsRef.current[i].inputs[0].value = Math.floor(ranN / 1000);
-            pinfieldsRef.current[i].inputs[1].value = Math.floor(ranN / 100 % 10);
-            pinfieldsRef.current[i].inputs[2].value = Math.floor(ranN % 100 / 10);
-            pinfieldsRef.current[i].inputs[3].value = Math.floor(ranN % 10);
+            
+            pinfieldsRef.current[len-ticketCount + i].inputs[0].value = Math.floor(ranN / 1000);
+            pinfieldsRef.current[len-ticketCount + i].inputs[1].value = Math.floor(ranN / 100 % 10);
+            pinfieldsRef.current[len-ticketCount + i].inputs[2].value = Math.floor(ranN % 100 / 10);
+            pinfieldsRef.current[len-ticketCount + i].inputs[3].value = Math.floor(ranN % 10);
         }
     };
 
     const handleModalOk = () => {
-        (async() => {
+        (async () => {
             const numbers = [];
+            const len = pinfieldsRef.current.length;
             for (let i = 0; i < ticketCount; i++) {
                 let number = 0;
-                number += parseInt(pinfieldsRef.current[i].inputs[0].value);
-                number += parseInt(pinfieldsRef.current[i].inputs[1].value) * 10;
-                number += parseInt(pinfieldsRef.current[i].inputs[2].value) * 100;
-                number += parseInt(pinfieldsRef.current[i].inputs[3].value) * 1000;
+                number += parseInt(pinfieldsRef.current[len-ticketCount + i].inputs[0].value);
+                number += parseInt(pinfieldsRef.current[len-ticketCount + i].inputs[1].value) * 10;
+                number += parseInt(pinfieldsRef.current[len-ticketCount + i].inputs[2].value) * 100;
+                number += parseInt(pinfieldsRef.current[len-ticketCount + i].inputs[3].value) * 1000;
 
                 numbers.push(number);
             }
@@ -473,10 +471,10 @@ const GraceOfFreyja = () => {
                 for (let i = 0; i < numbers.length; i++) {
                     args.push(new U32Value(numbers[i]));
                 }
-            
+
                 const { argumentsString } = new ArgSerializer().valuesToString(args);
                 const data = `buyTickets@${argumentsString}`;
-            
+
                 const tx = {
                     receiver: FREYJA_CONTRACT_ADDRESS,
                     data: data,
@@ -485,7 +483,7 @@ const GraceOfFreyja = () => {
                 };
 
                 await refreshAccount();
-                await sendTransactions({transactions: tx});
+                await sendTransactions({ transactions: tx });
             }
 
             setShowModal(false);
@@ -508,22 +506,22 @@ const GraceOfFreyja = () => {
             return;
         }
 
-        (async() => {
+        (async () => {
             const args: TypedValue[] = [
                 new U32Value(lotteries[selectedMylotteryId].lottery_id),	// lottery_id
             ];
-        
+
             const { argumentsString } = new ArgSerializer().valuesToString(args);
             const data = `claimTickets@${argumentsString}`;
-        
+
             const tx = {
                 receiver: FREYJA_CONTRACT_ADDRESS,
                 data: data,
                 gasLimit: new GasLimit(3000000 * oldAccount.total_number_of_win_brackets),
             };
-    
+
             await refreshAccount();
-            await sendTransactions({transactions: tx});
+            await sendTransactions({ transactions: tx });
         })();
     }
 
@@ -577,7 +575,8 @@ const GraceOfFreyja = () => {
 
                 {/** second part : Control Lottery */}
                 <div className='freyja-second-part' id="buyTickets">
-                    <Container style={{ paddingTop: "80px" }}>
+                    <Container style={{ paddingTop: "20px" }}>
+                        <p className='freyja-saying'>{"Our goddess Freyja is calling us ..."}</p>
                         <Box sx={{ width: '100%', typography: 'body1' }}>
                             <TabContext value={tabValue}>
                                 <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
@@ -689,7 +688,7 @@ const GraceOfFreyja = () => {
                                                             <Col sm='12' lg="6">
                                                                 <span className="Next-Draw"># Prize Pool</span>
                                                                 <div className="d-flex" style={{ flexDirection: "column", color: "white" }}>
-                                                                    
+
                                                                     <span className='mt-2' style={{ color: "#EEC98A" }}>Total: {'$'}{currentLottery ? currentLottery.total_value_in_usd : '-'}</span>
 
                                                                     {
@@ -842,12 +841,12 @@ const GraceOfFreyja = () => {
                                                                     })
                                                                 }
                                                             </div>
-                                                            <div className="mt-4" style={{color: 'white'}}>
+                                                            <div className="mt-4" style={{ color: 'white' }}>
                                                                 <div>Match 1: {oldAccount ? oldAccount.number_of_win_brackets[1] : '-'}</div>
                                                                 <div>Match 2: {oldAccount ? oldAccount.number_of_win_brackets[2] : '-'}</div>
                                                                 <div>Match 3: {oldAccount ? oldAccount.number_of_win_brackets[3] : '-'}</div>
                                                                 <div>Match 4: {oldAccount ? oldAccount.number_of_win_brackets[4] : '-'}</div>
-                                                                <div>Total Reward: {oldAccount ? `$${oldAccount.total_value_in_usd}`: '-'}</div>
+                                                                <div className="mt-2" style={{color:"#F1DA8A"}}>Total Reward: {oldAccount ? `$${oldAccount.total_value_in_usd}` : '-'}</div>
                                                             </div>
                                                             <div className="freyja-center mt-5">
                                                                 <div className="claim-but" onClick={claimTickets}>
