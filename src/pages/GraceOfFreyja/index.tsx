@@ -486,7 +486,7 @@ const GraceOfFreyja = () => {
                     receiver: FREYJA_CONTRACT_ADDRESS,
                     data: data,
                     value: Balance.egld(paymentTokens[selectedTokenIndex].amount * numbers.length),
-                    gasLimit: new GasLimit(3000000 * numbers.length),
+                    gasLimit: new GasLimit(6000000 + 3000000 * numbers.length),
                 };
 
                 await refreshAccount();
@@ -524,7 +524,7 @@ const GraceOfFreyja = () => {
             const tx = {
                 receiver: FREYJA_CONTRACT_ADDRESS,
                 data: data,
-                gasLimit: new GasLimit(3000000 * oldAccount.total_number_of_win_brackets),
+                gasLimit: new GasLimit(6000000 + 3000000 * oldAccount.total_number_of_win_brackets),
             };
 
             await refreshAccount();
