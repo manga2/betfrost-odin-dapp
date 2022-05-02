@@ -8,7 +8,7 @@
     background-position: top;
     background-repeat: no-repeat;
     overflow-x: hidden;
-    min-height: 768px;
+    // min-height: 768px;
 }
 
 .freyja-second-part {
@@ -154,7 +154,7 @@
     color: white;
     cursor: pointer;
     background-color: #8180496b;
-    
+
     border-radius: 5px;
     transition: .3s ease-in-out;
 
@@ -676,4 +676,14 @@
     &:hover {
         color: #da7474;
     }
+}
+
+.fade-border {
+    height: 100px;
+    background: linear-gradient(180deg, rgba(92, 92, 92, 0) 0%, rgb(92, 92, 92) 100%);
+}
+
+.fade-border-second {
+    height: 20px;
+    background: linear-gradient(180deg, rgba(92, 92, 92, 1) 0%, rgba(92, 92, 92, 0) 100%);
 }

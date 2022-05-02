@@ -582,7 +582,7 @@ const GraceOfFreyja = () => {
                         <img className="freyja-title" src={titleImg} alt="Grace of Freyja" />
 
                         <CountDown targetTimestamp={currentLottery ? currentLottery.end_timestamp : getCurrentTimestamp() + 60000000} />
-                        <p className="freyja-saying" style={{ filter: "drop-shadow(1px 2px 2px #000000)", fontSize:"29px" }}>
+                        <p className="freyja-saying" style={{ filter: "drop-shadow(1px 2px 2px #000000)", fontSize: "29px" }}>
                             {
                                 "Round #" + (currentLottery?.end_timestamp.getTime() > new Date().getTime() ? currentLottery?.lottery_id + " is Live" : currentLottery?.lottery_id + " is Finished")
                             }
@@ -606,18 +606,21 @@ const GraceOfFreyja = () => {
                             </div>
                         </div>
                     </Container>
+
+                    <div className="fade-border mt-3" />
                 </div>
 
                 {/** second part : Control Lottery */}
                 <div className='freyja-second-part' id="buyTickets">
-                    <Container style={{ paddingTop: "20px" }}>
-                        <p className='freyja-saying'>{"Our goddess Freyja is calling us ..."}</p>
+                    <div className="fade-border-second" />
+                    <Container>
+                        <p className='freyja-saying mb-1'>{"Our goddess Freyja is calling us ..."}</p>
                         <Box sx={{ width: '100%', typography: 'body1' }}>
                             <TabContext value={tabValue}>
                                 <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
                                     <TabList onChange={handleTabChange} aria-label="lab API tabs example">
-                                        <Tab label="Current" value="1" />
-                                        <Tab label="Claim" value="2" />
+                                        <Tab label="Current" value="1" style={{ color: "#dac374" }} />
+                                        <Tab label="Claim" value="2" style={{ color: "#dac374" }} />
                                     </TabList>
                                 </Box>
 
