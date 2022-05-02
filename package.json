@@ -8,6 +8,7 @@
     "@elrondnetwork/dapp-core": "1.0.45",
     "@elrondnetwork/erdjs": "10.0.0-beta.3",
     "@elrondnetwork/erdjs-walletcore": "^1.0.0",
+    "@material-ui/core": "^4.12.4",
     "axios": "^0.21.1",
     "bootstrap": "4.6.0",
     "copy-to-clipboard": "^3.3.1",

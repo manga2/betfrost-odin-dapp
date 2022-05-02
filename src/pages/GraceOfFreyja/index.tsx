@@ -5,6 +5,7 @@ import TabPanel from '@mui/lab/TabPanel';
 import Badge from '@mui/material/Badge';
 import Box from '@mui/material/Box';
 import Tab from '@mui/material/Tab';
+import { makeStyles } from "@material-ui/core/styles";
 
 import { Container, Row, Col, Dropdown } from 'react-bootstrap';
 import { Collapse } from 'react-collapse';
@@ -72,6 +73,17 @@ import {
 } from 'data';
 import * as lotteryData from './lotteryData';
 
+const useStyles = makeStyles((theme) => ({
+    badgePrimary: {
+        backgroundColor: "#7a7a7a",
+        color: "white"
+    },
+    badgeSecondary: {
+        backgroundColor: "#F1DA8A",
+        color: "black"
+    }
+}));
+
 function parseTicketNumber(ticketNumber: number, number_of_brackets: number) {
     const digits = [];
     const s = String(ticketNumber).padStart(number_of_brackets, '0').split('').reverse().join('');
@@ -93,6 +105,9 @@ function getUniqueRandomNumber(max) {
 }
 
 const GraceOfFreyja = () => {
+
+    const badgeClasses = useStyles();
+
     //
     const { account, address } = useGetAccountInfo();
     const { network } = useGetNetworkConfig();
@@ -930,7 +945,7 @@ const GraceOfFreyja = () => {
                                                                 return (
                                                                     <Col className="mt-4" sm="6" key={index}>
                                                                         {ticket.win_bracket > 0 ? (
-                                                                            <Badge color={ticket.claimed ? "secondary" : "secondary"} badgeContent={ticket.claimed ? "Claimed" : "Claimable"} >
+                                                                            <Badge classes={{ badge: ticket.claimed ? badgeClasses.badgePrimary : badgeClasses.badgeSecondary }} badgeContent={ticket.claimed ? "Claimed" : "Claimable"} >
                                                                                 <div className={`ticket-box-${flag}`}>
                                                                                     <div className="ticket-medal">
                                                                                         <div className="ticket-medal-inner-box" >
@@ -946,7 +961,7 @@ const GraceOfFreyja = () => {
                                                                                 </div>
                                                                             </Badge>
                                                                         ) : (
-                                                                            <Badge color={"secondary"} badgeContent={"No Win"} >
+                                                                            <Badge classes={{ badge: badgeClasses.badgePrimary }} badgeContent={"No Win"} >
                                                                                 <div className={`ticket-box-${flag}`}>
                                                                                     <div className="ticket-medal">
                                                                                         <div className="ticket-medal-inner-box" >
