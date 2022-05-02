@@ -501,7 +501,7 @@ const GraceOfFreyja = () => {
                 }
 
                 const { argumentsString } = new ArgSerializer().valuesToString(args);
-                const data = new TransactionPayload(`ESDTTransfer@${argumentsString}`);
+                const data = `ESDTTransfer@${argumentsString}`;
 
                 const tx = {
                     receiver: FREYJA_CONTRACT_ADDRESS,
@@ -946,7 +946,7 @@ const GraceOfFreyja = () => {
                                                                                 </div>
                                                                             </Badge>
                                                                         ) : (
-                                                                            <Badge color={"secondary"} badgeContent={"None"} >
+                                                                            <Badge color={"secondary"} badgeContent={"No Win"} >
                                                                                 <div className={`ticket-box-${flag}`}>
                                                                                     <div className="ticket-medal">
                                                                                         <div className="ticket-medal-inner-box" >
