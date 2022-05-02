@@ -197,6 +197,7 @@ const GraceOfFreyja = () => {
 
             const currentLottery = parseLottery(value);
 
+            // console.log(new Date().getTime(),"sfaskdfkweoiruowisjfdowieiorjerjoief");
             console.log('currentLottery', currentLottery);
             setCurrentLottery(currentLottery);
         })();
@@ -503,7 +504,7 @@ const GraceOfFreyja = () => {
                 for (let i = 0; i < numbers.length; i++) {
                     args.push(new U32Value(numbers[i]));
                 }
-            
+
                 const { argumentsString } = new ArgSerializer().valuesToString(args);
                 const data = new TransactionPayload(`ESDTTransfer@${argumentsString}`);
 
@@ -584,7 +585,13 @@ const GraceOfFreyja = () => {
                 <div className='freyja-first-part'>
                     <Container className='freyja-inner-container text-center' style={{ paddingTop: "100px" }}>
                         <img className="freyja-title" src={titleImg} alt="Grace of Freyja" />
+
                         <CountDown targetTimestamp={currentLottery ? currentLottery.end_timestamp : getCurrentTimestamp() + 60000000} />
+                        <p className="freyja-saying" style={{ filter: "drop-shadow(1px 2px 2px #000000)", fontSize:"29px" }}>
+                            {
+                                "Round" + (currentLottery?.end_timestamp.getTime() > new Date().getTime() ? currentLottery?.lottery_id + " is Live" : currentLottery?.lottery_id + " is Finished")
+                            }
+                        </p>
                         <div style={{ display: "flex", justifyContent: "center", textAlign: "center" }}>
                             <a href="#buyTickets">
                                 <div className="buy-ticket-button" >
@@ -621,8 +628,11 @@ const GraceOfFreyja = () => {
 
                                 {/** tab for current lottery */}
                                 <TabPanel value="1">
+                                    <div className="text-center">
+                                        <span className="freyja-saying">{"Round " + (lotteries?.length + 1)}</span>
+                                    </div>
                                     <Row>
-                                        <Col md="5" style={{ marginTop: "20px" }}>
+                                        <Col md="5" style={{ marginTop: "10px" }}>
                                             <div className="Buy-Ticket-Box" >
                                                 <span style={{ fontSize: "12px", color: "gray" }}>Payment Token</span>
                                                 <Dropdown onSelect={handleSelectTokenId} drop='down'>
@@ -712,7 +722,7 @@ const GraceOfFreyja = () => {
                                             </div>
                                         </Col>
 
-                                        <Col md="7" style={{ marginTop: "20px" }}>
+                                        <Col md="7" style={{ marginTop: "10px" }}>
                                             <Row>
                                                 <Col sm='7'>
                                                     <div className="Comment-Box">
