@@ -921,7 +921,7 @@ const GraceOfFreyja = () => {
                                                                 return (
                                                                     <Col className="mt-4" sm="6" key={index}>
                                                                         {ticket.win_bracket > 0 ? (
-                                                                            <Badge color={ticket.claimed ? "primary" : "secondary"} badgeContent={ticket.claimed ? "Claimed" : "Claimable"} >
+                                                                            <Badge color={ticket.claimed ? "secondary" : "primary"} badgeContent={ticket.claimed ? "Claimed" : "Claimable"} >
                                                                                 <div className={`ticket-box-${flag}`}>
                                                                                     <div className="ticket-medal">
                                                                                         <div className="ticket-medal-inner-box" >
@@ -937,19 +937,21 @@ const GraceOfFreyja = () => {
                                                                                 </div>
                                                                             </Badge>
                                                                         ) : (
-                                                                            <div className={`ticket-box-${flag}`}>
-                                                                                <div className="ticket-medal">
-                                                                                    <div className="ticket-medal-inner-box" >
-                                                                                        <span>{ticket.win_bracket}</span>
+                                                                            <Badge color={"secondary"} badgeContent={"None"} >
+                                                                                <div className={`ticket-box-${flag}`}>
+                                                                                    <div className="ticket-medal">
+                                                                                        <div className="ticket-medal-inner-box" >
+                                                                                            <span>{ticket.win_bracket}</span>
+                                                                                        </div>
+                                                                                    </div>
+                                                                                    <div className="text-center ml-3" >
+                                                                                        <span className="ml-2">{ticket.number[0]}</span>
+                                                                                        <span className="ml-2">{ticket.number[1]}</span>
+                                                                                        <span className="ml-2">{ticket.number[2]}</span>
+                                                                                        <span className="ml-2">{ticket.number[3]}</span>
                                                                                     </div>
                                                                                 </div>
-                                                                                <div className="text-center ml-3" >
-                                                                                    <span className="ml-2">{ticket.number[0]}</span>
-                                                                                    <span className="ml-2">{ticket.number[1]}</span>
-                                                                                    <span className="ml-2">{ticket.number[2]}</span>
-                                                                                    <span className="ml-2">{ticket.number[3]}</span>
-                                                                                </div>
-                                                                            </div>
+                                                                            </Badge>
                                                                         )}
                                                                     </Col>
                                                                 );
