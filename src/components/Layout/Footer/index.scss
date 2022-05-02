@@ -6,3 +6,15 @@ footer {
 footer div a {
     color: white !important;
 }
+
+.footer-icon-list {
+    a {
+        fill: white;
+
+        &:hover {
+            fill: gray;
+        }
+
+        margin-right: 6px;
+    }
+}
