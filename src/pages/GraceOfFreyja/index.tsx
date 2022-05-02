@@ -230,6 +230,7 @@ const GraceOfFreyja = () => {
 
             if (items.length > 0) {
                 setSelectedClaimableRoundIndex(items.length - 1);
+                setSelectedMylotteryId(items.length - 1);
             }
 
             console.log('lotteries', lotteries);
@@ -589,7 +590,7 @@ const GraceOfFreyja = () => {
                         <CountDown targetTimestamp={currentLottery ? currentLottery.end_timestamp : getCurrentTimestamp() + 60000000} />
                         <p className="freyja-saying" style={{ filter: "drop-shadow(1px 2px 2px #000000)", fontSize:"29px" }}>
                             {
-                                "Round" + (currentLottery?.end_timestamp.getTime() > new Date().getTime() ? currentLottery?.lottery_id + " is Live" : currentLottery?.lottery_id + " is Finished")
+                                "Round #" + (currentLottery?.end_timestamp.getTime() > new Date().getTime() ? currentLottery?.lottery_id + " is Live" : currentLottery?.lottery_id + " is Finished")
                             }
                         </p>
                         <div style={{ display: "flex", justifyContent: "center", textAlign: "center" }}>
@@ -629,7 +630,7 @@ const GraceOfFreyja = () => {
                                 {/** tab for current lottery */}
                                 <TabPanel value="1">
                                     <div className="text-center">
-                                        <span className="freyja-saying">{"Round " + (lotteries?.length + 1)}</span>
+                                        <span className="freyja-saying">{"Round #" + (currentLottery && currentLottery.lottery_id)}</span>
                                     </div>
                                     <Row>
                                         <Col md="5" style={{ marginTop: "10px" }}>
@@ -717,7 +718,8 @@ const GraceOfFreyja = () => {
                                                 </div>
 
                                                 <div className="text-center mt-2 show-tickets" onClick={() => setShowBoughtTicketsModal(true)}>
-                                                    {"You bought " + newTickets.length + " tickets. Click to look."}
+                                                    <div>{"You bought " + newTickets.length + " tickets."}</div>
+                                                    <div>Click here to see tickets you bought.</div>
                                                 </div>
                                             </div>
                                         </Col>
@@ -1092,7 +1094,7 @@ const GraceOfFreyja = () => {
                     <div className='custom-scroll-bar' style={{ overflowY: "auto", height: "520px" }}>
                         <Row>
                             {
-                                lotteryData.MyLotteries[0].tickets.map((ticket, index) => {
+                                newTickets.map((ticket, index) => {
                                     return (
                                         <Col className="mt-3" xs="6" sm="4" key={index}>
                                             <span className="ml-2">#{index}</span>
