@@ -648,10 +648,10 @@ const GraceOfFreyja = () => {
                                         <Col md="5" style={{ marginTop: "10px" }}>
                                             <div className="Buy-Ticket-Box" >
                                                 <Row>
-                                                    <Col xs="3">
+                                                    <Col sm="3">
                                                         <span style={{ fontSize: "12px", color: "gray" }}>Payment Token</span>
                                                     </Col>
-                                                    <Col xs="9">
+                                                    <Col sm="9">
                                                         <Dropdown className="w-100" onSelect={handleSelectTokenId} drop='down' style={{ width: "150px" }}>
                                                             <Dropdown.Toggle className='token-id-toggle' id="token-id">
                                                                 {
@@ -675,10 +675,10 @@ const GraceOfFreyja = () => {
                                                     </Col>
                                                 </Row>
                                                 <Row>
-                                                    <Col xs="3">
+                                                    <Col sm="3">
                                                         <span style={{ fontSize: "12px", color: "gray" }}>Tickets Amount</span>
                                                     </Col>
-                                                    <Col xs="9">
+                                                    <Col sm="9">
                                                         <div className="d-flex" >
                                                             <input className="custom-input" type='number' value={ticketCount ? ticketCount : ''} onChange={(e) => handleSetTicketCount(Number(e.target.value))} />
 
