@@ -342,7 +342,7 @@ const GraceOfFreyja = () => {
         })();
     }, [contractInteractor, address, lotteries, selectedMylotteryId]);
 
-    const [newTickets, setNewTickets] = React.useState<any>([]);
+    const [currentRoundTicketNumbers, setCurrentRoundTicketNumbers] = React.useState<any>([]);
     React.useEffect(() => {
         (async () => {
             if (!contractInteractor || !currentLottery || !address || hasPendingTransactions) return;
@@ -351,33 +351,27 @@ const GraceOfFreyja = () => {
                 new AddressValue(new Address(address)),
                 new U32Value(currentLottery.lottery_id),
             ];
-            const interaction = contractInteractor.contract.methods.viewTickets(args);
+            const interaction = contractInteractor.contract.methods.viewTicketNumbers(args);
             const res = await contractInteractor.controller.query(interaction);
 
             if (!res || !res.returnCode.isSuccess()) return;
             const items = res.firstValue?.valueOf();
 
-            const newTickets = [];
+            const currentRoundTicketNumbers = [];
             for (let i = 0; i < items.length; i++) {
                 const value = items[i];
 
-                const number = parseTicketNumber(value.number.toNumber(), currentLottery.number_of_brackets);
-                const claimed = value.claimed;
-                const win_bracket = value.win_bracket.toNumber();
-                const win_percentage = value.win_percentage.toNumber() / 1000000;
+                const number = parseTicketNumber(value.toNumber(), currentLottery.number_of_brackets);
 
                 const result = {
                     number,
-                    claimed,
-                    win_bracket,
-                    win_percentage,
                 };
 
-                newTickets.push(result);
+                currentRoundTicketNumbers.push(result);
             }
 
-            console.log("newTickets ===========", newTickets);
-            setNewTickets(newTickets);
+            console.log("currentRoundTicketNumbers", currentRoundTicketNumbers);
+            setCurrentRoundTicketNumbers(currentRoundTicketNumbers);
         })();
     }, [contractInteractor, address, currentLottery, hasPendingTransactions]);
 
@@ -718,7 +712,7 @@ const GraceOfFreyja = () => {
                                                 </div>
 
                                                 <div className="text-center mt-2 show-tickets" onClick={() => setShowBoughtTicketsModal(true)}>
-                                                    <div>{"You bought " + newTickets.length + " tickets."}</div>
+                                                    <div>{"You bought " + currentRoundTicketNumbers && currentRoundTicketNumbers.length + " tickets."}</div>
                                                     <div>Click here to see tickets you bought.</div>
                                                 </div>
                                             </div>
@@ -1094,7 +1088,7 @@ const GraceOfFreyja = () => {
                     <div className='custom-scroll-bar' style={{ overflowY: "auto", height: "520px" }}>
                         <Row>
                             {
-                                newTickets.map((ticket, index) => {
+                                currentRoundTicketNumbers && currentRoundTicketNumbers.map((ticket, index) => {
                                     return (
                                         <Col className="mt-3" xs="6" sm="4" key={index}>
                                             <span className="ml-2">#{index}</span>
