@@ -2,6 +2,8 @@
 
 // export const dAppName = 'Betfrost Odin';
 // export const SOCIAL_WEBSITE_URL = 'https://odindefi.app/';
+// export const SOCIAL_TWITTER_URL = 'https://twitter.com/OdinDefi';
+// export const SOCIAL_TELEGRAM_URL = 'https://t.me/OdinDeFiProtocol';
 
 // // Odin's Fate
 // export const FLIP_CONTRACT_ADDRESS = 'erd1qqqqqqqqqqqqqpgqwl27p4yqhudfgd95gf6hce4yzdqy086cdfyseva4ph';
@@ -17,6 +19,8 @@ export const ENVIRONMENT = 'devnet';
 
 export const dAppName = 'Betfrost Odin';
 export const SOCIAL_WEBSITE_URL = 'https://odindefi.app/';
+export const SOCIAL_TWITTER_URL = 'https://twitter.com/OdinDefi';
+export const SOCIAL_TELEGRAM_URL = 'https://t.me/OdinDeFiProtocol';
 
 // Odin's Fate
 export const FLIP_CONTRACT_ADDRESS = 'erd1qqqqqqqqqqqqqpgqwl27p4yqhudfgd95gf6hce4yzdqy086cdfyseva4ph';
