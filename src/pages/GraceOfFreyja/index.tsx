@@ -632,36 +632,45 @@ const GraceOfFreyja = () => {
                                     <Row>
                                         <Col md="5" style={{ marginTop: "10px" }}>
                                             <div className="Buy-Ticket-Box" >
-                                                <span style={{ fontSize: "12px", color: "gray" }}>Payment Token</span>
-                                                <Dropdown onSelect={handleSelectTokenId} drop='down'>
-                                                    <Dropdown.Toggle className='token-id-toggle' id="token-id">
-                                                        {
-                                                            <>
-                                                                <span>{paymentTokens && paymentTokens[selectedTokenIndex].ticker}</span>
-                                                                <img src={paymentTokens && paymentTokens[selectedTokenIndex].url} />
-                                                            </>
-                                                        }
-                                                    </Dropdown.Toggle>
-                                                    <Dropdown.Menu className='token-id-menu'>
-                                                        {
-                                                            paymentTokens && paymentTokens.map((token, index) => (
-                                                                <Dropdown.Item eventKey={index} key={`token-id-menu-item-${token.identifier}`}>
-                                                                    <span>{token.ticker}</span>
-                                                                    <img src={token.url} />
-                                                                </Dropdown.Item>
-                                                            ))
-                                                        }
-                                                    </Dropdown.Menu>
-                                                </Dropdown>
+                                                <Row>
+                                                    <Col xs="3">
+                                                        <span style={{ fontSize: "12px", color: "gray" }}>Payment Token</span>
+                                                    </Col>
+                                                    <Col xs="9">
+                                                        <Dropdown className="w-100" onSelect={handleSelectTokenId} drop='down' style={{ width: "150px" }}>
+                                                            <Dropdown.Toggle className='token-id-toggle' id="token-id">
+                                                                {
+                                                                    <>
+                                                                        <span>{paymentTokens && paymentTokens[selectedTokenIndex].ticker}</span>
+                                                                        <img src={paymentTokens && paymentTokens[selectedTokenIndex].url} />
+                                                                    </>
+                                                                }
+                                                            </Dropdown.Toggle>
+                                                            <Dropdown.Menu className='token-id-menu'>
+                                                                {
+                                                                    paymentTokens && paymentTokens.map((token, index) => (
+                                                                        <Dropdown.Item eventKey={index} key={`token-id-menu-item-${token.identifier}`}>
+                                                                            <span>{token.ticker}</span>
+                                                                            <img src={token.url} />
+                                                                        </Dropdown.Item>
+                                                                    ))
+                                                                }
+                                                            </Dropdown.Menu>
+                                                        </Dropdown>
+                                                    </Col>
+                                                </Row>
+                                                <Row>
+                                                    <Col xs="3">
+                                                        <span style={{ fontSize: "12px", color: "gray" }}>Tickets Amount</span>
+                                                    </Col>
+                                                    <Col xs="9">
+                                                        <div className="d-flex" >
+                                                            <input className="custom-input" type='number' value={ticketCount ? ticketCount : ''} onChange={(e) => handleSetTicketCount(Number(e.target.value))} />
 
-                                                <span style={{ fontSize: "12px", color: "gray" }}>Number of Tickets</span>
-                                                <div className="d-flex" >
-                                                    <input className="custom-input" type='number' value={ticketCount ? ticketCount : ''} onChange={(e) => handleSetTicketCount(Number(e.target.value))} />
-
-                                                    <div className="max-but ml-2" onClick={handleMax}>Max</div>
-                                                </div>
-
-
+                                                            <div className="max-but ml-2" onClick={handleMax}>Max</div>
+                                                        </div>
+                                                    </Col>
+                                                </Row>
 
                                                 <div className="freyja-center">
                                                     <div style={{ justifyContent: "space-between", display: "flex", width: "100px" }}>
@@ -921,7 +930,7 @@ const GraceOfFreyja = () => {
                                                                 return (
                                                                     <Col className="mt-4" sm="6" key={index}>
                                                                         {ticket.win_bracket > 0 ? (
-                                                                            <Badge color={ticket.claimed ? "secondary" : "primary"} badgeContent={ticket.claimed ? "Claimed" : "Claimable"} >
+                                                                            <Badge color={ticket.claimed ? "secondary" : "secondary"} badgeContent={ticket.claimed ? "Claimed" : "Claimable"} >
                                                                                 <div className={`ticket-box-${flag}`}>
                                                                                     <div className="ticket-medal">
                                                                                         <div className="ticket-medal-inner-box" >
