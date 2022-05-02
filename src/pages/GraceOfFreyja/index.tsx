@@ -501,7 +501,7 @@ const GraceOfFreyja = () => {
                 }
 
                 const { argumentsString } = new ArgSerializer().valuesToString(args);
-                const data = new TransactionPayload(`ESDTTransfer@${argumentsString}`);
+                const data = `ESDTTransfer@${argumentsString}`;
 
                 const tx = {
                     receiver: FREYJA_CONTRACT_ADDRESS,
