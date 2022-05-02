@@ -937,7 +937,7 @@ const GraceOfFreyja = () => {
                                                                                 </div>
                                                                             </Badge>
                                                                         ) : (
-                                                                            <Badge color={"secondary"} badgeContent={"None"} >
+                                                                            <Badge color={"secondary"} badgeContent={"No Win"} >
                                                                                 <div className={`ticket-box-${flag}`}>
                                                                                     <div className="ticket-medal">
                                                                                         <div className="ticket-medal-inner-box" >
