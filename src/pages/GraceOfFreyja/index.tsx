@@ -710,10 +710,10 @@ const GraceOfFreyja = () => {
                                                     </div>
                                                 </div>
 
-                                                <div className="buy-tickets-but" onClick={handleBuyTicket}>
-                                                    <img src={buyImg1} style={{ width: "20%" }} />
-                                                    <span className="ml-3"> Buy Tickets </span>
-                                                    <img src={buyImg2} className="ml-3" style={{ width: "20%" }} />
+                                                <div className="claim-but text-center" onClick={handleBuyTicket}>
+                                                    {/* <img src={buyImg1} style={{ width: "20%" }} /> */}
+                                                    <span>Buy Tickets </span>
+                                                    {/* <img src={buyImg2} className="ml-3" style={{ width: "20%" }} /> */}
                                                 </div>
 
                                                 <div className="text-center mt-2 show-tickets" onClick={() => setShowBoughtTicketsModal(true)}>
