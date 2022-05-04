@@ -750,7 +750,7 @@ const GraceOfFreyja = () => {
                                                 <Col sm='7'>
                                                     <div className="Comment-Box">
                                                         <p className="Next-Draw">Next Draw is on &nbsp;<span style={{ color: "#EEC98A" }}>{currentLottery ? convertTimestampToDateTime(currentLottery.end_timestamp) : '-'}</span></p>
-                                                        <p className="Comment">She is waiting for your prayers, buy tickets with caution. Good luck</p>
+                                                        <p className="Comment">Buy tickets with caution and may the grace of Freyja be with you.</p>
 
                                                         <Row>
                                                             <Col xs='6'>
@@ -872,8 +872,8 @@ const GraceOfFreyja = () => {
                                                 </Col>
                                                 <Col sm="7">
                                                     <div className="Comment-Box text-center">
-                                                        <p className="Next-Draw"><span style={{ color: "#EEC98A" }}>Welcome!</span></p>
-                                                        <p className="Comment">Choose date for grace of freyja.</p>
+                                                        <p className="Next-Draw"><span style={{ color: "#EEC98A" }}>History</span></p>
+                                                        {/* <p className="Comment">Choose date for grace of freyja.</p> */}
                                                     </div>
 
                                                     <div className="mt-2">
