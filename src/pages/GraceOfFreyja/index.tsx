@@ -6,6 +6,8 @@ import Badge from '@mui/material/Badge';
 import Box from '@mui/material/Box';
 import Tab from '@mui/material/Tab';
 import { makeStyles } from "@material-ui/core/styles";
+import Snackbar from '@mui/material/Snackbar';
+import MuiAlert, { AlertProps } from '@mui/material/Alert';
 
 import { Container, Row, Col, Dropdown } from 'react-bootstrap';
 import { Collapse } from 'react-collapse';
@@ -588,10 +590,36 @@ const GraceOfFreyja = () => {
 
     const [showBoughtTicketsModal, setShowBoughtTicketsModal] = useState(false);
 
+    /** notification */
+    const Alert = React.forwardRef<HTMLDivElement, AlertProps>(function Alert(
+        props,
+        ref,
+    ) {
+        return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />;
+    });
+    const [openNotification, setOpenNotification] = React.useState(true);
+    // const handleClick = () => {
+    //     setOpenNotification(true);
+    // };
+    const handleCloseNotification = (event?: React.SyntheticEvent | Event, reason?: string) => {
+        if (reason === 'clickaway') {
+            return;
+        }
+
+        setOpenNotification(false);
+    };
+
     return (
         <>
             <div style={{ background: "#121212" }}>
-                {/** first part : Lottery Home */}
+                <Snackbar anchorOrigin={{ vertical: 'top', horizontal: 'right' }} open={openNotification} onClose={handleCloseNotification}>
+                    <Alert onClose={handleCloseNotification} severity="success" sx={{ width: '100%', marginTop: "55px" }}>
+                        {
+                            (currentLottery?.end_timestamp.getTime() > new Date().getTime() ? "New Round open, buy your tickets" : "Round #" + currentLottery?.lottery_id + " is closed, check your prises!")
+                        }
+                    </Alert>
+                </Snackbar>
+
                 <div className='freyja-first-part'>
                     <Container className='freyja-inner-container text-center' style={{ paddingTop: "100px" }}>
                         <img className="freyja-title" src={titleImg} alt="Grace of Freyja" />
