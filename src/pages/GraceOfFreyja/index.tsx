@@ -629,7 +629,7 @@ const GraceOfFreyja = () => {
                 <div className='freyja-second-part' id="buyTickets">
                     <div className="fade-border-second" />
                     <Container>
-                        <p className='freyja-saying mb-1'>{"Our goddess Freyja is calling us ..."}</p>
+                        <p className='freyja-saying mb-1'>{"Freyja is waiting for you with chests of EGLD & ESDT."}</p>
                         <Box sx={{ width: '100%', typography: 'body1' }}>
                             <TabContext value={tabValue}>
                                 <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
@@ -1004,12 +1004,12 @@ const GraceOfFreyja = () => {
                             <Row>
                                 <Col sm="4">
                                     <p className="step-info-title">Buy Tickets</p>
-                                    <p className="step-info-description">{"Prices are set when the round starts, equal to 50 USD in Odin per ticket."}</p>
+                                    <p className="step-info-description">{"Prices are set when the round starts, equal to 5 USD in Odin per ticket."}</p>
                                 </Col>
 
                                 <Col sm="4">
                                     <p className="step-info-title">Wait for the Draw</p>
-                                    <p className="step-info-description">{"There is one draw every day alternating between 0 AM UTC and 12 PM UTC."}</p>
+                                    <p className="step-info-description">{"When round is over, a final number will be drawn by our goddess Freyja."}</p>
                                 </Col>
 
                                 <Col sm="4">
@@ -1044,13 +1044,13 @@ const GraceOfFreyja = () => {
                             <p className="step-info-description">{"The prizes for each lottery round come from three sources:"}</p>
 
                             <span className="step-info-title" style={{ fontWeight: "500", fontSize: "17px" }}>{"Ticket Purchases"}</span>
-                            <p className="step-info-description">{"- 100% of the CAKE paid by people buying tickets that round goes back into the prize pools."}</p>
+                            <p className="step-info-description">{"- 100% of the EGLD & ESDT paid by people buying tickets that round goes back into the prize pools."}</p>
 
                             <span className="step-info-title" style={{ fontWeight: "500", fontSize: "17px" }}>{"Rollover Prizes"}</span>
-                            <p className="step-info-description">{"- After every round, if nobody wins in one of the prize brackets, the unclaimed CAKE for that bracket rolls over into the next round and are redistributed among the prize pools."}</p>
+                            <p className="step-info-description">{"- After every round, if nobody wins in one of the prize brackets, the unclaimed EGLD & ESDT for that bracket rolls over into the next round and are redistributed among the prize pools."}</p>
 
-                            <span className="step-info-title" style={{ fontWeight: "500", fontSize: "17px" }}>{"CAKE Injections"}</span>
-                            <p className="step-info-description">{"- An average total of 35,000 CAKE from the treasury is added to lottery rounds over the course of a week. This CAKE is of course also included in rollovers! Read more in our guide to CAKE Tokenomics"}</p>
+                            <span className="step-info-title" style={{ fontWeight: "500", fontSize: "17px" }}>{"EGLD & ESDT Injections"}</span>
+                            <p className="step-info-description">{"- EGLD & ESDT from the treasury is added to lottery rounds over the course of a week. This EGLD & ESDT is of course also included in rollovers!"}</p>
                         </div>
                     </Container>
                 </div>
