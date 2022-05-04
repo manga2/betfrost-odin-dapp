@@ -855,7 +855,7 @@ const GraceOfFreyja = () => {
                                                 </div>
                                             </Collapse>
 
-                                            <img src={whowill} style={{ width: "100%" }} alt="who will recieve the grace of freyja" />
+                                            {/* <img src={whowill} style={{ width: "100%" }} alt="who will recieve the grace of freyja" /> */}
                                         </div>
                                     </div>
 
