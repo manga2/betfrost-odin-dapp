@@ -822,7 +822,7 @@ const GraceOfFreyja = () => {
                                                         <Col className="mt-3" xs="6" sm="3">
                                                             <div className="d-flex flex-column">
                                                                 <span style={{ fontSize: "16px", fontWeight: "600" }}> Match first 1 </span>
-                                                                {/* <span className="mt-2"> 405 Odin </span> */}
+                                                                <span className="mt-2">{lotteries[selectedClaimableRoundIndex].reward_percentage_per_bracket[0]} %</span>
                                                                 <span className="mt-1" style={{ fontSize: "12px", color: "#F1DA8A" }}> ~ ${lotteries ? lotteries[selectedClaimableRoundIndex].brackets[0].total_value_in_usd : '-'}</span>
                                                                 <span className="mt-1" style={{ fontSize: "12px", color: "#fff" }}> {lotteries && `${lotteries[selectedClaimableRoundIndex].number_of_winners_per_bracket[0]} Win Tickets`}</span>
                                                             </div>
@@ -830,7 +830,7 @@ const GraceOfFreyja = () => {
                                                         <Col className="mt-3" xs="6" sm="3">
                                                             <div className="d-flex flex-column">
                                                                 <span style={{ fontSize: "16px", fontWeight: "600" }}> Match first 2 </span>
-                                                                {/* <span className="mt-2"> 405 Odin </span> */}
+                                                                <span className="mt-2">{lotteries[selectedClaimableRoundIndex].reward_percentage_per_bracket[1]} %</span>
                                                                 <span className="mt-1" style={{ fontSize: "12px", color: "#F1DA8A" }}> ~ ${lotteries ? lotteries[selectedClaimableRoundIndex].brackets[1].total_value_in_usd : '-'}</span>
                                                                 <span className="mt-1" style={{ fontSize: "12px", color: "#fff" }}> {lotteries && `${lotteries[selectedClaimableRoundIndex].number_of_winners_per_bracket[1]} Win Tickets`}</span>
                                                             </div>
@@ -838,7 +838,7 @@ const GraceOfFreyja = () => {
                                                         <Col className="mt-3" xs="6" sm="3">
                                                             <div className="d-flex flex-column">
                                                                 <span style={{ fontSize: "16px", fontWeight: "600" }}> Match first 3 </span>
-                                                                {/* <span className="mt-2"> 405 Odin </span> */}
+                                                                <span className="mt-2">{lotteries[selectedClaimableRoundIndex].reward_percentage_per_bracket[2]} %</span>
                                                                 <span className="mt-1" style={{ fontSize: "12px", color: "#F1DA8A" }}> ~ ${lotteries ? lotteries[selectedClaimableRoundIndex].brackets[2].total_value_in_usd : '-'}</span>
                                                                 <span className="mt-1" style={{ fontSize: "12px", color: "#fff" }}> {lotteries && `${lotteries[selectedClaimableRoundIndex].number_of_winners_per_bracket[2]} Win Tickets`}</span>
                                                             </div>
@@ -846,7 +846,7 @@ const GraceOfFreyja = () => {
                                                         <Col className="mt-3" xs="6" sm="3">
                                                             <div className="d-flex flex-column">
                                                                 <span style={{ fontSize: "16px", fontWeight: "600" }}> Match first 4 </span>
-                                                                {/* <span className="mt-2"> 405 Odin </span> */}
+                                                                <span className="mt-2">{lotteries[selectedClaimableRoundIndex].reward_percentage_per_bracket[3]} %</span>
                                                                 <span className="mt-1" style={{ fontSize: "12px", color: "#F1DA8A" }}> ~ ${lotteries ? lotteries[selectedClaimableRoundIndex].brackets[3].total_value_in_usd : '-'}</span>
                                                                 <span className="mt-1" style={{ fontSize: "12px", color: "#fff" }}> {lotteries && `${lotteries[selectedClaimableRoundIndex].number_of_winners_per_bracket[3]} Win Tickets`}</span>
                                                             </div>
