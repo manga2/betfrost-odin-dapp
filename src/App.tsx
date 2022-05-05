@@ -1,13 +1,15 @@
 import React from 'react';
 import { DappUI, DappProvider } from '@elrondnetwork/dapp-core';
+import { Notifications } from 'react-push-notification';
 import { Route, Routes, BrowserRouter as Router, Navigate } from 'react-router-dom';
 import Layout from 'components/Layout';
 import PageNotFound from 'pages/PageNotFound';
-import UnlockPage from './pages/UnlockPage';
 import { routeNames } from 'routes';
 import routes from 'routes';
 import '@elrondnetwork/dapp-core/build/index.css';
 import { ENVIRONMENT } from './config';
+import UnlockPage from './pages/UnlockPage';
+
 
 const {
   TransactionsToastList,
@@ -27,6 +29,7 @@ const App = () => {
           <TransactionsToastList />
           <NotificationModal />
           <SignTransactionsModals />
+          <Notifications />
           <Routes>
             <Route
               path={routeNames.unlock}

@@ -1,4 +1,4 @@
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import TabContext from '@mui/lab/TabContext';
 import TabList from '@mui/lab/TabList';
 import TabPanel from '@mui/lab/TabPanel';
@@ -13,6 +13,7 @@ import { Container, Row, Col, Dropdown } from 'react-bootstrap';
 import { Collapse } from 'react-collapse';
 import Modal from 'react-modal';
 import ReactPinField from "react-pin-field";
+import OneSignal from 'react-onesignal';
 
 import {
     refreshAccount,
@@ -74,6 +75,8 @@ import {
     TOKENS
 } from 'data';
 import * as lotteryData from './lotteryData';
+
+import addNotification from 'react-push-notification';
 
 const useStyles = makeStyles((theme) => ({
     badgePrimary: {
@@ -609,16 +612,46 @@ const GraceOfFreyja = () => {
         setOpenNotification(false);
     };
 
+    useEffect(() => {
+        // console.log("asdf");
+        // OneSignal.init({
+        //     appId: "8946a494-9f96-41d4-9f44-c1c77f3c8f66",
+        //     notifyButton: {
+        //         enable: true,
+        //     },
+        //     allowLocalhostAsSecureOrigin: true,
+        // });
+
+        if (currentLottery?.end_timestamp.getTime() > new Date().getTime()) {
+            addNotification({
+                title: 'Grace of Freyja',
+                subtitle: 'This is a subtitle',
+                message: 'New Round open, buy your tickets',
+                theme: 'darkblue',
+                native: true // when using native, your OS will handle theming.
+            });
+        } else {
+            addNotification({
+                title: 'Grace of Freyja',
+                subtitle: 'This is a subtitle',
+                message: `Round #${currentLottery?.lottery_id} is closed, check your prises!`,
+                theme: 'darkblue',
+                native: true // when using native, your OS will handle theming.
+            });
+        }
+
+    }, [currentLottery]);
+
     return (
         <>
             <div style={{ background: "#121212" }}>
-                <Snackbar anchorOrigin={{ vertical: 'top', horizontal: 'right' }} open={openNotification} onClose={handleCloseNotification}>
+                {/* <Snackbar anchorOrigin={{ vertical: 'top', horizontal: 'right' }} open={openNotification} onClose={handleCloseNotification}>
                     <Alert onClose={handleCloseNotification} severity="success" sx={{ width: '100%', marginTop: "55px" }}>
                         {
                             (currentLottery?.end_timestamp.getTime() > new Date().getTime() ? "New Round open, buy your tickets" : "Round #" + currentLottery?.lottery_id + " is closed, check your prises!")
                         }
                     </Alert>
-                </Snackbar>
+                </Snackbar> */}
 
                 <div className='freyja-first-part'>
                     <Container className='freyja-inner-container text-center' style={{ paddingTop: "100px" }}>
