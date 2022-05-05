@@ -910,7 +910,7 @@ const GraceOfFreyja = () => {
                                                                 {
                                                                     lotteries ?
                                                                         (<>
-                                                                            <span>#{lotteries[selectedMylotteryId].lottery_id}</span>
+                                                                            <span>Round #{lotteries[selectedMylotteryId].lottery_id}</span>
                                                                             <span>{convertTimestampToDateTime(lotteries[selectedMylotteryId].end_timestamp)}</span>
                                                                         </>) : '-'
                                                                 }
@@ -919,7 +919,7 @@ const GraceOfFreyja = () => {
                                                                 {
                                                                     lotteries && lotteries.map((myLottery, index) => (
                                                                         <Dropdown.Item eventKey={index} key={`MyLottery-id-menu-item-${index}`}>
-                                                                            <span>#{myLottery.lottery_id}</span>
+                                                                            <span>Round #{myLottery.lottery_id}</span>
                                                                             <span>{convertTimestampToDateTime(myLottery.end_timestamp)}</span>
                                                                         </Dropdown.Item>
                                                                     ))
