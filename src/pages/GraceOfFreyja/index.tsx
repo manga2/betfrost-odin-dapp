@@ -621,6 +621,8 @@ const GraceOfFreyja = () => {
         //     },
         //     allowLocalhostAsSecureOrigin: true,
         // });
+        if (currentLottery === undefined)
+            return;
 
         if (currentLottery?.end_timestamp.getTime() > new Date().getTime()) {
             addNotification({
@@ -628,18 +630,24 @@ const GraceOfFreyja = () => {
                 subtitle: 'This is a subtitle',
                 message: 'New Round open, buy your tickets',
                 theme: 'darkblue',
+                duration: 5000,
                 native: true // when using native, your OS will handle theming.
+
             });
+
+            setTimeout(() => {
+                window.location.reload();
+            }, currentLottery.end_timestamp.getTime() - Date.now());
         } else {
             addNotification({
                 title: 'Grace of Freyja',
                 subtitle: 'This is a subtitle',
                 message: `Round #${currentLottery?.lottery_id} is closed, check your prises!`,
                 theme: 'darkblue',
+                duration: 5000,
                 native: true // when using native, your OS will handle theming.
             });
         }
-
     }, [currentLottery]);
 
     return (
