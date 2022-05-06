@@ -26,7 +26,8 @@ export const TOKENS = {
         identifier: "LUCKY-2cb58b",
         ticker: "LUCKY",
         decimals: 18,
-        url: "https://media.elrond.com/tokens/asset/LUCKY-2cb58b/logo.svg"
+        url: "https://media.elrond.com/tokens/asset/LUCKY-2cb58b/logo.svg",
+        unit_price_in_usd: 0,
     },
     "MEX-455c57": {
         identifier: "MEX-455c57",
@@ -39,7 +40,8 @@ export const TOKENS = {
         identifier: "WEGLD-bd4d79",
         ticker: "WEGLD",
         decimals: 18,
-        url: "https://media.elrond.com/tokens/asset/WEGLD-bd4d79/logo.svg"
+        url: "https://media.elrond.com/tokens/asset/WEGLD-bd4d79/logo.svg",
+        unit_price_in_usd: 0,
     },
     "SUPER-507aa6": {
         identifier: "SUPER-507aa6",
@@ -59,13 +61,15 @@ export const TOKENS = {
         identifier: "EFFORT-a13513",
         ticker: "EFFORT",
         decimals: 18,
-        url: "https://media.elrond.com/tokens/asset/EFFORT-a13513/logo.svg"
+        url: "https://media.elrond.com/tokens/asset/EFFORT-a13513/logo.svg",
+        unit_price_in_usd: 0,
     },
     "DICE-9749cc": {
         identifier: "DICE-9749cc",
         ticker: "DICE",
         decimals: 6,
-        url: "https://media.elrond.com/tokens/asset/DICE-9749cc/logo.svg"
+        url: "https://media.elrond.com/tokens/asset/DICE-9749cc/logo.svg",
+        unit_price_in_usd: 0,
     },
 };
 
