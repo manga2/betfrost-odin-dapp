@@ -14,7 +14,7 @@ export const FLIP_GAS_LIMIT = 6000000;
 export const FLIP_LAST_TX_SEARCH_COUNT = 3;
 
 // Grace Of Freyja
-export const FREYJA_CONTRACT_ADDRESS = 'erd1qqqqqqqqqqqqqpgq725xynr8hx30g5yuahh5usxl98mp2cghdfysme0g8x';
+export const FREYJA_CONTRACT_ADDRESS = 'erd1qqqqqqqqqqqqqpgqmdl40ua5fhe20x4cr38le0y4zfmflm9tdfyssyxc2q';
 export const FREYJA_CONTRACT_ABI_URL = '/abi/odin-lottery.abi.json';
 export const FREYJA_CONTRACT_NAME = 'OdinLottery';
 
