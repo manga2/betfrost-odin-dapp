@@ -1,4 +1,4 @@
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import TabContext from '@mui/lab/TabContext';
 import TabList from '@mui/lab/TabList';
 import TabPanel from '@mui/lab/TabPanel';
@@ -6,11 +6,14 @@ import Badge from '@mui/material/Badge';
 import Box from '@mui/material/Box';
 import Tab from '@mui/material/Tab';
 import { makeStyles } from "@material-ui/core/styles";
+import Snackbar from '@mui/material/Snackbar';
+import MuiAlert, { AlertProps } from '@mui/material/Alert';
 
 import { Container, Row, Col, Dropdown } from 'react-bootstrap';
 import { Collapse } from 'react-collapse';
 import Modal from 'react-modal';
 import ReactPinField from "react-pin-field";
+import OneSignal from 'react-onesignal';
 
 import {
     refreshAccount,
@@ -72,6 +75,8 @@ import {
     TOKENS
 } from 'data';
 import * as lotteryData from './lotteryData';
+
+import addNotification from 'react-push-notification';
 
 const useStyles = makeStyles((theme) => ({
     badgePrimary: {
@@ -588,10 +593,74 @@ const GraceOfFreyja = () => {
 
     const [showBoughtTicketsModal, setShowBoughtTicketsModal] = useState(false);
 
+    /** notification */
+    const Alert = React.forwardRef<HTMLDivElement, AlertProps>(function Alert(
+        props,
+        ref,
+    ) {
+        return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />;
+    });
+    const [openNotification, setOpenNotification] = React.useState(true);
+    // const handleClick = () => {
+    //     setOpenNotification(true);
+    // };
+    const handleCloseNotification = (event?: React.SyntheticEvent | Event, reason?: string) => {
+        if (reason === 'clickaway') {
+            return;
+        }
+
+        setOpenNotification(false);
+    };
+
+    useEffect(() => {
+        // console.log("asdf");
+        // OneSignal.init({
+        //     appId: "8946a494-9f96-41d4-9f44-c1c77f3c8f66",
+        //     notifyButton: {
+        //         enable: true,
+        //     },
+        //     allowLocalhostAsSecureOrigin: true,
+        // });
+        if (currentLottery === undefined)
+            return;
+
+        if (currentLottery?.end_timestamp.getTime() > new Date().getTime()) {
+            addNotification({
+                title: 'Grace of Freyja',
+                subtitle: 'This is a subtitle',
+                message: 'New Round open, buy your tickets',
+                theme: 'darkblue',
+                duration: 5000,
+                native: true // when using native, your OS will handle theming.
+
+            });
+
+            setTimeout(() => {
+                window.location.reload();
+            }, currentLottery.end_timestamp.getTime() - Date.now());
+        } else {
+            addNotification({
+                title: 'Grace of Freyja',
+                subtitle: 'This is a subtitle',
+                message: `Round #${currentLottery?.lottery_id} is closed, check your prises!`,
+                theme: 'darkblue',
+                duration: 5000,
+                native: true // when using native, your OS will handle theming.
+            });
+        }
+    }, [currentLottery]);
+
     return (
         <>
             <div style={{ background: "#121212" }}>
-                {/** first part : Lottery Home */}
+                {/* <Snackbar anchorOrigin={{ vertical: 'top', horizontal: 'right' }} open={openNotification} onClose={handleCloseNotification}>
+                    <Alert onClose={handleCloseNotification} severity="success" sx={{ width: '100%', marginTop: "55px" }}>
+                        {
+                            (currentLottery?.end_timestamp.getTime() > new Date().getTime() ? "New Round open, buy your tickets" : "Round #" + currentLottery?.lottery_id + " is closed, check your prises!")
+                        }
+                    </Alert>
+                </Snackbar> */}
+
                 <div className='freyja-first-part'>
                     <Container className='freyja-inner-container text-center' style={{ paddingTop: "100px" }}>
                         <img className="freyja-title" src={titleImg} alt="Grace of Freyja" />
@@ -629,7 +698,7 @@ const GraceOfFreyja = () => {
                 <div className='freyja-second-part' id="buyTickets">
                     <div className="fade-border-second" />
                     <Container>
-                        <p className='freyja-saying mb-1'>{"Our goddess Freyja is calling us ..."}</p>
+                        <p className='freyja-saying mb-1'>{"Freyja is waiting for you with chests of EGLD & ESDT."}</p>
                         <Box sx={{ width: '100%', typography: 'body1' }}>
                             <TabContext value={tabValue}>
                                 <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
@@ -750,7 +819,7 @@ const GraceOfFreyja = () => {
                                                 <Col sm='7'>
                                                     <div className="Comment-Box">
                                                         <p className="Next-Draw">Next Draw is on &nbsp;<span style={{ color: "#EEC98A" }}>{currentLottery ? convertTimestampToDateTime(currentLottery.end_timestamp) : '-'}</span></p>
-                                                        <p className="Comment">She is waiting for your prayers, buy tickets with caution. Good luck</p>
+                                                        <p className="Comment">Buy tickets with caution and may the grace of Freyja be with you.</p>
 
                                                         <Row>
                                                             <Col xs='6'>
@@ -855,7 +924,7 @@ const GraceOfFreyja = () => {
                                                 </div>
                                             </Collapse>
 
-                                            <img src={whowill} style={{ width: "100%" }} alt="who will recieve the grace of freyja" />
+                                            {/* <img src={whowill} style={{ width: "100%" }} alt="who will recieve the grace of freyja" /> */}
                                         </div>
                                     </div>
 
@@ -872,8 +941,8 @@ const GraceOfFreyja = () => {
                                                 </Col>
                                                 <Col sm="7">
                                                     <div className="Comment-Box text-center">
-                                                        <p className="Next-Draw"><span style={{ color: "#EEC98A" }}>Welcome!</span></p>
-                                                        <p className="Comment">Choose date for grace of freyja.</p>
+                                                        <p className="Next-Draw"><span style={{ color: "#EEC98A" }}>History</span></p>
+                                                        {/* <p className="Comment">Choose date for grace of freyja.</p> */}
                                                     </div>
 
                                                     <div className="mt-2">
@@ -882,7 +951,7 @@ const GraceOfFreyja = () => {
                                                                 {
                                                                     lotteries && lotteries.length > 0 ?
                                                                         (<>
-                                                                            <span>#{lotteries[selectedMylotteryId].lottery_id}</span>
+                                                                            <span>Round #{lotteries[selectedMylotteryId].lottery_id}</span>
                                                                             <span>{convertTimestampToDateTime(lotteries[selectedMylotteryId].end_timestamp)}</span>
                                                                         </>) : '-'
                                                                 }
@@ -891,7 +960,7 @@ const GraceOfFreyja = () => {
                                                                 {
                                                                     lotteries && lotteries.length && lotteries.map((myLottery, index) => (
                                                                         <Dropdown.Item eventKey={index} key={`MyLottery-id-menu-item-${index}`}>
-                                                                            <span>#{myLottery.lottery_id}</span>
+                                                                            <span>Round #{myLottery.lottery_id}</span>
                                                                             <span>{convertTimestampToDateTime(myLottery.end_timestamp)}</span>
                                                                         </Dropdown.Item>
                                                                     ))
@@ -1004,12 +1073,12 @@ const GraceOfFreyja = () => {
                             <Row>
                                 <Col sm="4">
                                     <p className="step-info-title">Buy Tickets</p>
-                                    <p className="step-info-description">{"Prices are set when the round starts, equal to 50 USD in Odin per ticket."}</p>
+                                    <p className="step-info-description">{"Prices are set when the round starts, equal to 5 USD in Odin per ticket."}</p>
                                 </Col>
 
                                 <Col sm="4">
                                     <p className="step-info-title">Wait for the Draw</p>
-                                    <p className="step-info-description">{"There is one draw every day alternating between 0 AM UTC and 12 PM UTC."}</p>
+                                    <p className="step-info-description">{"When round is over, a final number will be drawn by our goddess Freyja."}</p>
                                 </Col>
 
                                 <Col sm="4">
@@ -1044,13 +1113,13 @@ const GraceOfFreyja = () => {
                             <p className="step-info-description">{"The prizes for each lottery round come from three sources:"}</p>
 
                             <span className="step-info-title" style={{ fontWeight: "500", fontSize: "17px" }}>{"Ticket Purchases"}</span>
-                            <p className="step-info-description">{"- 100% of the CAKE paid by people buying tickets that round goes back into the prize pools."}</p>
+                            <p className="step-info-description">{"- 100% of the EGLD & ESDT paid by people buying tickets that round goes back into the prize pools."}</p>
 
                             <span className="step-info-title" style={{ fontWeight: "500", fontSize: "17px" }}>{"Rollover Prizes"}</span>
-                            <p className="step-info-description">{"- After every round, if nobody wins in one of the prize brackets, the unclaimed CAKE for that bracket rolls over into the next round and are redistributed among the prize pools."}</p>
+                            <p className="step-info-description">{"- After every round, if nobody wins in one of the prize brackets, the unclaimed EGLD & ESDT for that bracket rolls over into the next round and are redistributed among the prize pools."}</p>
 
-                            <span className="step-info-title" style={{ fontWeight: "500", fontSize: "17px" }}>{"CAKE Injections"}</span>
-                            <p className="step-info-description">{"- An average total of 35,000 CAKE from the treasury is added to lottery rounds over the course of a week. This CAKE is of course also included in rollovers! Read more in our guide to CAKE Tokenomics"}</p>
+                            <span className="step-info-title" style={{ fontWeight: "500", fontSize: "17px" }}>{"EGLD & ESDT Injections"}</span>
+                            <p className="step-info-description">{"- EGLD & ESDT from the treasury is added to lottery rounds over the course of a week. This EGLD & ESDT is of course also included in rollovers!"}</p>
                         </div>
                     </Container>
                 </div>
