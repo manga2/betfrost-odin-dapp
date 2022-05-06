@@ -45,13 +45,15 @@ export const TOKENS = {
         identifier: "SUPER-507aa6",
         ticker: "SUPER",
         decimals: 18,
-        url: "https://media.elrond.com/tokens/asset/SUPER-507aa6/logo.svg"
+        url: "https://media.elrond.com/tokens/asset/SUPER-507aa6/logo.svg",
+        unit_price_in_usd: 0.034,
     },
     "VITAL-bc0917": {
         identifier: "VITAL-bc0917",
         ticker: "VITAL",
         decimals: 8,
-        url: "https://media.elrond.com/tokens/asset/VITAL-bc0917/logo.svg"
+        url: "https://media.elrond.com/tokens/asset/VITAL-bc0917/logo.svg",
+        unit_price_in_usd: 0.00000010,
     },
     "EFFORT-a13513": {
         identifier: "EFFORT-a13513",
