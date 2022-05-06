@@ -169,12 +169,7 @@
         {
             "name": "closeLottery",
             "mutability": "mutable",
-            "inputs": [
-                {
-                    "name": "lottery_id",
-                    "type": "u32"
-                }
-            ],
+            "inputs": [],
             "outputs": []
         },
         {
