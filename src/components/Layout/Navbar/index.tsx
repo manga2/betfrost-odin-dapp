@@ -55,23 +55,39 @@ const Navbar = () => {
           <Nav className='ml-auto'>
 
             <Link to={routeNames.odinsfate} className='custom-navbar-button custom-navbar-normal-button'>
-              Odins Fate
+              <div onClick={() => {
+                document.getElementById('responsive-navbar-nav').className = "nav-menu-wrap navbar-collapse collapse";
+              }}>
+                Odins Fate
+              </div>
             </Link>
 
             <Link to={routeNames.graceoffreyja} className='custom-navbar-button custom-navbar-normal-button'>
-              Grace Of Freyja
+              <div onClick={() => {
+                document.getElementById('responsive-navbar-nav').className = "nav-menu-wrap navbar-collapse collapse";
+              }}>
+                Grace Of Freyja
+              </div>
             </Link>
 
             {isLoggedIn ? (
               <NavItem className='auth-button' onClick={handleLogout}>
-                Disconnect
+                <div onClick={() => {
+                  document.getElementById('responsive-navbar-nav').className = "nav-menu-wrap navbar-collapse collapse";
+                }}>
+                  Disconnect
+                </div>
               </NavItem>
             ) : (
               // <NavItem className='auth-button gradient-button' onClick={() => {setConnectModalShow(true);}}>
               //   Connect
               // </NavItem>
-              <Link to={ routeNames.unlock } className='auth-button'>
-                Connect
+              <Link to={routeNames.unlock} className='auth-button'>
+                <div onClick={() => {
+                  document.getElementById('responsive-navbar-nav').className = "nav-menu-wrap navbar-collapse collapse";
+                }}>
+                  Connect
+                </div>
               </Link>
             )}
           </Nav>
@@ -81,7 +97,7 @@ const Navbar = () => {
       <ConnectionModal
         show={connectionModalShow}
         onHide={() => setConnectModalShow(false)}
-        data={{ callbackRoute:routeNames.home }}
+        data={{ callbackRoute: routeNames.home }}
       />
     </BsNavbar>
   );
