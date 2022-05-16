@@ -564,7 +564,7 @@ const GraceOfFreyja = () => {
             const tx = {
                 receiver: FREYJA_CONTRACT_ADDRESS,
                 data: data,
-                gasLimit: new GasLimit(6000000 + 3000000 * oldAccount.total_number_of_win_brackets),
+                gasLimit: new GasLimit(6000000 + 5000000 * oldAccount.total_number_of_win_brackets),
             };
 
             await refreshAccount();
