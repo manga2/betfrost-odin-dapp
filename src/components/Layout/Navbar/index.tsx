@@ -35,12 +35,16 @@ const Navbar = () => {
     };
   }, [scrollState]);
 
+  const [toggleExpanded, setToggleExpanded] = React.useState<boolean>(false);
+  function toggleClicked() {
+    setToggleExpanded(!toggleExpanded);
+  }
 
   //
   const [connectionModalShow, setConnectModalShow] = React.useState<boolean>(false);
 
   return (
-    <BsNavbar className={scrollState == 'top' ? 'px-4 py-3 custom-navbar' : 'px-4 py-3 custom-navbar custom-navbar-dark'} expand='sm' collapseOnSelect fixed='top' variant='dark'>
+    <BsNavbar className={scrollState == 'top' ? 'px-4 py-3 custom-navbar' : 'px-4 py-3 custom-navbar custom-navbar-dark'} expand='sm' expanded={toggleExpanded} fixed='top' variant='dark'>
       <div className='container-fluid'>
         <Link
           className='d-flex align-items-center navbar-brand mr-0 c-logo-container'
@@ -50,15 +54,15 @@ const Navbar = () => {
           <span className=''>{dAppName}</span>
         </Link>
 
-        <BsNavbar.Toggle aria-controls='responsive-navbar-nav' />
+        <BsNavbar.Toggle aria-controls='responsive-navbar-nav' onClick={toggleClicked} />
         <BsNavbar.Collapse id='responsive-navbar-nav' className='nav-menu-wrap'>
           <Nav className='ml-auto'>
 
-            <Link to={routeNames.odinsfate} className='custom-navbar-button custom-navbar-normal-button'>
+            <Link to={routeNames.odinsfate} className='custom-navbar-button custom-navbar-normal-button' onClick={toggleClicked} >
               Odins Fate
             </Link>
 
-            <Link to={routeNames.graceoffreyja} className='custom-navbar-button custom-navbar-normal-button'>
+            <Link to={routeNames.graceoffreyja} className='custom-navbar-button custom-navbar-normal-button' onClick={toggleClicked} >
               Grace Of Freyja
             </Link>
 
