@@ -128,7 +128,7 @@ const GraceOfFreyja = () => {
             const contract = new SmartContract({ address: new Address(FREYJA_CONTRACT_ADDRESS), abi: abi });
             const controller = new DefaultSmartContractController(abi, provider);
 
-            console.log(contract, controller);
+            // console.log(contract, controller);
             setContractInteractor({
                 contract,
                 controller,
@@ -213,12 +213,12 @@ const GraceOfFreyja = () => {
 
             if (!res || !res.returnCode.isSuccess()) return;
             const value = res.firstValue?.valueOf();
-            console.log('currentLottery value', value);
+            // console.log('currentLottery value', value);
 
             const currentLottery = parseLottery(value);
 
             // console.log(new Date().getTime(),"sfaskdfkweoiruowisjfdowieiorjerjoief");
-            console.log('currentLottery', currentLottery);
+            // console.log('currentLottery', currentLottery);
             setCurrentLottery(currentLottery);
         })();
     }, [contractInteractor, hasPendingTransactions]);
@@ -253,7 +253,7 @@ const GraceOfFreyja = () => {
                 setSelectedMylotteryId(items.length - 1);
             }
 
-            console.log('lotteries', lotteries);
+            // console.log('lotteries', lotteries);
             setLotteries(lotteries);
         })();
     }, [contractInteractor, hasPendingTransactions]);
@@ -274,7 +274,7 @@ const GraceOfFreyja = () => {
             });
         }
 
-        console.log('paymentTokens', tokens);
+        // console.log('paymentTokens', tokens);
         setPaymentTokens(tokens);
     }, [currentLottery]);
 
@@ -347,7 +347,7 @@ const GraceOfFreyja = () => {
                 oldTickets.push(result);
             }
 
-            console.log('oldTickets', oldTickets);
+            // console.log('oldTickets', oldTickets);
             setOldTickets(oldTickets);
 
             const total_value_in_usd = precisionfloor(lottery.total_value_in_usd * total_win_percentage / 100, FREYJA_DECIMALS_PRECISION);
@@ -357,7 +357,7 @@ const GraceOfFreyja = () => {
                 total_win_percentage,
                 total_value_in_usd,
             };
-            console.log(oldAccount);
+            // console.log(oldAccount);
             setOldAccount(oldAccount);
         })();
     }, [contractInteractor, address, lotteries, selectedMylotteryId]);
@@ -390,7 +390,7 @@ const GraceOfFreyja = () => {
                 currentRoundTicketNumbers.push(result);
             }
 
-            console.log("currentRoundTicketNumbers", currentRoundTicketNumbers);
+            // console.log("currentRoundTicketNumbers", currentRoundTicketNumbers);
             setCurrentRoundTicketNumbers(currentRoundTicketNumbers);
         })();
     }, [contractInteractor, address, currentLottery, hasPendingTransactions]);
@@ -487,7 +487,7 @@ const GraceOfFreyja = () => {
 
                 numbers.push(number);
             }
-            console.log('numbers', numbers);
+            // console.log('numbers', numbers);
 
             if (paymentTokens[selectedTokenIndex].identifier == 'EGLD') {
                 const args: TypedValue[] = [

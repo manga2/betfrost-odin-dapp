@@ -11,13 +11,13 @@ export async function getBalanceOfToken(apiAddress, account, token_id) {
         }
 
         const res = await axios.get(`${apiAddress}/accounts/${account.address.toString()}/tokens?identifier=${token_id}`);
-        console.log('res', res);
+        // console.log('res', res);
         if (res.data?.length > 0) {
             const token = res.data[0];
             return convertWeiToEsdt(token.balance, token.decimals);
         }
     } catch(e) {
-        console.log('getBalanceOfToken error', e);
+        // console.log('getBalanceOfToken error', e);
     }
 
     return 0;

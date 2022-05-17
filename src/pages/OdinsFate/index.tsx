@@ -102,7 +102,7 @@ const OdinsFate = () => {
 
           if (!res || !res.returnCode.isSuccess()) return;
           const items = res.firstValue?.valueOf();
-          console.log('getFlipPacks', items);
+          // console.log('getFlipPacks', items);
 
           const flipPacks = {};
           let ids = [];
@@ -138,7 +138,7 @@ const OdinsFate = () => {
             }
           }
 
-          console.log('flipPacks', newFlipPacks);
+          // console.log('flipPacks', newFlipPacks);
           setFlipPacks(newFlipPacks);
       })();
     }, [contractInteractor]);
@@ -154,7 +154,7 @@ const OdinsFate = () => {
 
           if (!res || !res.returnCode.isSuccess()) return;
           const items = res.firstValue?.valueOf();
-          console.log('viewLastFlips', items);
+          // console.log('viewLastFlips', items);
 
           const flipTxs = [];
           for (const item of items) {
@@ -176,7 +176,7 @@ const OdinsFate = () => {
 
             flipTxs.push(flipTx);
           }
-          console.log('flipTxs', flipTxs);
+          // console.log('flipTxs', flipTxs);
           setFlipTxs(flipTxs);
 
           // check for result of last flip tx
@@ -200,7 +200,7 @@ const OdinsFate = () => {
     //
     const [selectedTokenId, setSelectedTokenId] = React.useState<string | undefined>();
     function onTokenIdMenuSelect(token_id){
-      console.log('token_id', token_id);
+      // console.log('token_id', token_id);
       setSelectedTokenId(token_id);
     }
 
@@ -240,10 +240,10 @@ const OdinsFate = () => {
         flipButtonText = 'Connect Your Wallet';
       }
       else if (selectedTokenId) {
-        console.log('selectedTokenId', selectedTokenId);
-        console.log('selectedAmountId', selectedAmountId);
-        console.log('selectedTokenBalance', selectedTokenBalance);
-        console.log('flipPacks[selectedTokenId].amounts[selectedAmountId]', flipPacks[selectedTokenId].amounts[selectedAmountId]);
+        // console.log('selectedTokenId', selectedTokenId);
+        // console.log('selectedAmountId', selectedAmountId);
+        // console.log('selectedTokenBalance', selectedTokenBalance);
+        // console.log('flipPacks[selectedTokenId].amounts[selectedAmountId]', flipPacks[selectedTokenId].amounts[selectedAmountId]);
         if (selectedTokenBalance >= flipPacks[selectedTokenId].amounts[selectedAmountId]) {
           flipButtonDisabled = false;
           flipButtonText = 'I Shall Choose';
