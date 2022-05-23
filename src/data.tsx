@@ -71,6 +71,13 @@ export const TOKENS = {
         url: "https://media.elrond.com/tokens/asset/DICE-9749cc/logo.svg",
         unit_price_in_usd: 0,
     },
+    "GTTS-ac8274": {
+        identifier: "GTTS-ac8274",
+        ticker: "GTTS",
+        decimals: 6,
+        url: "https://media.elrond.com/tokens/asset/GTTS-ac8274/logo.svg",
+        unit_price_in_usd: 0,
+    },
 };
 
 
